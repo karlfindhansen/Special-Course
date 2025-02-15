@@ -18,7 +18,6 @@ class InputModule(nn.Module):
         - out_channels: Number of output channels for each processed input.
         """
         super(InputModule, self).__init__()
-        print("Convolutional block")
         self.conv_blocks = nn.ModuleList([
             nn.Sequential(
                 nn.Conv2d(in_ch, out_channels, kernel_size=3, stride=1, padding=1),
@@ -29,7 +28,6 @@ class InputModule(nn.Module):
                 nn.LeakyReLU(0.2, inplace=True),
             ) for in_ch in in_channels_list
         ])
-        print("Final Convolution")
         self.final_conv = nn.Conv2d(len(in_channels_list) * out_channels, 64, kernel_size=3, stride=1, padding=1)
 
     def forward(self, inputs):
@@ -43,7 +41,6 @@ class InputModule(nn.Module):
         - Tensor of shape (batch_size, 64, H, W) -> Pre-residual representation.
         """
         assert len(inputs) == len(self.conv_blocks), "Mismatch between inputs and conv blocks"
-        print(len(inputs) == len(self.conv_blocks))
         # Process each input
         processed_inputs = [conv_block(x) for conv_block, x in tqdm(list(zip(self.conv_blocks, inputs)), total=len(inputs))]
         # Concatenate along the channel dimension
@@ -97,7 +94,6 @@ if __name__ == "__main__":
     bedmachine = torch.randn(batch_size, 1, height, width)
     arctic_dem = torch.randn(batch_size, 2, height, width)
     velocities_x_y = torch.randn(batch_size, 1, height, width)
-    print("Inputting in to the model")
     model = InputModule(in_channels_list=[1, 2, 1])
     output = model([bedmachine, arctic_dem, velocities_x_y])
 

@@ -20,7 +20,7 @@ class ArcticDEMDataset(Dataset):
         extracted_path = "data/arcticdem_extracted"
         os.makedirs(extracted_path, exist_ok=True)
         with tarfile.open(arcticdem_path) as tar:
-            tar.extractall(path=extracted_path)
+            tar.extractall(path=extracted_path, filter="fully_trusted")
         
         tif_file = "arcticdem_mosaic_500m_v4.1_dem.tif"
         self.arcticdem_tif_path = os.path.join(extracted_path, tif_file)

@@ -4,11 +4,16 @@ auth = earthaccess.login(persist=True)
 
 data = 'BedMachineGreenland-v5.nc'
 
+"""
+username: karlfindhansen
+password: vyfcaw-Nyrmy2-dyxvid
+"""
+
 url_nc_file = "https://n5eil01u.ecs.nsidc.org/ICEBRIDGE/IDBMG4.005/1993.01.01/BedMachineGreenland-v5.nc"
 url_tif_file = "https://n5eil01u.ecs.nsidc.org/ICEBRIDGE/IDBMG4.005/1993.01.01/BedMachineGreenland-v5_bed.tif"
 
 local_tif_filename = 'BedMachineGreenland-v5_bed.tif'
-local_nc_filename = "BedMachineGreenland-v5.nc"
+local_nc_filename = "data/BedMachineGreenland-v5.nc"
 
 session = earthaccess.get_requests_https_session()
 headers = {"Range": "bytes=0-100"}
