@@ -1,0 +1,4 @@
+*.tar
+*.tif
+*.nc
+__pycache__
