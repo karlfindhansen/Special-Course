@@ -25,7 +25,7 @@ def download_file(url, local_filename):
     print(f"Downloading {local_filename}")
     with fs.open(url, "rb") as remote_file:
         with open(local_filename, "wb") as local_file:
-            local_file.write(remote_file.read())  # Download the full file
+            local_file.write(remote_file.read())  
     print(f"Download complete: {local_filename}")
 
 download_file(url_nc_file, local_nc_filename)
