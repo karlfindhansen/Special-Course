@@ -1,6 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import os
+import sys
+
+sys.path.append('data')
+
+from data_pipeline import cropped_data  
+
+print('os.listdir(..): ', os.listdir('..'))
 
 class DeepbedmapInputBlock(nn.Module):
     """
@@ -57,13 +65,28 @@ class DeepbedmapInputBlock(nn.Module):
         return output
 
 if __name__ == "__main__":
+    #print(cropped_data[3].keys())
+    #print(type(cropped_data[3]['height_icecap']))
+    #print(cropped_data[3]['height_icecap'].size())
+   # exit()
+
     input_block = DeepbedmapInputBlock()
-    batch_size = 1
+    batch_size = 128
+
+    for batch in cropped_data:
+        x = batch['ice_velocity_x'].unsqueeze(0)
+        y = batch['ice_velocity_y'].unsqueeze(0)
+        print(x.size())
+        xy = torch.concat([x,y])
+        print(xy.size())
 
     x = torch.randn(batch_size,1,11,11) 
     w1 = torch.randn(batch_size,1,110,110)
     w2 = torch.randn(batch_size,2,22,22)
     w3 = torch.randn(batch_size,1,11,11)
+
+    #print(x)
+    #exit()
 
     output = input_block(x, w1, w2, w3)
     print("Output shape:", output.shape)
