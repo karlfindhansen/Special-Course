@@ -1,16 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import os
+from torch.utils.data import Dataset, DataLoader, random_split
 import sys
 
 sys.path.append('data')
 
-from data_pipeline import cropped_data  
+from data_preprocessing import ArcticDataloader
 
-print('os.listdir(..): ', os.listdir('..'))
-
-class DeepbedmapInputBlock(nn.Module):
+class InputBlock(nn.Module):
     """
     Custom input block for DeepBedMap.
 
@@ -26,18 +24,18 @@ class DeepbedmapInputBlock(nn.Module):
     """
 
     def __init__(self, out_channels=32):
-        super(DeepbedmapInputBlock, self).__init__()
+        super(InputBlock, self).__init__()
 
         self.conv_on_X = nn.Conv2d(
             in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
         )
         
         self.conv_on_W1 = nn.Conv2d(
-            in_channels=1, out_channels=out_channels, kernel_size=(30, 30), stride=(10, 10), padding=(0, 0)
+            in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
         )
 
         self.conv_on_W2 = nn.Conv2d(
-            in_channels=2, out_channels=out_channels, kernel_size=(6, 6), stride=(2, 2), padding=(0, 0)
+            in_channels=2, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
         )
 
         self.conv_on_W3 = nn.Conv2d(
@@ -70,23 +68,35 @@ if __name__ == "__main__":
     #print(cropped_data[3]['height_icecap'].size())
    # exit()
 
-    input_block = DeepbedmapInputBlock()
+    input_block = InputBlock()
     batch_size = 128
 
-    for batch in cropped_data:
-        x = batch['ice_velocity_x'].unsqueeze(0)
-        y = batch['ice_velocity_y'].unsqueeze(0)
-        print(x.size())
-        xy = torch.concat([x,y])
-        print(xy.size())
+    dataset = ArcticDataloader(
+                                bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
+                                arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+                                ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
+                                snow_accumulation_path="data/Snow_acc/...",
+                                true_crops_folder="data/true_crops"
+    )
 
-    x = torch.randn(batch_size,1,11,11) 
-    w1 = torch.randn(batch_size,1,110,110)
-    w2 = torch.randn(batch_size,2,22,22)
-    w3 = torch.randn(batch_size,1,11,11)
 
-    #print(x)
-    #exit()
+    train_size = int(0.8 * len(dataset))  # 80% for training
+    val_size = len(dataset) - train_size  # 20% for validation
+    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+
+    batch_size = 32
+    dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
+
+    for i, batch in enumerate(dataloader):
+        if batch['bed_elevation'].shape[0] != 32:
+            break
+        x = batch['bed_elevation']
+        #print(x.size())
+        w1 = batch['height_icecap']
+        #print(w1.size())
+        w2 = batch['velocity']
+        #print(w2.size())
+        w3 = torch.randn(batch_size,1,11,11)
 
     output = input_block(x, w1, w2, w3)
-    print("Output shape:", output.shape)
+   # print("Output shape:", output.shape)

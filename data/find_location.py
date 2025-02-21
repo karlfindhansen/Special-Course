@@ -11,7 +11,12 @@ import matplotlib.patches as patches
 class CroppedAreaGenerator:
     def __init__(self, bedmachine_path, crop_size=100, num_crops=None, downscale=False):
         self.bedmachine_path = bedmachine_path
-        self.crop_size = crop_size
+
+        if downscale:
+            self.crop_size = crop_size // 5
+        else:
+            self.crop_size = crop_size
+
         self.num_crops = num_crops
         self.downscale = downscale  
         self.bed_tensor, self.mask_tensor = self._load_and_preprocess_data()
@@ -25,8 +30,8 @@ class CroppedAreaGenerator:
         mask_tensor = (errbed_tensor < 10).float()
         
         if self.downscale:
-            new_height = mask_tensor.shape[0] // 10
-            new_width = mask_tensor.shape[1] // 10
+            new_height = mask_tensor.shape[0] // 5
+            new_width = mask_tensor.shape[1] // 5
 
             mask_tensor = F.interpolate(
                 mask_tensor.unsqueeze(0).unsqueeze(0),  
@@ -91,7 +96,10 @@ class CroppedAreaGenerator:
         if selected_crops:
             print(f"Saving {len(selected_crops)} cropped areas to '{output_dir}'...")
             for i, crop in enumerate(tqdm(selected_crops, desc="Saving crops")):
-                file_path = os.path.join(output_dir, f"{file_prefix}{i+1}.npy")
+                if self.downscale:
+                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}_downscaled.npy")
+                else:
+                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}_downscaled.npy")
                 np.save(file_path, np.array(crop)) 
                 if i == crops_to_generate - 1: 
                     break
@@ -118,7 +126,7 @@ class CroppedAreaGenerator:
 
 if __name__ == '__main__':
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
-    crop_generator = CroppedAreaGenerator(bedmachine_path, num_crops=1000) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, downscale=True) 
     cropped_areas = crop_generator.generate_and_save_crops()
     print(cropped_areas)
 
