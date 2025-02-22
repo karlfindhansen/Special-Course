@@ -29,8 +29,8 @@ class GeneratorModel(nn.Module):
 
     def __init__(
         self,
-        inblock_class,  # Pass the input block class as an argument
-        resblock_class,  # Pass the residual block class as an argument
+        inblock_class=InputBlock,  # Pass the input block class as an argument
+        resblock_class=ResInResDenseBlock,  # Pass the residual block class as an argument
         num_residual_blocks: int = 12,
         residual_scaling: float = 0.1,
         out_channels: int = 1,
@@ -147,8 +147,8 @@ if __name__ == "__main__":
    # exit()
 
     generator_model = GeneratorModel(
-        inblock_class=InputBlock,
-        resblock_class=ResInResDenseBlock,
+        inblock_class=InputBlock(),
+        resblock_class=ResInResDenseBlock(),
         num_residual_blocks=12,
         residual_scaling=0.1,
         out_channels=1,

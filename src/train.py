@@ -4,6 +4,7 @@ import torch.optim as optim
 import numpy as np
 import tqdm
 import sys
+import os
 import optuna
 import comet_ml
 from torch.utils.data import DataLoader, random_split
@@ -15,8 +16,6 @@ from data_preprocessing import ArcticDataloader
 from src.Model.GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
-# Placeholder: Import your SRGAN model
-#from Model.srgan_model import compile_srgan_model, SRGAN_Discriminator
 
 def objective(
     trial: optuna.trial.Trial = optuna.trial.FixedTrial(
@@ -41,22 +40,32 @@ def objective(
     #)
 
     # Load dataset
-    dataset = ArcticDataloader()
+    dataset = ArcticDataloader(bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
+                               arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+                               ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
+                               snow_accumulation_path="data/Snow_acc/...",
+                               true_crops_folder="data/true_crops"
+    )
     train_size = int(0.95 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    batch_size = 2 ** trial.suggest_int("batch_size_exponent", 7, 7)
+    #batch_size = 2 ** trial.suggest_int(32, 7, 7)
+    batch_size = 32
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     # Model parameters
-    learning_rate = trial.suggest_float("learning_rate", 1.0e-4, 2.0e-4, step=0.1e-4)
-    num_residual_blocks = trial.suggest_int("num_residual_blocks", 12, 12)
-    residual_scaling = trial.suggest_float("residual_scaling", 0.1, 0.3, step=0.05)
+    #learning_rate = trial.suggest_float("learning_rate", 1.0e-4, 2.0e-4, step=0.1e-4)
+    #num_residual_blocks = trial.suggest_int("num_residual_blocks", 12, 12)
+    #residual_scaling = trial.suggest_float("residual_scaling", 0.1, 0.3, step=0.05)
+
+    learning_rate = 1.0e-4
+    num_residual_blocks = 12
+    residual_scaling = 0.2
 
     # Initialize models
-    generator = GeneratorModel(num_residual_blocks, residual_scaling).cuda()
+    generator = GeneratorModel(num_residual_blocks=num_residual_blocks, residual_scaling=residual_scaling).cuda()
     discriminator = DiscriminatorModel().cuda()
 
     # Optimizers
@@ -121,5 +130,25 @@ def objective(
     return best_rmse
 
 if __name__ == "__main__":
-    # do something
-    print("hello")
+    n_trials = 1
+    if n_trials == 1:  # Run training once only
+        objective(optuna.trial.FixedTrial({"enable_livelossplot": True, "enable_comet_logging": False}))
+    elif n_trials > 1:  # Perform hyperparameter tuning
+        hostname = os.uname().nodename
+        tpe_seed = len(hostname) + int(os.getenv("CUDA_VISIBLE_DEVICES", "0"))
+        
+        sampler = optuna.samplers.TPESampler(
+            seed=tpe_seed, **optuna.samplers.TPESampler.hyperopt_parameters()
+        )
+        study = optuna.create_study(
+            study_name="DeepBedMap_tuning",
+            storage=f"sqlite:///model/logs/train_on_{hostname}.db",
+            sampler=sampler,
+            pruner=optuna.pruners.HyperbandPruner(
+                min_resource=15,
+                max_resource=150,
+                reduction_factor=3,
+            ),
+            load_if_exists=True,
+        )
+        study.optimize(func=objective, n_trials=n_trials, n_jobs=1)
