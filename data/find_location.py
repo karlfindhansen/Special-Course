@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 class CroppedAreaGenerator:
-    def __init__(self, bedmachine_path, crop_size=100, num_crops=None, downscale=False):
+    def __init__(self, bedmachine_path, crop_size=50, num_crops=None, downscale=False):
         self.bedmachine_path = bedmachine_path
 
         if downscale:
@@ -63,7 +63,7 @@ class CroppedAreaGenerator:
                         occupied[i:end_row, j:end_col] = True
                         crops_counter += 1
                         tqdm_bar.set_postfix(total_crops=crops_counter)
-
+        print(f"Found {len(valid_crops_info)} valid crops!")
         return valid_crops_info
 
     def generate_and_save_crops(self):
@@ -97,9 +97,10 @@ class CroppedAreaGenerator:
             print(f"Saving {len(selected_crops)} cropped areas to '{output_dir}'...")
             for i, crop in enumerate(tqdm(selected_crops, desc="Saving crops")):
                 if self.downscale:
+                    output_dir = "data/downscaled_true_crops"
                     file_path = os.path.join(output_dir, f"{file_prefix}{i+1}_downscaled.npy")
                 else:
-                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}_downscaled.npy")
+                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}.npy")
                 np.save(file_path, np.array(crop)) 
                 if i == crops_to_generate - 1: 
                     break
@@ -126,7 +127,7 @@ class CroppedAreaGenerator:
 
 if __name__ == '__main__':
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
-    crop_generator = CroppedAreaGenerator(bedmachine_path, downscale=True) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, downscale=False) 
     cropped_areas = crop_generator.generate_and_save_crops()
     print(cropped_areas)
 

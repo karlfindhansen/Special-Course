@@ -8,6 +8,7 @@ from PIL import Image
 from torch.utils.data import Dataset, DataLoader, random_split
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import torchvision.transforms as transforms
 import torch.nn.functional as F
 
 Image.MAX_IMAGE_PIXELS = None
@@ -41,7 +42,8 @@ class ArcticDataloader(Dataset):
                  ice_velocity_path,
                  snow_accumulation_path,
                  true_crops_folder,
-                 patch_size=11):
+                 patch_size=11,
+                 scale_factor=4):
         """ Initializes the dataset by loading and aligning data from NetCDF and GeoTIFF files. """
         self.bedmachine_data = xr.open_dataset(bedmachine_path)
         self.bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
@@ -72,7 +74,13 @@ class ArcticDataloader(Dataset):
         # Load true crop coordinates
         self.true_crops = [np.load(os.path.join(true_crops_folder, file)) for file in os.listdir(true_crops_folder)]
         self.patch_size = patch_size
+        self.scale_factor = scale_factor
         self.crop_patches_info = self._generate_crop_patches_info()
+
+        self.downsample_transform = transforms.Compose([
+            transforms.Resize((patch_size // scale_factor, patch_size // scale_factor), interpolation=transforms.InterpolationMode.BICUBIC),
+            transforms.Resize((patch_size, patch_size), interpolation=transforms.InterpolationMode.BICUBIC)  
+        ])
 
     def read_icecap_height_data(self):
         """ Reads ArcticDEM data as a tensor. """
@@ -122,23 +130,12 @@ class ArcticDataloader(Dataset):
     def __getitem__(self, idx):
         """ Returns a fixed-size patch from the crop. """
         crop_idx, patch_x1, patch_y1, patch_x2, patch_y2 = self.crop_patches_info[idx]
-        #crop = self.true_crops[crop_idx]
-        #crop_x, crop_y, crop_x2, crop_y2 = crop
-
-        # crops
-        # height_icecap = self.height_map_icecap_tensor[:, crop_x:crop_x2, crop_y:crop_y2]
-        # bed_elevation = self.bedmachine[:, crop_x:crop_x2, crop_y:crop_y2]
-        # ice_velocity_x = self.ice_velocity_x_tensor[:, crop_x:crop_x2, crop_y:crop_y2]
-        # ice_velocity_y = self.ice_velocity_y_tensor[:, crop_x:crop_x2, crop_y:crop_y2]
 
         # patches
-        #print(patch_x1, patch_y1, patch_x2, patch_y2)
         height_icecap = self.height_map_icecap_tensor[:, patch_x1:patch_x2, patch_y1:patch_y2]
         bed_elevation = self.bedmachine[:, patch_x1:patch_x2, patch_y1:patch_y2]
         ice_velocity_x = self.ice_velocity_x_tensor[:, patch_x1:patch_x2, patch_y1:patch_y2]
         ice_velocity_y = self.ice_velocity_y_tensor[:, patch_x1:patch_x2, patch_y1:patch_y2]
-
-        #print(height_icecap.shape, self.patch_size, self.patch_size)
 
         # Ensure all patches are of the same size
         assert height_icecap.shape == (1, self.patch_size, self.patch_size), f"Patch height icecap shape mismatch: {height_icecap.shape}"
@@ -148,11 +145,23 @@ class ArcticDataloader(Dataset):
 
         velocity = torch.cat((ice_velocity_x, ice_velocity_y), dim=0)
 
+        height_icecap_lr = self.downsample_transform(height_icecap)
+        bed_elevation_lr = self.downsample_transform(bed_elevation)
+        velocity_lr = self.downsample_transform(velocity)
+
+        hr_snow_accumulation = torch.rand((1, self.patch_size, self.patch_size))
+        lr_snow_accumulation = self.downsample_transform(hr_snow_accumulation)
+
+
         return {
-            'height_icecap': height_icecap,
-            'bed_elevation': bed_elevation,
-            'velocity': velocity,
-            #'ice_velocity_y': ice_velocity_y,
+            'lr_height_icecap': height_icecap_lr,
+            'hr_height_icecap': height_icecap,
+            'lr_bed_elevation': bed_elevation_lr,
+            'hr_bed_elevation': bed_elevation,
+            'lr_velocity': velocity_lr,
+            'hr_velocity': velocity,
+            'hr_snow_accumulation': hr_snow_accumulation,
+            'lr_snow_accumulation': lr_snow_accumulation
         }
 
     def plot_crop_overlay(self, idx, x, y, h, w, start_row, start_col):

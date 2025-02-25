@@ -147,8 +147,8 @@ if __name__ == "__main__":
    # exit()
 
     generator_model = GeneratorModel(
-        inblock_class=InputBlock(),
-        resblock_class=ResInResDenseBlock(),
+        inblock_class=InputBlock,
+        resblock_class=ResInResDenseBlock,
         num_residual_blocks=12,
         residual_scaling=0.1,
         out_channels=1,

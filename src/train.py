@@ -6,7 +6,7 @@ import tqdm
 import sys
 import os
 import optuna
-import comet_ml
+#import comet_ml
 from torch.utils.data import DataLoader, random_split
 
 sys.path.append('data')
@@ -14,7 +14,8 @@ sys.path.append('src/Model')
 
 from data_preprocessing import ArcticDataloader
 from src.Model.GeneratorModel import GeneratorModel
-from DiscriminatorModel import DiscriminatorModel
+from src.Model.InputBlock import InputBlock
+from src.Model.DiscriminatorModel import DiscriminatorModel
 
 
 def objective(
@@ -65,6 +66,7 @@ def objective(
     residual_scaling = 0.2
 
     # Initialize models
+    #input_block = InputBlock()
     generator = GeneratorModel(num_residual_blocks=num_residual_blocks, residual_scaling=residual_scaling).cuda()
     discriminator = DiscriminatorModel().cuda()
 
@@ -76,19 +78,38 @@ def objective(
     mse_loss = nn.MSELoss()
     bce_loss = nn.BCEWithLogitsLoss()
 
-    epochs = trial.suggest_int("num_epochs", 15, 150)
+    #epochs = trial.suggest_int("num_epochs", 15, 150)
+    epochs = 30
     best_rmse = float("inf")
 
+    #for batch in train_loader:
+        #print(batch)
+    #    break
+    #exit()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Running on {"cuda" if torch.cuda.is_available() else "cpu"}")
     for epoch in range(epochs):
         generator.train()
         discriminator.train()
 
-        for lr_imgs, hr_imgs in tqdm.tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
-            lr_imgs, hr_imgs = lr_imgs.cuda(), hr_imgs.cuda()
+        for imgs in tqdm.tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
+            lr_imgs = (
+                imgs['lr_bed_elevation'].to(device),
+                imgs['lr_height_icecap'].to(device),
+                imgs['lr_velocity'].to(device),
+                imgs['lr_snow_accumulation'].to(device)
+            )
+            hr_imgs = (
+                imgs['hr_bed_elevation'].to(device),
+                imgs['hr_height_icecap'].to(device),
+                imgs['hr_velocity'].to(device),
+                imgs['hr_snow_accumulation'].to(device)
+            )
 
             # Train Discriminator
-            fake_imgs = generator(lr_imgs).detach()
-            d_real = discriminator(hr_imgs)
+            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3]).detach()
+            print(hr_imgs[0].size())
+            d_real = discriminator(hr_imgs[0])
             d_fake = discriminator(fake_imgs)
 
             d_loss = bce_loss(d_real, torch.ones_like(d_real)) + bce_loss(d_fake, torch.zeros_like(d_fake))
