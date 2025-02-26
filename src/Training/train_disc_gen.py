@@ -1,13 +1,22 @@
 import torch
+import sys
 import torch.nn.functional as F
+from torch.utils.data import Dataset, DataLoader, random_split
 import numpy as np
 import typing
-from src.Model.discriminator_loss import calculate_discriminator_loss
-from src.Model.GeneratorModel import GeneratorModel
-from src.Model.DiscriminatorModel import DiscriminatorModel
-from src.Model.ssim_loss import ssim_loss
-from src.Model.pnsr import psnr
-from src.Model.generator_loss import calculate_generator_loss
+
+sys.path.append('src/Model')
+
+from discriminator_loss import calculate_discriminator_loss
+from GeneratorModel import GeneratorModel
+from DiscriminatorModel import DiscriminatorModel
+from ssim_loss import ssim_loss, ssim_loss_func
+from pnsr import psnr
+from generator_loss import calculate_generator_loss
+
+sys.path.append('data')
+
+from data_preprocessing import ArcticDataloader
 
 # Assuming you have GeneratorModel, DiscriminatorModel, and calculate_discriminator_loss defined elsewhere
 # from your_module import GeneratorModel, DiscriminatorModel, calculate_discriminator_loss
@@ -34,15 +43,15 @@ def train_eval_discriminator(
 
     # Generator produces fake images
     with torch.no_grad():
-        X = torch.from_numpy(input_arrays["X"]).float().to(device)
-        W1 = torch.from_numpy(input_arrays["W1"]).float().to(device)
-        W2 = torch.from_numpy(input_arrays["W2"]).float().to(device)
-        W3 = torch.from_numpy(input_arrays["W3"]).float().to(device)
+        X = input_arrays["X"].float().to(device)
+        W1 = input_arrays["W1"].float().to(device)
+        W2 = input_arrays["W2"].float().to(device)
+        W3 = input_arrays["W3"].float().to(device)
         fake_images = g_model(x=X, w1=W1, w2=W2, w3=W3)
         fake_labels = torch.zeros(fake_images.shape[0], 1).to(device)
 
     # Real groundtruth images
-    real_images = torch.from_numpy(input_arrays["Y"]).float().to(device)
+    real_images = input_arrays["Y"].float().to(device)
     real_labels = torch.ones(real_images.shape[0], 1).to(device)
 
     # Discriminator comparison
@@ -98,10 +107,10 @@ def train_eval_generator(
     device = next(g_model.parameters()).device
 
     # Generator produces fake images
-    X = torch.from_numpy(input_arrays["X"]).float().to(device)
-    W1 = torch.from_numpy(input_arrays["W1"]).float().to(device)
-    W2 = torch.from_numpy(input_arrays["W2"]).float().to(device)
-    W3 = torch.from_numpy(input_arrays["W3"]).float().to(device)
+    X = input_arrays["X"].float().to(device)
+    W1 = input_arrays["W1"].float().to(device)
+    W2 = input_arrays["W2"].float().to(device)
+    W3 = input_arrays["W3"].float().to(device)
     fake_images = g_model(x=X, w1=W1, w2=W2, w3=W3)
 
     # Discriminator believes is real
@@ -109,13 +118,13 @@ def train_eval_generator(
         fake_labels = d_model(x=fake_images).float()
 
     # Real groundtruth images
-    real_images = torch.from_numpy(input_arrays["Y"]).float().to(device)
+    real_images = input_arrays["Y"].float().to(device)
     real_labels = torch.ones(real_images.shape[0], 1).float().to(device)
 
     # Comparison
     fake_minus_real_target = torch.ones(real_images.shape[0], 1).int().to(device)
     real_minus_fake_target = torch.zeros(real_images.shape[0], 1).int().to(device)
-    x_topo = torch.from_numpy(input_arrays["X"][:, :, 1:-1, 1:-1]).float().to(device)
+    x_topo = input_arrays["X"][:, :, 1:-1, 1:-1].float().to(device)
 
     g_loss = calculate_generator_loss(
         y_pred=fake_images,
@@ -127,7 +136,7 @@ def train_eval_generator(
         x_topo=x_topo,
     )
     g_psnr = psnr(y_pred=fake_images, y_true=real_images)
-    g_ssim = ssim_loss(y_pred=fake_images, y_true=real_images)
+    g_ssim = ssim_loss_func(y_pred=fake_images, y_true=real_images)
 
     # Generator learning
     if train is True:
@@ -137,3 +146,70 @@ def train_eval_generator(
 
     return g_loss.item(), g_psnr.item(), g_ssim.item()
 
+if __name__ == '__main__':
+    g_model = GeneratorModel()
+    d_model = DiscriminatorModel()
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    g_model.to(device)
+    d_model.to(device)
+
+    g_optimizer = torch.optim.Adam(g_model.parameters(), lr=1e-4, betas=(0.9, 0.999))
+    d_optimizer = torch.optim.Adam(d_model.parameters(), lr=1e-4, betas=(0.9, 0.999))
+
+
+    batch_size = 32
+
+    dataset = ArcticDataloader(
+                                bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
+                                arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+                                ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
+                                snow_accumulation_path="data/Snow_acc/...",
+                                true_crops_folder="data/downscaled_true_crops"
+    )
+
+
+    train_size = int(0.8 * len(dataset))  # 80% for training
+    val_size = len(dataset) - train_size  # 20% for validation
+    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+
+    dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
+
+    for i, batch in enumerate(dataloader):
+        #if batch['bed_elevation'].shape[0] != 32:
+        #    break
+        x = batch['lr_bed_elevation']
+        #print(x.size())
+        w1 = batch['lr_height_icecap']
+        #print(w1.size())
+        w2 = batch['lr_velocity']
+        #print(w2.size())
+        w3 = torch.randn(batch_size,1,x.size()[-1],x.size()[-1])
+
+        input_arrays = {
+            "X": batch['lr_bed_elevation'],
+            "W1": batch['lr_height_icecap'],
+            "W2": batch['lr_velocity'],
+            "W3": torch.randn(batch_size,1,x.size()[-1],x.size()[-1]),
+            "Y": torch.randn(batch_size,1,36,36),
+        }
+        break
+
+    d_loss, d_accu = train_eval_discriminator(
+        input_arrays=input_arrays,
+        g_model=g_model,
+        d_model=d_model,
+        d_optimizer=d_optimizer,
+        train=True
+    )
+    print(f"Discriminator Loss: {d_loss}, Accuracy: {d_accu}")
+
+    # Train generator
+    g_loss, g_psnr, g_ssim = train_eval_generator(
+        input_arrays=input_arrays,
+        g_model=g_model,
+        d_model=d_model,
+        g_optimizer=g_optimizer,
+        train=True
+    )
+    print(f"Generator Loss: {g_loss}, PSNR: {g_psnr}, SSIM: {g_ssim}")

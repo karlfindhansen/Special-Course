@@ -10,9 +10,6 @@ from src.Model.pnsr import psnr
 from src.Model.generator_loss import calculate_generator_loss
 from src.Training.train_disc_gen import train_eval_discriminator, train_eval_generator
 
-# Assuming you have train_eval_discriminator and train_eval_generator defined elsewhere
-# from your_module import train_eval_discriminator, train_eval_generator
-
 def trainer(
     i: int,  # current epoch
     columns: typing.List[str],  # dataframe column names, i.e. the metric names

@@ -15,12 +15,12 @@ class InputBlock(nn.Module):
     TODO: Update my own data to match the input block
     FIXME: Update the input block to match my own data
 
-    Takes in BedMachine (X) : size 100x100 
-    REMA Ice Surface Elevation (W1) : size 100x100
-    MEaSUREs Ice Surface Velocity x and y components (W2) : size 100x100
-    Snow Accumulation (W3) : size 100x100
+    Takes in BedMachine (X) : size 16x16 
+    REMA Ice Surface Elevation (W1) : size 16x16
+    MEaSUREs Ice Surface Velocity x and y components (W2) : size 16x16
+    Snow Accumulation (W3) : size 16x16
 
-    Each filter kernel is 3km by 3km in size, with a 1km stride and no padding.
+    Each filter kernel is 4x4 in size, with a stride of 2 and padding of 1.
     """
 
     def __init__(self, out_channels=32):
@@ -63,22 +63,14 @@ class InputBlock(nn.Module):
         return output
 
 if __name__ == "__main__":
-    #print(cropped_data[3].keys())
-    #print(type(cropped_data[3]['height_icecap']))
-    #print(cropped_data[3]['height_icecap'].size())
-   # exit()
-
     input_block = InputBlock()
-    batch_size = 128
-
     dataset = ArcticDataloader(
-                                bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
-                                arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
-                                ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-                                snow_accumulation_path="data/Snow_acc/...",
-                                true_crops_folder="data/true_crops"
+        bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
+        arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+        ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
+        snow_accumulation_path="data/Snow_acc/...",
+        true_crops_folder="data/downscaled_true_crops"
     )
-
 
     train_size = int(0.8 * len(dataset))  # 80% for training
     val_size = len(dataset) - train_size  # 20% for validation
@@ -88,15 +80,13 @@ if __name__ == "__main__":
     dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
     for i, batch in enumerate(dataloader):
-        if batch['bed_elevation'].shape[0] != 32:
+        if batch['lr_bed_elevation'].shape[0] != 32:
             break
-        x = batch['bed_elevation']
-        #print(x.size())
-        w1 = batch['height_icecap']
-        #print(w1.size())
-        w2 = batch['velocity']
-        #print(w2.size())
-        w3 = torch.randn(batch_size,1,11,11)
+        x = batch['lr_bed_elevation']
+        w1 = batch['lr_height_icecap']
+        w2 = batch['lr_velocity']
+        w3 = torch.randn(batch_size, 1, w2.size()[-1], w2.size()[-1])
 
     output = input_block(x, w1, w2, w3)
-   # print("Output shape:", output.shape)
+    print("Output size: ", output.size())
+    print("Output shape:", output.shape)

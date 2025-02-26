@@ -3,9 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 import sys
-from src.Model.ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
-from src.Model.InputBlock import InputBlock
-from src.Model.GeneratorModel import GeneratorModel
+
+sys.path.append('src/Model')
+
+from ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
+from InputBlock import InputBlock
+from GeneratorModel import GeneratorModel
 
 sys.path.append('data')
 
@@ -38,11 +41,11 @@ class DiscriminatorModel(nn.Module):
         self.conv_layer2 = nn.Conv2d(64, 128, 3, 1, 1, bias=True)
         self.conv_layer3 = nn.Conv2d(128, 128, 4, 2, 1, bias=True)
         self.conv_layer4 = nn.Conv2d(128, 128, 3, 1, 1, bias=True)
-        self.conv_layer5 = nn.Conv2d(128, 256, 4, 2, 1, bias=True)
+        self.conv_layer5 = nn.Conv2d(128, 256, 3, 1, 1, bias=True)  # No downsampling
         self.conv_layer6 = nn.Conv2d(256, 256, 3, 1, 1, bias=True)
         self.conv_layer7 = nn.Conv2d(256, 512, 4, 2, 1, bias=True)
         self.conv_layer8 = nn.Conv2d(512, 512, 3, 1, 1, bias=True)
-        self.conv_layer9 = nn.Conv2d(512, 512, 4, 2, 1, bias=True)
+        self.conv_layer9 = nn.Conv2d(512, 512, 3, 1, 1, bias=True) # Keep same size
 
         # Define batch normalization layers
         self.batch_norm1 = nn.BatchNorm2d(64)
@@ -56,7 +59,7 @@ class DiscriminatorModel(nn.Module):
         self.batch_norm9 = nn.BatchNorm2d(512)
 
         # Define fully connected layers
-        self.linear_1 = nn.Linear(512, 100)  # Adjust input size based on final conv output
+        self.linear_1 = nn.Linear(512*2*2*2*2, 100)  # Adjust input size based on final conv output
         self.linear_2 = nn.Linear(100, 1)
 
         # Initialize weights
@@ -79,6 +82,7 @@ class DiscriminatorModel(nn.Module):
         Output:
           A PyTorch tensor of shape (batch_size, 1)
         """
+        print('Input of discriminator model has size:', x.size())
         # 1st part: Convolutional Block without Batch Normalization k3n64s1
         a0 = self.conv_layer0(x)
         a0 = F.leaky_relu(a0, negative_slope=0.2)
@@ -114,6 +118,7 @@ class DiscriminatorModel(nn.Module):
 
         # 3rd part: Flatten, Dense (Fully Connected) Layers and Output
         a10 = torch.flatten(a9, start_dim=1)  # Flatten while keeping batch_size
+       # print('Size of a10', a10.size())
         a10 = self.linear_1(a10)
         a10 = F.leaky_relu(a10, negative_slope=0.2)
         a11 = self.linear_2(a10)

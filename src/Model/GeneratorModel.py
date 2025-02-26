@@ -3,8 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 import sys
-from src.Model.ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
-from src.Model.InputBlock import InputBlock
+from ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
+from InputBlock import InputBlock
 
 sys.path.append('data')
 
@@ -111,6 +111,7 @@ class GeneratorModel(nn.Module):
         # 0 part: Resize inputs to the right scale using convolution
         # and concatenate all inputs
         a0 = self.input_block(x=x, w1=w1, w2=w2, w3=w3)
+        #print(a0.size())
 
         # 1st part: Pre-residual convolution k3n64s1
         a1 = self.pre_residual_conv_layer(a0)
@@ -160,7 +161,7 @@ if __name__ == "__main__":
                                 arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
                                 ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
                                 snow_accumulation_path="data/Snow_acc/...",
-                                true_crops_folder="data/true_crops"
+                                true_crops_folder="data/downscaled_true_crops"
     )
 
 
@@ -170,17 +171,27 @@ if __name__ == "__main__":
 
     dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
+    num_batches = len(dataloader)
+    #print(f"Number of batches in dataloader: {num_batches}")
+    
     for i, batch in enumerate(dataloader):
-        if batch['bed_elevation'].shape[0] != 32:
-            break
-        x = batch['bed_elevation']
+        #if batch['bed_elevation'].shape[0] != 32:
+            #break
+        x = batch['lr_bed_elevation']
         #print(x.size())
-        w1 = batch['height_icecap']
+        w1 = batch['lr_height_icecap']
         #print(w1.size())
-        w2 = batch['velocity']
+        w2 = batch['lr_velocity']
         #print(w2.size())
-        w3 = torch.randn(batch_size,1,11,11)
+        w3 = batch['lr_snow_accumulation']
+
+        break
+
+    #print(x.size())
+    #print(w2.size())
 
     output = generator_model(x, w1, w2, w3)
+
+    #print(output.size())
     
     

@@ -2,14 +2,16 @@ import xarray as xr
 import torch
 import os
 import numpy as np
+import rioxarray
 import random
+import shutil
 from tqdm import tqdm
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 class CroppedAreaGenerator:
-    def __init__(self, bedmachine_path, crop_size=50, num_crops=None, downscale=False):
+    def __init__(self, bedmachine_path, crop_size=100, num_crops=None, downscale=False):
         self.bedmachine_path = bedmachine_path
 
         if downscale:
@@ -27,7 +29,10 @@ class CroppedAreaGenerator:
         errbed_tensor = torch.tensor(bedmachine_data['errbed'].values.astype(np.float32))
         bed_tensor = torch.tensor(bedmachine_data['bed'].values.astype(np.float32))
 
-        mask_tensor = (errbed_tensor < 10).float()
+        if self.downscale:
+            mask_tensor = (errbed_tensor < 10).float()
+        else:
+            mask_tensor = (errbed_tensor < 15).float()
         
         if self.downscale:
             new_height = mask_tensor.shape[0] // 5
@@ -90,18 +95,23 @@ class CroppedAreaGenerator:
 
         selected_crops = [self.valid_indices[i] for i in selected_indices]
 
-        output_dir = "data/true_crops"
         file_prefix = "greenland_crop_"
 
         if selected_crops:
-            print(f"Saving {len(selected_crops)} cropped areas to '{output_dir}'...")
+            if self.downscale:
+                output_dir = os.path.join("data", "downscaled_true_crops")
+            else:
+                output_dir = os.path.join("data", "true_crops")
+
+            shutil.rmtree(output_dir, ignore_errors=True)
+            os.makedirs(output_dir, exist_ok=True)
+
             for i, crop in enumerate(tqdm(selected_crops, desc="Saving crops")):
-                if self.downscale:
-                    output_dir = "data/downscaled_true_crops"
-                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}_downscaled.npy")
-                else:
-                    file_path = os.path.join(output_dir, f"{file_prefix}{i+1}.npy")
-                np.save(file_path, np.array(crop)) 
+                #print(f"Saving {len(selected_crops)} cropped areas to '{output_dir}'...")
+                file_suffix = "_downscaled.npy" if self.downscale else ".npy"
+                file_path = os.path.join(output_dir, f"{file_prefix}{i+1}{file_suffix}")
+                np.save(file_path, np.array(crop))
+
                 if i == crops_to_generate - 1: 
                     break
             print("Crops saved successfully!")
@@ -110,7 +120,7 @@ class CroppedAreaGenerator:
 
         return selected_crops
         
-    def overlay_crops_on_mask(self, output_path="figures/crops_overlay.png"):
+    def overlay_crops_on_mask(self, output_path="figures"):
         """Overlays the generated crops on the mask image and saves it."""
         plt.figure(figsize=(10, 8))
         plt.imshow(self.mask_tensor.numpy(), cmap='terrain')
@@ -121,15 +131,49 @@ class CroppedAreaGenerator:
             plt.gca().add_patch(rect)
 
         plt.title("Mask with Cropped Areas")
-        plt.savefig(output_path)
+        if self.downscale:
+            plt.savefig(os.path.join(output_path, "downscaled_crops_overlay.png"), dpi=300)
+        else:
+            plt.savefig(os.path.join(output_path, "true_size_crops_overlay.png"), dpi=300)
         plt.close()
         print(f"Overlay image saved to '{output_path}'")
 
 if __name__ == '__main__':
+
+    def align_to_bedmachine(bedmachine_data, data):
+        """ Reprojects and aligns data to match the BedMachine grid. """
+        aligned = data.rio.reproject_match(bedmachine_data)
+        return aligned
+
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
-    crop_generator = CroppedAreaGenerator(bedmachine_path, downscale=False) 
+    velocity_path = "data/Ice_velocity/Promice_AVG5year.nc"
+
+    bedmachine_data = xr.open_dataset(bedmachine_path)
+    bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
+
+    ice_velocity_data = xr.open_dataset(velocity_path)
+    ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
+
+    ice_velocity_data = align_to_bedmachine(
+            bedmachine_data['bed'],
+            ice_velocity_data['land_ice_surface_easting_velocity']
+        )
+
+    
+    plt.figure(figsize=(10, 8))
+    bedmachine_data['bed'].plot(cmap='terrain', alpha=0.6)
+    ice_velocity_data.plot(cmap='viridis', alpha=0.6)
+    plt.title('Bedmachine Data with Velocity Overlay')
+    plt.xlabel('X Coordinate')
+    plt.ylabel('Y Coordinate')
+    plt.savefig('figures/overlay.png')
+
+    exit()
+
+
+    crop_generator = CroppedAreaGenerator(bedmachine_path, downscale=True) 
     cropped_areas = crop_generator.generate_and_save_crops()
-    print(cropped_areas)
+    #print(cropped_areas)
 
     if cropped_areas:
         print(f"Generated {len(cropped_areas)} cropped areas.")
