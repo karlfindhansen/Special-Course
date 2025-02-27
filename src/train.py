@@ -1,12 +1,16 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
 import tqdm
-import matplotlib.pyplot as plt
 import sys
 import os
 from torch.utils.data import DataLoader, random_split
+
+# For plot
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.interpolate import make_interp_spline
 
 sys.path.append('data')
 sys.path.append('src/Model')
@@ -20,7 +24,7 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=30,
+    epochs=50,
 ):
     # Load dataset
     dataset = ArcticDataloader(
@@ -51,6 +55,8 @@ def train(
     mse_loss = nn.MSELoss()
     bce_loss = nn.BCEWithLogitsLoss()
     best_rmse = float("inf")
+
+    validation_rmse = []
     
     print(f"Running on {device}")
     for epoch in range(epochs):
@@ -99,6 +105,7 @@ def train(
         
         plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
         val_rmse /= len(val_loader)
+        validation_rmse.append(float(val_rmse))
         print(f"Epoch {epoch+1}: Validation RMSE = {val_rmse:.4f}")
 
         if val_rmse < best_rmse:
@@ -106,29 +113,66 @@ def train(
             torch.save(generator.state_dict(), os.path.join("res", "best_generator.pth"))
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
 
+    plot_val_rmse(validation_rmse, epochs)
+
     return best_rmse
 
-def plot_fake_real(fake_imgs, real_imgs, epoch_nr):
-    # Convert tensors to numpy arrays if they are not already
-    fake_imgs = fake_imgs.squeeze(0).squeeze(0).cpu().numpy()
-    real_imgs = real_imgs.squeeze(0).squeeze(0).cpu().numpy()
+def plot_val_rmse(val_rmse_ls, epochs):
+    sns.set_style("darkgrid")  # Modern seaborn style
 
-    # Plot the images
-    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
-    
-    #print(fake_imgs.size())
-    #print(real_imgs.size())
-    axes[0].imshow(fake_imgs, cmap='gray')
-    axes[0].set_title(f'Fake Image - Epoch {epoch_nr}')
-    axes[0].axis('off')
-    
-    axes[1].imshow(real_imgs, cmap='gray')
-    axes[1].set_title(f'Real Image - Epoch {epoch_nr}')
-    axes[1].axis('off')
-    
+    # Ensure we have proper x values (epochs)
+    x = np.arange(1, epochs + 1)
+    y = np.array(val_rmse_ls)
+
+    # Create smooth curve using cubic spline interpolation (only if enough points exist)
+    if epochs > 3:  
+        x_smooth = np.linspace(x.min(), x.max(), 300)
+        y_smooth = make_interp_spline(x, y, k=3)(x_smooth)
+    else:
+        x_smooth, y_smooth = x, y  
+
+    plt.figure(figsize=(8, 5))
+    plt.plot(x_smooth, y_smooth, label="Validation RMSE", color="royalblue", linewidth=2.5)
+
+    plt.scatter(x, y, color="red", label="Epoch Points", zorder=3)
+
+    plt.title("Validation RMSE Over Epochs", fontsize=16, fontweight="bold", pad=15)
+    plt.xlabel("Epoch", fontsize=14, labelpad=10)
+    plt.ylabel("RMSE", fontsize=14, labelpad=10)
+
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.legend(fontsize=12, loc="upper right", frameon=True)
+
     plt.tight_layout()
-    plt.savefig(f"figures/genereated/imgs/fake_real_epoch_{epoch_nr}.png")
+    plt.savefig("figures/validation/validation_rmse.png", dpi=300)
+    plt.close()
+
+def plot_fake_real(fake_imgs, real_imgs, epoch_nr):
+    sns.set_style("darkgrid")  
+    
+    fake_imgs = fake_imgs[0].squeeze(0).cpu().numpy()
+    real_imgs = real_imgs[0].squeeze(0).cpu().numpy()
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+    im1 = axes[0].imshow(fake_imgs, cmap="terrain")
+    axes[0].set_title("Generated (Fake) Image", fontsize=14, fontweight="bold")
+    axes[0].axis("off")
+    
+    im2 = axes[1].imshow(real_imgs, cmap="terrain")
+    axes[1].set_title("Ground Truth (Real) Image", fontsize=14, fontweight="bold")
+    axes[1].axis("off")
+
+    fig.suptitle(f"Comparison of Fake vs. Real Images (Epoch {epoch_nr})", 
+                 fontsize=16, fontweight="bold", y=1.02)
+
+    cbar = fig.colorbar(im2, ax=axes, fraction=0.046, pad=0.04)
+    cbar.ax.tick_params(labelsize=12)
+
+    plt.savefig(f"figures/generated_imgs/fake_real_epoch_{epoch_nr}.png", dpi=300, bbox_inches="tight")
     plt.show()
+    plt.close()
+
 
     
 
