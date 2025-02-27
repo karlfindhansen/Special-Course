@@ -39,7 +39,7 @@ def train(
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
     # Initialize models
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
     generator = GeneratorModel(num_residual_blocks=num_residual_blocks, residual_scaling=residual_scaling).to(device)
     discriminator = DiscriminatorModel().to(device)
 
@@ -83,7 +83,6 @@ def train(
             g_loss.backward()
             g_optimizer.step()
 
-        # Validate model
         generator.eval()
         with torch.no_grad():
             val_rmse = 0
@@ -95,7 +94,7 @@ def train(
                     imgs['snow_accumulation'].to(device),
                 )
                 hr_imgs = imgs['hr_bed_elevation'].to(device)
-                preds = generator(lr_imgs)
+                preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3])
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
         
         plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
@@ -111,19 +110,19 @@ def train(
 
 def plot_fake_real(fake_imgs, real_imgs, epoch_nr):
     # Convert tensors to numpy arrays if they are not already
-    if isinstance(fake_imgs, torch.Tensor):
-        fake_imgs = fake_imgs.cpu().numpy()
-    if isinstance(real_imgs, torch.Tensor):
-        real_imgs = real_imgs.cpu().numpy()
+    fake_imgs = fake_imgs.squeeze(0).squeeze(0).cpu().numpy()
+    real_imgs = real_imgs.squeeze(0).squeeze(0).cpu().numpy()
 
     # Plot the images
     fig, axes = plt.subplots(1, 2, figsize=(10, 5))
     
-    axes[0].imshow(fake_imgs.squeeze(), cmap='gray')
+    #print(fake_imgs.size())
+    #print(real_imgs.size())
+    axes[0].imshow(fake_imgs, cmap='gray')
     axes[0].set_title(f'Fake Image - Epoch {epoch_nr}')
     axes[0].axis('off')
     
-    axes[1].imshow(real_imgs.squeeze(), cmap='gray')
+    axes[1].imshow(real_imgs, cmap='gray')
     axes[1].set_title(f'Real Image - Epoch {epoch_nr}')
     axes[1].axis('off')
     
