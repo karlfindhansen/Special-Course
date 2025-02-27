@@ -10,16 +10,14 @@ sys.path.append('src/Model')
 from discriminator_loss import calculate_discriminator_loss
 from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
-from ssim_loss import ssim_loss, ssim_loss_func
+from InputBlock import InputBlock
+from ssim_loss import ssim_loss_func
 from pnsr import psnr
 from generator_loss import calculate_generator_loss
 
 sys.path.append('data')
 
 from data_preprocessing import ArcticDataloader
-
-# Assuming you have GeneratorModel, DiscriminatorModel, and calculate_discriminator_loss defined elsewhere
-# from your_module import GeneratorModel, DiscriminatorModel, calculate_discriminator_loss
 
 def train_eval_discriminator(
     input_arrays: typing.Dict[str, np.ndarray],
@@ -165,7 +163,7 @@ if __name__ == '__main__':
                                 arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
                                 ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
                                 snow_accumulation_path="data/Snow_acc/...",
-                                true_crops_folder="data/downscaled_true_crops"
+                                true_crops_folder="data/true_crops/selected_crops.csv"
     )
 
 
@@ -175,26 +173,15 @@ if __name__ == '__main__':
 
     dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
-    for i, batch in enumerate(dataloader):
-        #if batch['bed_elevation'].shape[0] != 32:
-        #    break
-        x = batch['lr_bed_elevation']
-        #print(x.size())
-        w1 = batch['lr_height_icecap']
-        #print(w1.size())
-        w2 = batch['lr_velocity']
-        #print(w2.size())
-        w3 = torch.randn(batch_size,1,x.size()[-1],x.size()[-1])
-
-        input_arrays = {
-            "X": batch['lr_bed_elevation'],
-            "W1": batch['lr_height_icecap'],
-            "W2": batch['lr_velocity'],
-            "W3": torch.randn(batch_size,1,x.size()[-1],x.size()[-1]),
-            "Y": torch.randn(batch_size,1,36,36),
-        }
-        break
-
+    batch = next(iter(dataloader))
+    input_arrays = {
+        "X": batch['lr_bed_elevation'], # low resolution real images
+        "W1": batch['height_icecap'],
+        "W2": batch['velocity'],
+        "W3": batch['snow_accumulation'],
+        "Y":  batch['hr_bed_elevation'], #real images
+    }
+        
     d_loss, d_accu = train_eval_discriminator(
         input_arrays=input_arrays,
         g_model=g_model,

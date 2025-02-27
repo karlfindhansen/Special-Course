@@ -12,9 +12,6 @@ class InputBlock(nn.Module):
     """
     Custom input block for DeepBedMap.
 
-    TODO: Update my own data to match the input block
-    FIXME: Update the input block to match my own data
-
     Takes in BedMachine (X) : size 16x16 
     REMA Ice Surface Elevation (W1) : size 16x16
     MEaSUREs Ice Surface Velocity x and y components (W2) : size 16x16
@@ -60,6 +57,7 @@ class InputBlock(nn.Module):
 
         # Concatenate along the channel dimension (dim=1 for NCHW format)
         output = torch.cat((x_, w1_, w2_, w3_), dim=1)
+        print(f"Size of output of input block is {output.size()}")
         return output
 
 if __name__ == "__main__":
@@ -69,7 +67,7 @@ if __name__ == "__main__":
         arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
         snow_accumulation_path="data/Snow_acc/...",
-        true_crops_folder="data/downscaled_true_crops"
+        true_crops_folder="data/true_crops/selected_crops.csv"
     )
 
     train_size = int(0.8 * len(dataset))  # 80% for training

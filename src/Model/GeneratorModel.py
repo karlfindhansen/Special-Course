@@ -139,6 +139,7 @@ class GeneratorModel(nn.Module):
         a5_1 = F.leaky_relu(a5_1, negative_slope=0.2)
         a5_2 = self.final_conv_layer2(a5_1)
 
+        print(f"Size of output of generator model is {a5_2.size()}")
         return a5_2
     
 if __name__ == "__main__":
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     )
 
 
-    train_size = int(0.8 * len(dataset))  # 80% for training
+    train_size = int(0.9 * len(dataset))  # 80% for training
     val_size = len(dataset) - train_size  # 20% for validation
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
@@ -174,18 +175,14 @@ if __name__ == "__main__":
     num_batches = len(dataloader)
     #print(f"Number of batches in dataloader: {num_batches}")
     
-    for i, batch in enumerate(dataloader):
-        #if batch['bed_elevation'].shape[0] != 32:
-            #break
-        x = batch['lr_bed_elevation']
-        #print(x.size())
-        w1 = batch['lr_height_icecap']
-        #print(w1.size())
-        w2 = batch['lr_velocity']
-        #print(w2.size())
-        w3 = batch['lr_snow_accumulation']
-
-        break
+    batch = next(iter(dataloader))
+    x = batch['lr_bed_elevation']
+    #print(x.size())
+    w1 = batch['lr_height_icecap']
+    #print(w1.size())
+    w2 = batch['lr_velocity']
+    #print(w2.size())
+    w3 = batch['lr_snow_accumulation']
 
     #print(x.size())
     #print(w2.size())
