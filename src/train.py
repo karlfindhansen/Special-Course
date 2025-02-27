@@ -1,7 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import numpy as np
 import tqdm
+import matplotlib.pyplot as plt
 import sys
 import os
 from torch.utils.data import DataLoader, random_split
@@ -95,7 +97,8 @@ def train(
                 hr_imgs = imgs['hr_bed_elevation'].to(device)
                 preds = generator(lr_imgs)
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
-
+        
+        plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
         val_rmse /= len(val_loader)
         print(f"Epoch {epoch+1}: Validation RMSE = {val_rmse:.4f}")
 
@@ -105,6 +108,30 @@ def train(
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
 
     return best_rmse
+
+def plot_fake_real(fake_imgs, real_imgs, epoch_nr):
+    # Convert tensors to numpy arrays if they are not already
+    if isinstance(fake_imgs, torch.Tensor):
+        fake_imgs = fake_imgs.cpu().numpy()
+    if isinstance(real_imgs, torch.Tensor):
+        real_imgs = real_imgs.cpu().numpy()
+
+    # Plot the images
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+    
+    axes[0].imshow(fake_imgs.squeeze(), cmap='gray')
+    axes[0].set_title(f'Fake Image - Epoch {epoch_nr}')
+    axes[0].axis('off')
+    
+    axes[1].imshow(real_imgs.squeeze(), cmap='gray')
+    axes[1].set_title(f'Real Image - Epoch {epoch_nr}')
+    axes[1].axis('off')
+    
+    plt.tight_layout()
+    plt.savefig(f"figures/genereated/imgs/fake_real_epoch_{epoch_nr}.png")
+    plt.show()
+
+    
 
 if __name__ == "__main__":
     train()
