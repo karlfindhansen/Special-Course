@@ -45,7 +45,7 @@ def objective(
                                arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
                                ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
                                snow_accumulation_path="data/Snow_acc/...",
-                               true_crops_folder="data/downscaled_true_crops"
+                               true_crops="data/downscaled_true_crops"
     )
     train_size = int(0.95 * len(dataset))
     val_size = len(dataset) - train_size

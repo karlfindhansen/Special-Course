@@ -82,7 +82,6 @@ class DiscriminatorModel(nn.Module):
         Output:
           A PyTorch tensor of shape (batch_size, 1)
         """
-        print('Input of discriminator model has size:', x.size())
         # 1st part: Convolutional Block without Batch Normalization k3n64s1
         a0 = self.conv_layer0(x)
         a0 = F.leaky_relu(a0, negative_slope=0.2)
@@ -118,7 +117,6 @@ class DiscriminatorModel(nn.Module):
 
         # 3rd part: Flatten, Dense (Fully Connected) Layers and Output
         a10 = torch.flatten(a9, start_dim=1)  # Flatten while keeping batch_size
-       # print('Size of a10', a10.size())
         a10 = self.linear_1(a10)
         a10 = F.leaky_relu(a10, negative_slope=0.2)
         a11 = self.linear_2(a10)
@@ -141,7 +139,7 @@ if __name__ == '__main__':
                                 arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
                                 ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
                                 snow_accumulation_path="data/Snow_acc/...",
-                                true_crops_folder="data/true_crops"
+                                true_crops="data/true_crops"
     )
 
 
@@ -155,15 +153,11 @@ if __name__ == '__main__':
         if batch['bed_elevation'].shape[0] != 32:
             break
         x = batch['bed_elevation']
-        #print(x.size())
         w1 = batch['height_icecap']
-        #print(w1.size())
         w2 = batch['velocity']
-        #print(w2.size())
         w3 = torch.randn(batch_size,1,11,11)
 
     output = generator_model(x, w1, w2, w3)
     disc_model = DiscriminatorModel()
 
     output = disc_model(output)
-    print(output.size())

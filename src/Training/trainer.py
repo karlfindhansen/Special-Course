@@ -2,22 +2,22 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import typing
-from src.Model.discriminator_loss import calculate_discriminator_loss
-from src.Model.GeneratorModel import GeneratorModel
-from src.Model.DiscriminatorModel import DiscriminatorModel
-from src.Model.ssim_loss import ssim_loss
-from src.Model.pnsr import psnr
-from src.Model.generator_loss import calculate_generator_loss
-from src.Training.train_disc_gen import train_eval_discriminator, train_eval_generator
+from discriminator_loss import calculate_discriminator_loss
+from GeneratorModel import GeneratorModel
+from DiscriminatorModel import DiscriminatorModel
+from ssim_loss import ssim_loss
+from pnsr import psnr
+from generator_loss import calculate_generator_loss
+from train_disc_gen import train_eval_discriminator, train_eval_generator
 
 def trainer(
     i: int,  # current epoch
     columns: typing.List[str],  # dataframe column names, i.e. the metric names
     train_loader: torch.utils.data.DataLoader,
     dev_loader: torch.utils.data.DataLoader,
-    g_model: torch.nn.Module,  # generator_model
+    g_model: GeneratorModel,  # generator_model
     g_optimizer: torch.optim.Optimizer,  # generator_optimizer
-    d_model: torch.nn.Module,  # discriminator_model
+    d_model: DiscriminatorModel,  # discriminator_model
     d_optimizer: torch.optim.Optimizer,  # discriminator_optimizer
 ) -> typing.Dict[str, typing.List[float]]:
     """

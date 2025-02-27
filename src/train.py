@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
 import tqdm
 import sys
 import os
@@ -11,8 +10,8 @@ sys.path.append('data')
 sys.path.append('src/Model')
 
 from data_preprocessing import ArcticDataloader
-from src.Model.GeneratorModel import GeneratorModel
-from src.Model.DiscriminatorModel import DiscriminatorModel
+from GeneratorModel import GeneratorModel
+from DiscriminatorModel import DiscriminatorModel
 
 def train(
     batch_size=32,
@@ -27,7 +26,6 @@ def train(
         arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
         snow_accumulation_path="data/Snow_acc/...",
-        true_crops_folder=os.path.join("data", "downscaled_true_crops"),
     )
     train_size = int(0.95 * len(dataset))
     val_size = len(dataset) - train_size
@@ -60,21 +58,14 @@ def train(
         for imgs in tqdm.tqdm(train_loader, desc=f"Epoch {epoch+1}/{epochs}"):
             lr_imgs = (
                 imgs['lr_bed_elevation'].to(device),
-                imgs['lr_height_icecap'].to(device),
-                imgs['lr_velocity'].to(device),
-                imgs['lr_snow_accumulation'].to(device),
+                imgs['height_icecap'].to(device),
+                imgs['velocity'].to(device),
+                imgs['snow_accumulation'].to(device),
             )
-            hr_imgs = (
-                imgs['hr_bed_elevation'].to(device),
-                imgs['hr_height_icecap'].to(device),
-                imgs['hr_velocity'].to(device),
-                imgs['hr_snow_accumulation'].to(device),
-            )
+            hr_imgs = imgs['hr_bed_elevation'].to(device)
 
-            # Train Discriminator
             fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3]).detach()
-            d_real = discriminator(hr_imgs[0])
-            #print('Size of fake images', fake_imgs.size())
+            d_real = discriminator(hr_imgs)
             d_fake = discriminator(fake_imgs)
             d_loss = bce_loss(d_real, torch.ones_like(d_real)) + bce_loss(d_fake, torch.zeros_like(d_fake))
             d_optimizer.zero_grad()
@@ -82,7 +73,7 @@ def train(
             d_optimizer.step()
 
             # Train Generator
-            fake_imgs = generator(lr_imgs)
+            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
             g_adv_loss = bce_loss(discriminator(fake_imgs), torch.ones_like(d_real))
             g_pixel_loss = mse_loss(fake_imgs, hr_imgs)
             g_loss = g_adv_loss + g_pixel_loss
@@ -97,16 +88,11 @@ def train(
             for imgs in val_loader:
                 lr_imgs = (
                     imgs['lr_bed_elevation'].to(device),
-                    imgs['lr_height_icecap'].to(device),
-                    imgs['lr_velocity'].to(device),
-                    imgs['lr_snow_accumulation'].to(device),
+                    imgs['height_icecap'].to(device),
+                    imgs['velocity'].to(device),
+                    imgs['snow_accumulation'].to(device),
                 )
-                hr_imgs = (
-                    imgs['hr_bed_elevation'].to(device),
-                    imgs['hr_height_icecap'].to(device),
-                    imgs['hr_velocity'].to(device),
-                    imgs['hr_snow_accumulation'].to(device),
-                )
+                hr_imgs = imgs['hr_bed_elevation'].to(device)
                 preds = generator(lr_imgs)
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
 
@@ -115,8 +101,8 @@ def train(
 
         if val_rmse < best_rmse:
             best_rmse = val_rmse
-            torch.save(generator.state_dict(), "best_generator.pth")
-            torch.save(discriminator.state_dict(), "best_discriminator.pth")
+            torch.save(generator.state_dict(), os.path.join("res", "best_generator.pth"))
+            torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
 
     return best_rmse
 
