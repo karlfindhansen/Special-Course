@@ -92,10 +92,8 @@ class ArcticDataloader(Dataset):
         y_1, x_1, y_2, x_2 = self.true_crops[idx]
         y_1_b, x_1_b, y_2_b, x_2_b = self.bedmachine_crops[idx]
 
-        if y_2_b - y_1_b == 37: 
-            y_2_b -= 1
-        if x_2_b - x_1_b == 37: 
-            x_2_b -= 1
+        y_2_b -= 1 if (y_2_b - y_1_b) == 37 else y_2_b
+        x_2_b -= 1 if (x_2_b - x_1_b) == 37 else x_2_b
         
         height_icecap = self.height_map_icecap_tensor[:, y_1:y_2, x_1:x_2]
         bed_elevation_lr = self.bedmachine_projected[:, y_1:y_2, x_1:x_2]
