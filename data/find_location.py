@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 
 class CroppedAreaGenerator:
-    def __init__(self, bedmachine_path, ice_velocity_path, precise, crop_size=11, num_crops=None, downscale=False):
+    def __init__(self, bedmachine_path, ice_velocity_path, precise=True, crop_size=11, num_crops=None, downscale=False):
         """Initializes the CroppedAreaGenerator with paths, processing settings, and data loading."""
         self.bedmachine_path = bedmachine_path
         self.ice_velocity_path = ice_velocity_path
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
     velocity_path = "data/Ice_velocity/Promice_AVG5year.nc"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, precise=False, downscale=False) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:

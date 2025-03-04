@@ -92,8 +92,10 @@ class ArcticDataloader(Dataset):
         y_1, x_1, y_2, x_2 = self.true_crops[idx]
         y_1_b, x_1_b, y_2_b, x_2_b = self.bedmachine_crops[idx]
 
-        y_2_b -= 1 if (y_2_b - y_1_b) == 37 else y_2_b
-        x_2_b -= 1 if (x_2_b - x_1_b) == 37 else x_2_b
+        if (y_2_b - y_1_b) == 37:
+                y_2_b = y_2_b-1
+        if (x_2_b - x_1_b) == 37:
+            x_2_b = x_2_b-1
         
         height_icecap = self.height_map_icecap_tensor[:, y_1:y_2, x_1:x_2]
         bed_elevation_lr = self.bedmachine_projected[:, y_1:y_2, x_1:x_2]
@@ -109,6 +111,7 @@ class ArcticDataloader(Dataset):
         assert snow_accumulation.shape == (1, self.crop_size, self.crop_size), f"Patch snow accumulations shape mismatch: {height_icecap.shape}"
         assert bed_elevation_lr.shape == (1, self.crop_size, self.crop_size), f"Patch bed elevation shape mismatch: {bed_elevation_lr.shape}"
         assert velocity.shape == (2, self.crop_size, self.crop_size), f"Patch ice velocity x shape mismatch: {ice_velocity_x.shape}"
+        assert bed_elevation_hr.shape == (1, 36, 36), f"Patch bed elevation shape mismatch: {bed_elevation_hr.shape}"
 
         snow_accumulation = torch.rand((1, self.crop_size, self.crop_size))
 
@@ -129,7 +132,6 @@ if __name__ == "__main__":
         arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
         snow_accumulation_path="data/Snow_acc/...",
-        true_crops="data/true_crops/selected_crops.csv"
     )
 
     # Split dataset into training and validation sets
@@ -137,7 +139,7 @@ if __name__ == "__main__":
     val_size = len(dataset) - train_size  # 20% for validation
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    dataloader = DataLoader(dataset=train_dataset, batch_size=128, shuffle=False)
+    dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
     print(f"DataLoader created with {len(dataloader)} batches")
 
