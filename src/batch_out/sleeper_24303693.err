@@ -1,0 +1,33 @@
+Epoch 1/100:   0%|          | 0/77 [00:00<?, ?it/s]Epoch 1/100:   1%|▏         | 1/77 [00:14<17:59, 14.20s/it]Epoch 1/100:   3%|▎         | 2/77 [00:27<16:48, 13.44s/it]Epoch 1/100:   4%|▍         | 3/77 [00:39<16:09, 13.10s/it]Epoch 1/100:   5%|▌         | 4/77 [00:52<15:51, 13.04s/it]Epoch 1/100:   6%|▋         | 5/77 [01:05<15:30, 12.93s/it]Epoch 1/100:   8%|▊         | 6/77 [01:18<15:13, 12.87s/it]Epoch 1/100:   9%|▉         | 7/77 [01:31<15:02, 12.89s/it]Epoch 1/100:  10%|█         | 8/77 [01:44<14:49, 12.89s/it]Epoch 1/100:  12%|█▏        | 9/77 [01:56<14:35, 12.87s/it]Epoch 1/100:  12%|█▏        | 9/77 [02:09<16:20, 14.43s/it]
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/train.py", line 189, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/train.py", line 91, in train
+    g_loss.backward()
+    ~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/_tensor.py", line 626, in backward
+    torch.autograd.backward(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self, gradient, retain_graph, create_graph, inputs=inputs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/__init__.py", line 347, in backward
+    _engine_run_backward(
+    ~~~~~~~~~~~~~~~~~~~~^
+        tensors,
+        ^^^^^^^^
+    ...<5 lines>...
+        accumulate_grad=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/graph.py", line 823, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        t_outputs, *args, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )  # Calls into the C++ engine to run the backward pass
+    ^
+KeyboardInterrupt

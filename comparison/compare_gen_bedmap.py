@@ -31,12 +31,12 @@ def create_nxn_crops(x1, y1, x2, y2, crop_size=11):
                 crops.append((i, j, i + crop_size, j + crop_size))
     return crops
 
-model = os.path.join("res", "best_generator.pth")
+model = os.path.join("res", "long_train", "best_generator.pth")
 crop_size = 11
 crop_path_org = os.path.join("data", "true_crops", "large_crops", "original_crops.csv")
 crop_path_proj = os.path.join("data", "true_crops", "large_crops", "projected_crops.csv")
 
-bedmachine_path = os.path.join("data", "bedmachine", "BedMachineGreenland-v5.nc")
+bedmachine_path = os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc")
 arcticdem_path= os.path.join("data", "arcticdem_extracted", "arcticdem_mosaic_500m_v4.1_dem.tif")
 ice_velocity_path = os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc")
 
@@ -78,20 +78,23 @@ for i, ((y1, x1, y2, x2),(y1_org, x1_org, y2_org, x2_org)) in enumerate(zip(crop
     velocity = torch.cat((ice_velocity_x, ice_velocity_y), dim=0).unsqueeze(0)
     snow_accumulation = torch.rand((1, crop_size, crop_size)).unsqueeze(0)
 
-    print(f"Bed machine lr shape: {bed_machine_lr.shape}")
-    print(f"Height map icecap shape: {height_map_icecap.shape}")
-    print(f"Ice velocity shape: {velocity.shape}")
-    print(f"Snow accumulation shape: {snow_accumulation.shape}")
+    # print(f"Bed machine lr shape: {bed_machine_lr.shape}")
+    # print(f"Height map icecap shape: {height_map_icecap.shape}")
+    # print(f"Ice velocity shape: {velocity.shape}")
+    # print(f"Snow accumulation shape: {snow_accumulation.shape}")
     
-    print(f"Bed elevation hr shape: {bed_elevation_hr_1.shape}")
+    # print(f"Bed elevation hr shape: {bed_elevation_hr_1.shape}")
 
     generator_model.eval()
     with torch.no_grad():
-        print(f"Input shapes: {bed_machine_lr.shape}, {height_map_icecap.shape}, {velocity.shape}, {snow_accumulation.shape}")
+        #print(f"Input shapes: {bed_machine_lr.shape}, {height_map_icecap.shape}, {velocity.shape}, {snow_accumulation.shape}")
         output = generator_model(bed_machine_lr, height_map_icecap, velocity, snow_accumulation)
-        print(f"Output shape: {output.shape}")
+        #print(f"Output shape: {output.shape}")
         # plot the output
-        plt.imshow(output.squeeze(0).squeeze(0).cpu().numpy())
-        plt.show()
-        break
+        plt.imshow(output.squeeze(0).squeeze(0).cpu().numpy(), cmap='terrain')
+        save_dir = os.path.join("comparison", "figures")
+        if not os.path.exists(save_dir):
+            os.mkdir(os.path.join("comparison", "figures"))
+
+        plt.savefig(os.path.join(save_dir, f"output_{i}.png"))
 

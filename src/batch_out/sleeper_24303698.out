@@ -1,0 +1,4 @@
+Number of items in train_dataset: 4902
+Running on cpu
+Epoch 1: Validation RMSE = 404.0838
+Epoch 2: Validation RMSE = 317.2772

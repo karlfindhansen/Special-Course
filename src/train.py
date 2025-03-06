@@ -25,7 +25,7 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=100,
+    epochs=250,
 ):
     # Load dataset
     dataset = ArcticDataloader(
@@ -34,14 +34,14 @@ def train(
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
         snow_accumulation_path="data/Snow_acc/...",
     )
-    train_size = int(0.95 * len(dataset))
+    train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     print(f"Number of items in train_dataset: {len(train_dataset)}")
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=3)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=3)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
 
     # Initialize models
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -117,8 +117,9 @@ def train(
             epochs_no_improve = 0
         else:
             epochs_no_improve += 1
+            print(f"Validation RMSE did not improve from {best_rmse:.4f}, early stopping counter: {epochs_no_improve}")
 
-        if epochs_no_improve >= 5:
+        if epochs_no_improve >= 10:
             print("Early stopping!")
             break
 
