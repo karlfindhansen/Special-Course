@@ -10,13 +10,12 @@ from tqdm import tqdm
 
 
 class CroppedAreaGenerator:
-    def __init__(self, bedmachine_path, ice_velocity_path, precise=True, crop_size=11, num_crops=None, downscale=False):
+    def __init__(self, bedmachine_path, ice_velocity_path, precise=True, crop_size=11, downscale=False):
         """Initializes the CroppedAreaGenerator with paths, processing settings, and data loading."""
         self.bedmachine_path = bedmachine_path
         self.ice_velocity_path = ice_velocity_path
         self.precise = precise
         self.crop_size = crop_size
-        self.num_crops = num_crops
         self.downscale = downscale
 
         # Load datasets
@@ -133,7 +132,11 @@ class CroppedAreaGenerator:
         if not self.valid_indices:
             return []
 
-        output_dir = os.path.join("data", "true_crops" if self.precise else "unprecise_crops")
+        output_dir = os.path.join(
+            "data",
+            "true_crops" if self.precise else "unprecise_crops",
+            "large_crops" if self.crop_size == 121 else ""
+        ).rstrip(os.sep)
         if self.downscale:
             output_dir = os.path.join(output_dir, "downscaled")
 
@@ -171,7 +174,7 @@ if __name__ == '__main__':
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
     velocity_path = "data/Ice_velocity/Promice_AVG5year.nc"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, crop_size=121) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:

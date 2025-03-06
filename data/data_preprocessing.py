@@ -113,8 +113,6 @@ class ArcticDataloader(Dataset):
         assert velocity.shape == (2, self.crop_size, self.crop_size), f"Patch ice velocity x shape mismatch: {ice_velocity_x.shape}"
         assert bed_elevation_hr.shape == (1, 36, 36), f"Patch bed elevation shape mismatch: {bed_elevation_hr.shape}"
 
-        snow_accumulation = torch.rand((1, self.crop_size, self.crop_size))
-
         return {
             'height_icecap': height_icecap,
             'lr_bed_elevation': bed_elevation_lr,

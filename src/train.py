@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader, random_split
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import pandas as pd
 from scipy.interpolate import make_interp_spline
 
 sys.path.append('data')
@@ -20,7 +21,7 @@ from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
 def train(
-    batch_size=32,
+    batch_size=64,
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
