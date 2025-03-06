@@ -25,7 +25,7 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=50,
+    epochs=100,
 ):
     # Load dataset
     dataset = ArcticDataloader(
@@ -40,8 +40,8 @@ def train(
 
     print(f"Number of items in train_dataset: {len(train_dataset)}")
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=3)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=3)
 
     # Initialize models
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -56,6 +56,7 @@ def train(
     mse_loss = nn.MSELoss()
     bce_loss = nn.BCEWithLogitsLoss()
     best_rmse = float("inf")
+    epochs_no_improve = 0
 
     validation_rmse = []
     
@@ -113,6 +114,13 @@ def train(
             best_rmse = val_rmse
             torch.save(generator.state_dict(), os.path.join("res", "best_generator.pth"))
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
+            epochs_no_improve = 0
+        else:
+            epochs_no_improve += 1
+
+        if epochs_no_improve >= 5:
+            print("Early stopping!")
+            break
 
     plot_val_rmse(validation_rmse, epochs)
 

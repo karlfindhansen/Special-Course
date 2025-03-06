@@ -174,7 +174,7 @@ if __name__ == '__main__':
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
     velocity_path = "data/Ice_velocity/Promice_AVG5year.nc"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, crop_size=121) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, crop_size=11) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:
