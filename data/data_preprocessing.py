@@ -18,7 +18,8 @@ class ArcticDataloader(Dataset):
                  ice_velocity_path,
                  snow_accumulation_path,
                  true_crops = os.path.join("data", "true_crops", "projected_crops.csv"),
-                 bedmachine_crops = os.path.join("data", "true_crops", "original_crops.csv")
+                 bedmachine_crops = os.path.join("data", "true_crops", "original_crops.csv"),
+                 region = None
                  ):
         
         """ Initializes the dataset by loading and aligning data from NetCDF and GeoTIFF files. """
@@ -54,17 +55,26 @@ class ArcticDataloader(Dataset):
         with open(true_crops, newline='') as f:
             reader = csv.reader(f)
             next(reader)
-            self.true_crops = [list(map(int, row)) for row in reader]
+            all_true_crops = [list(map(int, row)) for row in reader]
 
         with open(bedmachine_crops, newline='') as f:
             reader = csv.reader(f)
             next(reader)
-            self.bedmachine_crops = [list(map(int, row)) for row in reader]
+            all_bedmachine_crops = [list(map(int, row)) for row in reader]
         
-        self.crop_size = self.true_crops[0][2] - self.true_crops[0][0]
-        self.bedmachine_crops_size = self.bedmachine_crops[0][2] - self.bedmachine_crops[0][0]
+        self.crop_size = all_true_crops[0][2] - all_true_crops[0][0]
+        self.bedmachine_crops_size = all_bedmachine_crops[0][2] - all_bedmachine_crops[0][0]
 
         self.bed_elevation_hr = torch.tensor(self.bedmachine_data['bed'].values.astype(np.float32)).unsqueeze(0)
+
+        if region is not None:
+            self.true_crops = [crop for crop in all_true_crops if region['Projected']['x_1'] <= crop[1] <= region['Projected']['x_2'] and region['Projected']['y_1'] <= crop[0] <= region['Projected']['y_2']]
+            self.bedmachine_crops = [crop for crop in all_bedmachine_crops if region['Original']['x_1'] <= crop[1] <= region['Original']['x_2'] and region['Original']['y_1'] <= crop[0] <= region['Original']['y_2']]
+        else:
+            self.true_crops = all_true_crops
+            self.bedmachine_crops = all_bedmachine_crops
+
+        print(f"Loaded {len(self.true_crops)} crops in the selected region.")
 
         
     def read_icecap_height_data(self):

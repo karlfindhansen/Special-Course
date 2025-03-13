@@ -1,4 +1,5 @@
 import earthaccess
+import matplotlib.pyplot as plt
 
 auth = earthaccess.login(persist=True)
 
@@ -13,7 +14,7 @@ url_nc_file = "https://n5eil01u.ecs.nsidc.org/ICEBRIDGE/IDBMG4.005/1993.01.01/Be
 url_tif_file = "https://n5eil01u.ecs.nsidc.org/ICEBRIDGE/IDBMG4.005/1993.01.01/BedMachineGreenland-v5_bed.tif"
 
 local_tif_filename = 'BedMachineGreenland-v5_bed.tif'
-local_nc_filename = "data/BedMachineGreenland-v5.nc"
+local_nc_filename = "data/Bedmachine/BedMachineGreenland-v5.nc"
 
 session = earthaccess.get_requests_https_session()
 headers = {"Range": "bytes=0-100"}
@@ -28,5 +29,17 @@ def download_file(url, local_filename):
             local_file.write(remote_file.read())  
     print(f"Download complete: {local_filename}")
 
-download_file(url_nc_file, local_nc_filename)
-download_file(url_tif_file, local_tif_filename)
+if __name__ == "__main__":
+
+    #download_file(url_nc_file, local_nc_filename)
+    #download_file(url_tif_file, local_tif_filename)
+
+    # inspect the file
+    import xarray as xr
+    ds = xr.open_dataset(local_nc_filename)
+    # plot ds mask
+
+    mask = ds['mask']
+    mask.plot()
+    plt.savefig('data/Bedmachine/mask.png')
+    plt.show()

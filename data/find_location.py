@@ -34,15 +34,18 @@ class CroppedAreaGenerator:
         """Loads and reprojects datasets, and creates corresponding tensors."""
         original_bed = self.bedmachine_data["bed"]
         original_errbed = self.bedmachine_data["errbed"]
+     #   mask_bed = self.bedmachine_data["mask"]
 
         orig_transform = original_bed.rio.transform()
         bed_reprojected = original_bed.rio.reproject_match(self.ice_velocity_data)
         errbed_reprojected = original_errbed.rio.reproject_match(self.ice_velocity_data)
+     #   mask_transform = mask_bed.rio.reproject_match(self.ice_velocity_data)
         reproj_transform = bed_reprojected.rio.transform()
 
         # Convert to PyTorch tensors
         bed_tensor = torch.tensor(bed_reprojected.values.astype(np.float32))
         errbed_tensor = torch.tensor(errbed_reprojected.values.astype(np.float32))
+   #     mask_transform = torch.tensor(mask_transform.values.astype(np.int64))
 
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
         ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)

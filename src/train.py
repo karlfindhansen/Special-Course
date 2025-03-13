@@ -157,30 +157,38 @@ def plot_val_rmse(val_rmse_ls, epochs):
     plt.savefig("figures/validation/validation_rmse.png", dpi=300)
     plt.close()
 
-def plot_fake_real(fake_imgs, real_imgs, epoch_nr):
+def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated_imgs/', show=False):
     sns.set_style("darkgrid")  
     
-    fake_imgs = fake_imgs[0].squeeze(0).cpu().numpy()
-    real_imgs = real_imgs[0].squeeze(0).cpu().numpy()
+    # Convert to numpy arrays and remove the batch dimension
+    fake_imgs = fake_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 fake images
+    real_imgs = real_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 real images
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
-
-    im1 = axes[0].imshow(fake_imgs, cmap="terrain")
-    axes[0].set_title("Generated (Fake) Image", fontsize=14, fontweight="bold")
-    axes[0].axis("off")
+    # Create a 2x2 grid of subplots
+    fig, axes = plt.subplots(2, 4, figsize=(16, 8))  # 2 rows, 4 columns
     
-    im2 = axes[1].imshow(real_imgs, cmap="terrain")
-    axes[1].set_title("Ground Truth (Real) Image", fontsize=14, fontweight="bold")
-    axes[1].axis("off")
+    for i in range(4):
+        # Plot fake images
+        axes[i // 2, i % 2].imshow(fake_imgs[i], cmap="terrain")
+        axes[i // 2, i % 2].set_title(f"Generated (Fake) Image {i+1}", fontsize=12, fontweight="bold")
+        axes[i // 2, i % 2].axis("off")
+        
+        # Plot real images
+        axes[i // 2, (i % 2) + 2].imshow(real_imgs[i], cmap="terrain")
+        axes[i // 2, (i % 2) + 2].set_title(f"Ground Truth (Real) Image {i+1}", fontsize=12, fontweight="bold")
+        axes[i // 2, (i % 2) + 2].axis("off")
 
+    # Add a super title for the entire plot
     fig.suptitle(f"Comparison of Fake vs. Real Images (Epoch {epoch_nr})", 
                  fontsize=16, fontweight="bold", y=1.02)
 
-    cbar = fig.colorbar(im2, ax=axes, fraction=0.046, pad=0.04)
-    cbar.ax.tick_params(labelsize=12)
+    # Adjust layout
+    plt.tight_layout()
 
-    plt.savefig(f"figures/generated_imgs/fake_real_epoch_{epoch_nr}.png", dpi=300, bbox_inches="tight")
-    plt.show()
+    # Save the figure
+    plt.savefig(f"{output_dir}fake_real_epoch_{epoch_nr}.png", dpi=300, bbox_inches="tight")
+    if show:
+        plt.show()
     plt.close()
 
 

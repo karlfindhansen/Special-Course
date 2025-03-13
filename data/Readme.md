@@ -7,3 +7,5 @@
     - Spatial resolution of 500 m.
 - Articdem: Surface elevation
 - SMB_mao: Snow accumulation (TODO: find this data)
+
+Using mask (ground area with ice (3)) from Bedmachine to determine the area we are interested in

@@ -1,113 +1,114 @@
-import matplotlib.pyplot as plt
-import os
-import torch
-import numpy as np
-import xarray as xr
-import rioxarray
-import pandas as pd
 import sys
 
+sys.path.append('data')
+sys.path.append('src/model')
 sys.path.append('src')
-sys.path.append('src/Model')
 
+import matplotlib.pyplot as plt
+from data_preprocessing import ArcticDataloader
+from torch.utils.data import DataLoader
+import torch.nn as nn
+from torchvision.utils import save_image
 from GeneratorModel import GeneratorModel
+import torch
+import tqdm
+import pandas as pd
+from train import plot_fake_real
 
-def read_icecap_height_data(arcticdem_path):
-    """ Reads ArcticDEM data as a tensor. """
-    arcticdem_data = rioxarray.open_rasterio(arcticdem_path)
-    arcticdem_data.rio.write_crs("EPSG:3413", inplace=True)
-    return arcticdem_data
+region_of_interest_org = pd.read_csv('data/true_crops/large_crops/original_crops.csv')
+region_of_interest_proj = pd.read_csv('data/true_crops/large_crops/projected_crops.csv')
 
-def align_to_velocity(data):
-    """ Reprojects and aligns data to match the velocity grid. """
-    aligned = data.rio.reproject_match(ice_velocity_data['land_ice_surface_easting_velocity'])
-    return torch.tensor(aligned.values.astype(np.float32))
+regions_of_interest = {
+    "Projected": {
+        'y_1': region_of_interest_proj['y_1'].astype(int).to_list()[0],
+        'x_1': region_of_interest_proj['x_1'].astype(int).to_list()[0],
+        'y_2': region_of_interest_proj['y_2'].astype(int).to_list()[0],
+        'x_2': region_of_interest_proj['x_2'].astype(int).to_list()[0]
+    },
+    "Original": {
+        'y_1': region_of_interest_org['y_1'].astype(int).to_list()[0],
+        'x_1': region_of_interest_org['x_1'].astype(int).to_list()[0],
+        'y_2': region_of_interest_org['y_2'].astype(int).to_list()[0],
+        'x_2': region_of_interest_org['x_2'].astype(int).to_list()[0]
+    }
+}
 
-def create_nxn_crops(x1, y1, x2, y2, crop_size=11):
-    crops = []
-    for i in range(y1, y2, crop_size):
-        for j in range(x1, x2, crop_size):
-            if i + crop_size <= y2 and j + crop_size <= x2:
-                crops.append((i, j, i + crop_size, j + crop_size))
-    return crops
 
-model = os.path.join("res", "long_train", "best_generator.pth")
-crop_size = 11
-crop_path_org = os.path.join("data", "true_crops", "large_crops", "original_crops.csv")
-crop_path_proj = os.path.join("data", "true_crops", "large_crops", "projected_crops.csv")
+dataset = ArcticDataloader(
+    bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
+    arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+    ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
+    snow_accumulation_path="data/Snow_acc/...",
+    region=regions_of_interest
+)
 
-bedmachine_path = os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc")
-arcticdem_path= os.path.join("data", "arcticdem_extracted", "arcticdem_mosaic_500m_v4.1_dem.tif")
-ice_velocity_path = os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc")
+mse_loss = nn.MSELoss()
 
-generator_model = GeneratorModel()
-generator_model.load_state_dict(torch.load(model, map_location=torch.device('cuda') if torch.cuda.is_available() else torch.device('mps') if torch.backends.mps.is_available() else torch.device('cpu')))
+print(f"Dataset contains {len(dataset)} crops in the specified region.")
 
-bedmachine_data = xr.open_dataset(bedmachine_path)
-bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
+dataloader = DataLoader(dataset=dataset, batch_size=16, shuffle=False)
 
-ice_velocity_data = xr.open_dataset(ice_velocity_path)
-ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
+device = torch.device("cuda" if torch.cuda.is_available() else "mps")
+generator = GeneratorModel().to(device)
+generator.load_state_dict(torch.load("res/long_train/best_generator.pth", map_location=device))
 
-height_map_icecap_data = read_icecap_height_data(arcticdem_path)
-height_map_icecap_tensor = align_to_velocity(height_map_icecap_data)
+output_dir = "comparison/figures_compare/"
 
-ice_velocity_x_tensor = align_to_velocity(ice_velocity_data['land_ice_surface_easting_velocity'])
-ice_velocity_y_tensor = align_to_velocity(ice_velocity_data['land_ice_surface_northing_velocity'])
-
-bedmachine_projected = align_to_velocity(bedmachine_data['bed']).unsqueeze(0)
-
-bed_elevation_hr = torch.tensor(bedmachine_data['bed'].values.astype(np.float32)).unsqueeze(0)
-
-crop_path_org = pd.read_csv(crop_path_org)
-crop_path_proj = pd.read_csv(crop_path_proj)
-
-y_1_proj, x_1_proj, y_2_proj, x_2_proj = crop_path_proj.iloc[0]['y_1'], crop_path_proj.iloc[0]['x_1'], crop_path_proj.iloc[0]['y_2'], crop_path_proj.iloc[0]['x_2']
-y_1_org, x_1_org, y_2_org, x_2_org = crop_path_org.iloc[0]['y_1'], crop_path_org.iloc[0]['x_1'], crop_path_org.iloc[0]['y_2'], crop_path_org.iloc[0]['x_2']
-
-crops_proj = create_nxn_crops(x_1_proj, y_1_proj, x_2_proj, y_2_proj, crop_size=11)
-crops_org = create_nxn_crops(x_1_org, y_1_org, x_2_org, y_2_org, crop_size=36)
-
-grid_size = (11, 11)
-stitched_image_generated = np.zeros((grid_size[0] * 36, grid_size[1] * 36))
-
-generator_model.eval()
+# Generating images and plotting them
 with torch.no_grad():
-    for i, ((y1, x1, y2, x2),(y1_org, x1_org, y2_org, x2_org)) in enumerate(zip(crops_proj, crops_org)):
-        bed_machine_lr = bedmachine_projected[:, y1:y2, x1:x2].unsqueeze(0)
-        ice_velocity_x = ice_velocity_x_tensor[:, y1:y2, x1:x2]
-        ice_velocity_y = ice_velocity_y_tensor[:, y1:y2, x1:x2]
-        height_map_icecap = height_map_icecap_tensor[:, y1:y2, x1:x2].unsqueeze(0)
-        bed_elevation_hr_1 = bed_elevation_hr[:, y1_org:y2_org, x1_org:x2_org].unsqueeze(0)
+    total_mse = 0
+    num_samples = 0
+    k = 0
+    for idx, imgs in enumerate(tqdm.tqdm(dataloader, desc="Generating images")):
+        lr_imgs = (
+            imgs['lr_bed_elevation'].to(device),
+            imgs['height_icecap'].to(device),
+            imgs['velocity'].to(device),
+            imgs['snow_accumulation'].to(device),
+        )
 
-        velocity = torch.cat((ice_velocity_x, ice_velocity_y), dim=0).unsqueeze(0)
-        snow_accumulation = torch.rand((1, crop_size, crop_size)).unsqueeze(0)
-
+        generated_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
+        real_imgs = imgs['hr_bed_elevation'].to(device)
         
-        output = generator_model(bed_machine_lr, height_map_icecap, velocity, snow_accumulation)
-        output_image = output.squeeze(0).squeeze(0).cpu().numpy()
+        batch_mse = mse_loss(generated_imgs, real_imgs).item()
+        total_mse += batch_mse * real_imgs.size(0)
+        num_samples += real_imgs.size(0)
+        
+        # Plotting all lr_imgs in the batch
+        fig, axes = plt.subplots(len(lr_imgs), lr_imgs[0].shape[0], figsize=(15, 5))  # Adjusting for number of images and batch size
+        
+        for i, lr_img in enumerate(lr_imgs):
+            lr_img_np = lr_img.cpu().detach().numpy().transpose(0, 2, 3, 1)  # (B, H, W, C)
+            
+            # If image has 2 channels, plot each channel separately
+            if lr_img_np.shape[-1] == 2:  # 2 channels case
+                for j in range(lr_img_np.shape[0]-1):  # Iterate through the batch dimension
+                    # Plot each channel of the image
+                    axes[i, j].imshow(lr_img_np[j, :, :, 0])  # First channel (grayscale)
+                    axes[i, j].set_title(f"C1- B {j + 1}")
+                    axes[i, j].axis('off')
 
-        # Compute row and column position
-        row = i // grid_size[1]
-        col = i % grid_size[1]
+                    axes[i, j + 1].imshow(lr_img_np[j, :, :, 1])  # Second channel (grayscale)
+                    axes[i, j + 1].set_title(f"C2 - B {j + 1}")
+                    axes[i, j + 1].axis('off')
+            else:
+                for j in range(lr_img_np.shape[0]):  # Iterate through the batch dimension
+                    axes[i, j].imshow(lr_img_np[j])  # Show the image directly (RGB)
+                    axes[i, j].set_title(f"IM{i + 1} - B {j + 1}")
+                    axes[i, j].axis('off')
 
-        # Place the image in the stitched canvas
-        stitched_image_generated[row * 36:(row + 1) * 36, col * 36:(col + 1) * 36] = output_image
+        plt.tight_layout()
+        #plt.show()
+        #exit()
 
+        # Save the generated images
+        for i in range(len(generated_imgs)):
+            k += 1
 
-be_hr = bed_elevation_hr[:, y_1_org:y_2_org, x_1_org:x_2_org].squeeze(0).squeeze(0).cpu().numpy()
+            plot_fake_real(generated_imgs, real_imgs, k, output_dir, show=False)
 
-fig, axes = plt.subplots(1, 2, figsize=(20, 10)) 
+        val_rmse = torch.sqrt(torch.tensor(total_mse / num_samples)).item()
+        print(f"Validation RMSE: {val_rmse}")
+        
 
-axes[0].imshow(stitched_image_generated, cmap="terrain")
-axes[0].axis("off")
-axes[0].set_title("Stitched Output")
-
-axes[1].imshow(be_hr, cmap="terrain")
-axes[1].axis("off")
-axes[1].set_title("High-Resolution Bed Elevation")
-
-save_dir = os.path.join("comparison")
-os.makedirs(save_dir, exist_ok=True)
-plt.savefig(os.path.join(save_dir, "stitched_and_bed_elevation.png"), bbox_inches="tight", dpi=300)
-plt.show()
+print(f"Generated images saved to {output_dir}.")
