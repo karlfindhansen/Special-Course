@@ -123,7 +123,7 @@ def train(
             print("Early stopping!")
             break
 
-    plot_val_rmse(validation_rmse, epochs)
+    plot_val_rmse(validation_rmse, epoch)
 
     return best_rmse
 
@@ -164,25 +164,25 @@ def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated
     fake_imgs = fake_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 fake images
     real_imgs = real_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 real images
 
-    # Create a 2x2 grid of subplots
-    fig, axes = plt.subplots(2, 4, figsize=(16, 8))  # 2 rows, 4 columns
+    # Create a 4x2 grid of subplots (4 rows, 2 columns)
+    fig, axes = plt.subplots(4, 2, figsize=(8, 16))  # 4 rows, 2 columns
     
     for i in range(4):
-        # Plot fake images
-        axes[i // 2, i % 2].imshow(fake_imgs[i], cmap="terrain")
-        axes[i // 2, i % 2].set_title(f"Generated (Fake) Image {i+1}", fontsize=12, fontweight="bold")
-        axes[i // 2, i % 2].axis("off")
+        # Plot fake images on the left column (axes[i, 0])
+        axes[i, 0].imshow(fake_imgs[i], cmap="terrain")
+        axes[i, 0].set_title(f"Generated (Fake) Image {i+1}", fontsize=12, fontweight="bold")
+        axes[i, 0].axis("off")
         
-        # Plot real images
-        axes[i // 2, (i % 2) + 2].imshow(real_imgs[i], cmap="terrain")
-        axes[i // 2, (i % 2) + 2].set_title(f"Ground Truth (Real) Image {i+1}", fontsize=12, fontweight="bold")
-        axes[i // 2, (i % 2) + 2].axis("off")
+        # Plot real images on the right column (axes[i, 1])
+        axes[i, 1].imshow(real_imgs[i], cmap="terrain")
+        axes[i, 1].set_title(f"Ground Truth (Real) Image {i+1}", fontsize=12, fontweight="bold")
+        axes[i, 1].axis("off")
 
     # Add a super title for the entire plot
     fig.suptitle(f"Comparison of Fake vs. Real Images (Epoch {epoch_nr})", 
                  fontsize=16, fontweight="bold", y=1.02)
 
-    # Adjust layout
+    # Adjust layout to prevent overlap
     plt.tight_layout()
 
     # Save the figure
@@ -190,7 +190,6 @@ def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated
     if show:
         plt.show()
     plt.close()
-
 
     
 
