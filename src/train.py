@@ -37,6 +37,15 @@ def train(
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
         mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
     )
+
+    dataset_for_generation = ArcticDataloader(
+        bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
+        arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+        ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
+        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        region=regions_of_interest
+    )
+
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
@@ -45,6 +54,7 @@ def train(
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+    gen_loader = DataLoader(dataset_for_generation, batch_size=batch_size, shuffle=False)
 
     # Initialize models
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -119,7 +129,7 @@ def train(
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
             epochs_no_improve = 0
 
-            if epoch > 50:
+            if epoch%5 == 0:
                 org_y1, org_y2 = int(regions_of_interest['Original']['y_1']), int(regions_of_interest['Original']['y_2'])
                 org_x1, org_x2 = int(regions_of_interest['Original']['x_1']), int(regions_of_interest['Original']['x_2'])
 
@@ -128,7 +138,7 @@ def train(
 
                 generator.eval()  
                 with torch.no_grad():
-                    for imgs in train_loader:
+                    for imgs in gen_loader:
                         lr_imgs = (
                             imgs['lr_bed_elevation'].to(device),
                             imgs['height_icecap'].to(device),
@@ -140,18 +150,7 @@ def train(
 
                         save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2) 
         
-                with torch.no_grad():
-                    for imgs in val_loader:
-                        lr_imgs = (
-                            imgs['lr_bed_elevation'].to(device),
-                            imgs['height_icecap'].to(device),
-                            imgs['velocity'].to(device),
-                            imgs['mass_balance'].to(device),
-                        )
-                        hr_imgs = imgs['hr_bed_elevation'].to(device)
-                        preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
-
-                        save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2)
+            
 
         else:
             epochs_no_improve += 1
@@ -178,21 +177,21 @@ def save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2):
     for i in range(len(preds)):
         crop_y1, crop_y2 = int(imgs['crops']['Original']['y_1'][i]), int(imgs['crops']['Original']['y_2'][i])
         crop_x1, crop_x2 = int(imgs['crops']['Original']['x_1'][i]), int(imgs['crops']['Original']['x_2'][i])
-        if (crop_y1 >= org_y1 and crop_y2 <= org_y2) and (crop_x1 >= org_x1 and crop_x2 <= org_x2):
-            pred_img = preds[i].detach().cpu().numpy()
-            pred_img = np.squeeze(pred_img)
+        #if (crop_y1 >= org_y1 and crop_y2 <= org_y2) and (crop_x1 >= org_x1 and crop_x2 <= org_x2):
+        pred_img = preds[i].detach().cpu().numpy()
+        pred_img = np.squeeze(pred_img)
 
-            num_imgs_in_folder = len(os.listdir(save_path))
+        num_imgs_in_folder = len(os.listdir(save_path))
 
-            image_filename = f'pred_{num_imgs_in_folder}.png' if num_imgs_in_folder > 0 else f'pred_{num_imgs_in_folder+1}.png'
-            plt.imsave(f'{save_path}{image_filename}', pred_img, cmap='terrain')
+        image_filename = f'pred_{num_imgs_in_folder+1}.png'
+        plt.imsave(f'{save_path}{image_filename}', pred_img, cmap='terrain')
 
-            records.append({
-                "image_id": i,
-                "crop_y1": crop_y1, "crop_y2": crop_y2,
-                "crop_x1": crop_x1, "crop_x2": crop_x2,
-                "image_filename": image_filename
-            })
+        records.append({
+            "image_id": i,
+            "crop_y1": crop_y1, "crop_y2": crop_y2,
+            "crop_x1": crop_x1, "crop_x2": crop_x2,
+            "image_filename": image_filename
+        })
 
     new_df = pd.DataFrame(records)
     df = pd.concat([df, new_df], ignore_index=True)
@@ -229,32 +228,25 @@ def plot_val_rmse(val_rmse_ls, epochs):
 def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated_imgs/', show=False):
     sns.set_style("darkgrid")  
     
-    # Convert to numpy arrays and remove the batch dimension
-    fake_imgs = fake_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 fake images
-    real_imgs = real_imgs[:4].squeeze(1).cpu().numpy()  # Take the first 4 real images
+    fake_imgs = fake_imgs[:4].squeeze(1).cpu().numpy() 
+    real_imgs = real_imgs[:4].squeeze(1).cpu().numpy() 
 
-    # Create a 4x2 grid of subplots (4 rows, 2 columns)
-    fig, axes = plt.subplots(4, 2, figsize=(8, 16))  # 4 rows, 2 columns
+    fig, axes = plt.subplots(4, 2, figsize=(8, 16)) 
     
     for i in range(4):
-        # Plot fake images on the left column (axes[i, 0])
         axes[i, 0].imshow(fake_imgs[i], cmap="terrain")
         axes[i, 0].set_title(f"Generated (Fake) Image {i+1}", fontsize=12, fontweight="bold")
         axes[i, 0].axis("off")
         
-        # Plot real images on the right column (axes[i, 1])
         axes[i, 1].imshow(real_imgs[i], cmap="terrain")
         axes[i, 1].set_title(f"Ground Truth (Real) Image {i+1}", fontsize=12, fontweight="bold")
         axes[i, 1].axis("off")
 
-    # Add a super title for the entire plot
     fig.suptitle(f"Comparison of Fake vs. Real Images (Epoch {epoch_nr})", 
                  fontsize=16, fontweight="bold", y=1.02)
 
-    # Adjust layout to prevent overlap
     plt.tight_layout()
 
-    # Save the figure
     plt.savefig(f"{output_dir}fake_real_epoch_{epoch_nr}.png", dpi=300, bbox_inches="tight")
     if show:
         plt.show()
