@@ -4,6 +4,7 @@ import torch.optim as optim
 import tqdm
 import sys
 import os
+import shutil
 from torch.utils.data import DataLoader, random_split
 
 # For plot
@@ -13,10 +14,12 @@ import numpy as np
 import pandas as pd
 from scipy.interpolate import make_interp_spline
 
+sys.path.append('comparison')
 sys.path.append('data')
 sys.path.append('src/Model')
 
 from data_preprocessing import ArcticDataloader
+from compare_gen_bedmap import regions_of_interest
 from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
@@ -32,7 +35,7 @@ def train(
         bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
-        snow_accumulation_path="data/Snow_acc/...",
+        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
     )
     train_size = int(0.9 * len(dataset))
     val_size = len(dataset) - train_size
@@ -70,7 +73,7 @@ def train(
                 imgs['lr_bed_elevation'].to(device),
                 imgs['height_icecap'].to(device),
                 imgs['velocity'].to(device),
-                imgs['snow_accumulation'].to(device),
+                imgs['mass_balance'].to(device),
             )
             hr_imgs = imgs['hr_bed_elevation'].to(device)
 
@@ -99,12 +102,12 @@ def train(
                     imgs['lr_bed_elevation'].to(device),
                     imgs['height_icecap'].to(device),
                     imgs['velocity'].to(device),
-                    imgs['snow_accumulation'].to(device),
+                    imgs['mass_balance'].to(device),
                 )
                 hr_imgs = imgs['hr_bed_elevation'].to(device)
                 preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3])
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
-        
+
         plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
         val_rmse /= len(val_loader)
         validation_rmse.append(float(val_rmse))
@@ -115,6 +118,41 @@ def train(
             torch.save(generator.state_dict(), os.path.join("res", "best_generator.pth"))
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
             epochs_no_improve = 0
+
+            if epoch > 50:
+                org_y1, org_y2 = int(regions_of_interest['Original']['y_1']), int(regions_of_interest['Original']['y_2'])
+                org_x1, org_x2 = int(regions_of_interest['Original']['x_1']), int(regions_of_interest['Original']['x_2'])
+
+                shutil.rmtree('figures/specified_area')
+                os.mkdir('figures/specified_area')
+
+                generator.eval()  
+                with torch.no_grad():
+                    for imgs in train_loader:
+                        lr_imgs = (
+                            imgs['lr_bed_elevation'].to(device),
+                            imgs['height_icecap'].to(device),
+                            imgs['velocity'].to(device),
+                            imgs['mass_balance'].to(device),
+                        )
+                        hr_imgs = imgs['hr_bed_elevation'].to(device)
+                        preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
+
+                        save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2) 
+        
+                with torch.no_grad():
+                    for imgs in val_loader:
+                        lr_imgs = (
+                            imgs['lr_bed_elevation'].to(device),
+                            imgs['height_icecap'].to(device),
+                            imgs['velocity'].to(device),
+                            imgs['mass_balance'].to(device),
+                        )
+                        hr_imgs = imgs['hr_bed_elevation'].to(device)
+                        preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
+
+                        save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2)
+
         else:
             epochs_no_improve += 1
             print(f"Validation RMSE did not improve from {best_rmse:.4f}, early stopping counter: {epochs_no_improve}")
@@ -127,14 +165,45 @@ def train(
 
     return best_rmse
 
-def plot_val_rmse(val_rmse_ls, epochs):
-    sns.set_style("darkgrid")  # Modern seaborn style
+def save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2):
+    records = []
+    save_path="figures/specified_area/"
+    csv_filename = f"{save_path}coordinates.csv"
 
-    # Ensure we have proper x values (epochs)
+    if os.path.exists(csv_filename):
+        df = pd.read_csv(csv_filename)
+    else:
+        df = pd.DataFrame(columns=["image_id", "crop_y1", "crop_y2", "crop_x1", "crop_x2", "image_filename"])
+
+    for i in range(len(preds)):
+        crop_y1, crop_y2 = int(imgs['crops']['Original']['y_1'][i]), int(imgs['crops']['Original']['y_2'][i])
+        crop_x1, crop_x2 = int(imgs['crops']['Original']['x_1'][i]), int(imgs['crops']['Original']['x_2'][i])
+        if (crop_y1 >= org_y1 and crop_y2 <= org_y2) and (crop_x1 >= org_x1 and crop_x2 <= org_x2):
+            pred_img = preds[i].detach().cpu().numpy()
+            pred_img = np.squeeze(pred_img)
+
+            num_imgs_in_folder = len(os.listdir(save_path))
+
+            image_filename = f'pred_{num_imgs_in_folder}.png' if num_imgs_in_folder > 0 else f'pred_{num_imgs_in_folder+1}.png'
+            plt.imsave(f'{save_path}{image_filename}', pred_img, cmap='terrain')
+
+            records.append({
+                "image_id": i,
+                "crop_y1": crop_y1, "crop_y2": crop_y2,
+                "crop_x1": crop_x1, "crop_x2": crop_x2,
+                "image_filename": image_filename
+            })
+
+    new_df = pd.DataFrame(records)
+    df = pd.concat([df, new_df], ignore_index=True)
+    df.to_csv(csv_filename, index=False)
+
+def plot_val_rmse(val_rmse_ls, epochs):
+    sns.set_style("darkgrid")  
+
     x = np.arange(1, epochs + 1)
     y = np.array(val_rmse_ls)
 
-    # Create smooth curve using cubic spline interpolation (only if enough points exist)
     if epochs > 3:  
         x_smooth = np.linspace(x.min(), x.max(), 300)
         y_smooth = make_interp_spline(x, y, k=3)(x_smooth)

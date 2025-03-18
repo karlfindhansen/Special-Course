@@ -10,10 +10,11 @@ from tqdm import tqdm
 
 
 class CroppedAreaGenerator:
-    def __init__(self, bedmachine_path, ice_velocity_path, precise=True, crop_size=11, downscale=False):
+    def __init__(self, bedmachine_path, ice_velocity_path, mass_balance_path, precise=True, crop_size=11, downscale=False):
         """Initializes the CroppedAreaGenerator with paths, processing settings, and data loading."""
         self.bedmachine_path = bedmachine_path
         self.ice_velocity_path = ice_velocity_path
+        self.mass_balance_path = mass_balance_path
         self.precise = precise
         self.crop_size = crop_size
         self.downscale = downscale
@@ -21,30 +22,35 @@ class CroppedAreaGenerator:
         # Load datasets
         self.bedmachine_data = xr.open_dataset(self.bedmachine_path)
         self.ice_velocity_data = xr.open_dataset(self.ice_velocity_path)
+        self.mass_balance_data = xr.open_dataset(self.mass_balance_path)
 
         # Set CRS (Coordinate Reference System)
         self.bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
         self.ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
-
+        self.mass_balance_data.rio.write_crs("EPSG:3413", inplace=True)
+    
         # Process the data and find valid crop locations
-        self.bed_tensor, self.mask_tensor, self.ice_velocity_tensor, self.transform_info = self._load_and_preprocess_data()
+        self.bed_tensor, self.mask_tensor, self.ice_velocity_tensor, self.mass_balance_tensor, self.transform_info = self._load_and_preprocess_data()
+                
         self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
         """Loads and reprojects datasets, and creates corresponding tensors."""
         original_bed = self.bedmachine_data["bed"]
         original_errbed = self.bedmachine_data["errbed"]
-     #   mask_bed = self.bedmachine_data["mask"]
+        original_mass_balance = self.mass_balance_data['VMB'].mean(dim='yr')
 
         orig_transform = original_bed.rio.transform()
         bed_reprojected = original_bed.rio.reproject_match(self.ice_velocity_data)
         errbed_reprojected = original_errbed.rio.reproject_match(self.ice_velocity_data)
+        mass_balance_reprojected = original_mass_balance.rio.reproject_match(self.ice_velocity_data)
      #   mask_transform = mask_bed.rio.reproject_match(self.ice_velocity_data)
         reproj_transform = bed_reprojected.rio.transform()
 
         # Convert to PyTorch tensors
         bed_tensor = torch.tensor(bed_reprojected.values.astype(np.float32))
         errbed_tensor = torch.tensor(errbed_reprojected.values.astype(np.float32))
+        mass_balance_tensor = torch.tensor(mass_balance_reprojected.values.astype(np.float32))
    #     mask_transform = torch.tensor(mask_transform.values.astype(np.int64))
 
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
@@ -79,7 +85,7 @@ class CroppedAreaGenerator:
 
             transform_info.update({"downscale_factor": factor, "downscaled_shape": new_size})
 
-        return bed_tensor, mask_tensor, ice_velocity_tensor, transform_info
+        return bed_tensor, mask_tensor, ice_velocity_tensor, mass_balance_tensor, transform_info
 
     def __len__(self):
         return len(self.valid_indices)
@@ -108,8 +114,9 @@ class CroppedAreaGenerator:
                 crop_mask = self.mask_tensor[i:i + self.crop_size, j:j + self.crop_size]
                 crop_bed = self.bed_tensor[i:i + self.crop_size, j:j + self.crop_size]
                 crop_velocity = self.ice_velocity_tensor[i:i + self.crop_size, j:j + self.crop_size]
+                crop_mass_balance = self.mass_balance_tensor[i:i+self.crop_size, j:j+self.crop_size]
 
-                if torch.all(crop_mask == 1) and torch.all(crop_bed > 0) and torch.all(~torch.isnan(crop_velocity)):
+                if torch.all(crop_mask == 1) and torch.all(crop_bed > 0) and torch.all(~torch.isnan(crop_velocity)) and torch.all(~torch.isnan(crop_mass_balance)):
                     end_row, end_col = i + self.crop_size, j + self.crop_size
                     orig_y1, orig_x1 = self._projected_to_original_coords(i, j)
                     orig_y2, orig_x2 = self._projected_to_original_coords(end_row, end_col)
@@ -176,8 +183,9 @@ if __name__ == '__main__':
 
     bedmachine_path = "data/Bedmachine/BedMachineGreenland-v5.nc"
     velocity_path = "data/Ice_velocity/Promice_AVG5year.nc"
+    mass_balance_path = "data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, crop_size=11) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, mass_balance_path, crop_size=11) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:
