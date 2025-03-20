@@ -56,6 +56,8 @@ def simulated_annealing(df_sorted, hr_img, img_path_l, iterations=1000, temp=10.
 
         temp *= cooling
 
+    # Save the best_df_sorted to a CSV file
+    best_df_sorted.to_csv("comparison/optimized_order.csv", index=False)
     return best_df_sorted
 
 img_path_l = 'figures/specified_area/'

@@ -62,27 +62,26 @@ class InputBlock(nn.Module):
 if __name__ == "__main__":
     input_block = InputBlock()
     dataset = ArcticDataloader(
-        bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
-        arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
-        ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/Snow_acc/...",
-        true_crops="data/true_crops/selected_crops.csv"
+        bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
+        arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
+        ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
+        mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        hillshade_path="data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
     )
 
-    train_size = int(0.8 * len(dataset))  # 80% for training
-    val_size = len(dataset) - train_size  # 20% for validation
+    train_size = int(0.8 * len(dataset)) 
+    val_size = len(dataset) - train_size 
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     batch_size = 32
     dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
     for i, batch in enumerate(dataloader):
-        if batch['lr_bed_elevation'].shape[0] != 32:
-            break
         x = batch['lr_bed_elevation']
-        w1 = batch['lr_height_icecap']
-        w2 = batch['lr_velocity']
-        w3 = torch.randn(batch_size, 1, w2.size()[-1], w2.size()[-1])
+        w1 = batch['height_icecap']
+        w2 = batch['velocity']
+        w3 = batch['mass_balance']
+        break
 
     output = input_block(x, w1, w2, w3)
     print("Output size: ", output.size())

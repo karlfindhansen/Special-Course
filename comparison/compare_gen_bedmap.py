@@ -39,7 +39,7 @@ if __name__ == '__main__':
         bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/Snow_acc/...",
+        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         region=regions_of_interest
     )
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
     device = torch.device("cuda" if torch.cuda.is_available() else "mps")
     generator = GeneratorModel().to(device)
-    generator.load_state_dict(torch.load("res/long_train/best_generator.pth", map_location=device))
+    generator.load_state_dict(torch.load("res/best_generator.pth", map_location=device))
 
     output_dir = "comparison/figures_compare/"
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
                 imgs['lr_bed_elevation'].to(device),
                 imgs['height_icecap'].to(device),
                 imgs['velocity'].to(device),
-                imgs['snow_accumulation'].to(device),
+                imgs['mass_balance'].to(device),
             )
 
             generated_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
@@ -100,6 +100,7 @@ if __name__ == '__main__':
 
             plt.tight_layout()
             #plt.show()
+            plt.close()
             #exit()
 
             # Save the generated images
@@ -107,6 +108,10 @@ if __name__ == '__main__':
                 k += 1
 
                 #plot_fake_real(generated_imgs, real_imgs, k, output_dir, show=False)
+                print(generated_imgs[0].squeeze(0).cpu().numpy())
+                plt.imshow(generated_imgs[0].squeeze(0).cpu().numpy(), cmap='terrain')
+                plt.show()
+                exit()
 
             val_rmse = torch.sqrt(torch.tensor(total_mse / num_samples)).item()
             print(f"Validation RMSE: {val_rmse}")
