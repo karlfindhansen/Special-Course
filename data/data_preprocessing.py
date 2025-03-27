@@ -16,21 +16,20 @@ class ArcticDataloader(Dataset):
                  bedmachine_path,
                  arcticdem_path,
                  ice_velocity_path,
-                 mass_balance_path,
+                 snow_acc_path,
                  hillshade_path,
                  true_crops = os.path.join("data","crops", "true_crops", "projected_crops.csv"),
                  bedmachine_crops = os.path.join("data","crops", "true_crops","original_crops.csv"),
                  region = None
                  ):
-        
-        """ Initializes the dataset by loading and aligning data from NetCDF and GeoTIFF files. """
+
         self.bedmachine_data = xr.open_dataset(bedmachine_path)
         self.bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
 
         self.ice_velocity_data = xr.open_dataset(ice_velocity_path)
         self.ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
 
-        extracted_path = "data/arcticdem_extracted"
+        extracted_path = "data/inputs/arcticdem_extracted"
         os.makedirs(extracted_path, exist_ok=True)
         with tarfile.open(arcticdem_path) as tar:
             tar.extractall(path=extracted_path, filter="fully_trusted")
@@ -41,9 +40,8 @@ class ArcticDataloader(Dataset):
         self.height_map_icecap_data = self.read_icecap_height_data()
         self.height_map_icecap_tensor = self.align_to_velocity(self.height_map_icecap_data)
 
-        self.mass_balance_data = xr.open_dataset(mass_balance_path)
-
-        self.mass_balance_data.rio.write_crs("EPSG:3413", inplace=True)
+        self.snow_acc_data = xr.open_dataset(snow_acc_path)
+        self.snow_acc_data.rio.write_crs("EPSG:3413", inplace=True)
 
         self.ice_velocity_x_tensor = self.align_to_velocity(
             self.ice_velocity_data['land_ice_surface_easting_velocity']
@@ -57,9 +55,9 @@ class ArcticDataloader(Dataset):
             self.bedmachine_data['bed']
         ).unsqueeze(0)
 
-        self.projected_mass_balance_data = self.align_to_velocity(
-            self.mass_balance_data['VMB'].mean(dim='yr')
-        ).unsqueeze(0)
+        self.projected_snow_acc_data = self.align_to_velocity(
+            self.snow_acc_data["band_data"]
+        )
 
         self.hillshade_path = hillshade_path
         self.hillshade_tensor = self.read_hillshade_data()
@@ -90,7 +88,6 @@ class ArcticDataloader(Dataset):
 
         
     def read_icecap_height_data(self):
-        """ Reads ArcticDEM data as a tensor. """
         arcticdem_data = rioxarray.open_rasterio(self.arcticdem_tif_path)
         arcticdem_data.rio.write_crs("EPSG:3413", inplace=True)
         return arcticdem_data
@@ -101,22 +98,17 @@ class ArcticDataloader(Dataset):
         return torch.tensor(hillshade_data.values.astype(np.float32))
 
     def align_to_velocity(self, data, transpose=False):
-        """ Reprojects and aligns data to match the velocity grid. """
         aligned = data.rio.reproject_match(self.ice_velocity_data['land_ice_surface_easting_velocity'])
-
         return torch.tensor(aligned.values.astype(np.float32))
     
     def align_to_crop_to_bedmachine(self, data):
-        """Reprojects and aligns data to match the original bedmachine grid."""
         aligned = data.rio.reproject_match(self.bedmachine_data['bed'])
         return torch.tensor(aligned.values.astype(np.float32))
 
     def __len__(self):
-        """ Returns the number of available data points. """
         return len(self.true_crops)
 
     def __getitem__(self, idx):
-        """ Returns a fixed-size patch from the crop. """
         y_1, x_1, y_2, x_2 = self.true_crops[idx]
         y_1_b, x_1_b, y_2_b, x_2_b = self.bedmachine_crops[idx]
 
@@ -130,15 +122,13 @@ class ArcticDataloader(Dataset):
         bed_elevation_hr = self.bed_elevation_hr[:, y_1_b:y_2_b, x_1_b:x_2_b]
         ice_velocity_x = self.ice_velocity_x_tensor[:, y_1:y_2, x_1:x_2]
         ice_velocity_y = self.ice_velocity_y_tensor[:, y_1:y_2, x_1:x_2]
-        mass_balance = self.projected_mass_balance_data[:, y_1:y_2, x_1:x_2]
+        snow_acc_rate = self.projected_snow_acc_data[:, y_1:y_2, x_1:x_2]
         hillshade = self.hillshade_tensor[:, y_1:y_2, x_1:x_2]
-
-        mass_balance = torch.rand((1, self.crop_size, self.crop_size))
 
         velocity = torch.cat((ice_velocity_x, ice_velocity_y), dim=0)
 
         assert height_icecap.shape == (1, self.crop_size, self.crop_size), f"Patch height icecap shape mismatch: {height_icecap.shape}"
-        assert mass_balance.shape == (1, self.crop_size, self.crop_size), f"Patch mass balance shape mismatch: {mass_balance.shape}"
+        assert snow_acc_rate.shape == (1, self.crop_size, self.crop_size), f"Patch mass balance shape mismatch: {snow_acc_rate.shape}"
         assert bed_elevation_lr.shape == (1, self.crop_size, self.crop_size), f"Patch bed elevation shape mismatch: {bed_elevation_lr.shape}"
         assert velocity.shape == (2, self.crop_size, self.crop_size), f"Patch ice velocity x shape mismatch: {ice_velocity_x.shape}"
         assert hillshade.shape == (1, self.crop_size, self.crop_size), f"Patch hillshade shape mismatch: {hillshade}"
@@ -152,7 +142,7 @@ class ArcticDataloader(Dataset):
             'lr_bed_elevation': bed_elevation_lr,
             'hr_bed_elevation': bed_elevation_hr,
             'velocity': velocity,
-            'mass_balance': mass_balance,
+            'snow_acc': snow_acc_rate,
             'hillshade': hillshade,
             'crops' : crops
         }
@@ -164,7 +154,8 @@ if __name__ == "__main__":
         bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        #mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        snow_acc_path="data/inputs/Snow_acc/snow_acc_rate.tif",
         hillshade_path = "data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
     )
 
@@ -197,7 +188,7 @@ if __name__ == "__main__":
     batch = next(iter(dataloader))
     
 
-    image_types = ['height_icecap', 'lr_bed_elevation', 'hr_bed_elevation', 'velocity', 'velocity', 'mass_balance', 'hillshade']
+    image_types = ['height_icecap', 'lr_bed_elevation', 'hr_bed_elevation', 'velocity', 'velocity', 'snow_acc', 'hillshade']
     titles = ["Height Icecap", "Low-res Bed Elevation",  "High res Bed Elevation", "Velocity X", "Velocity Y", "Mass balance", "Flow aware hillshade"]
 
     fig, axes = plt.subplots(1, len(image_types), figsize=(20, 5))

@@ -32,17 +32,19 @@ def train(
 ):
     # Load dataset
     dataset = ArcticDataloader(
-        bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
-        arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
-        ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
-        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+        arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+        ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
+        snow_acc_path=os.path.join("data", "inputs", "mass_balance", "GrIS-Annual-RA-VMB-1992-2020.nc"),
+        hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
     )
 
     dataset_for_generation = ArcticDataloader(
-        bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
-        arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
-        ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
-        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+        arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+        ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
+        snow_acc_path=os.path.join("data", "inputs", "mass_balance", "GrIS-Annual-RA-VMB-1992-2020.nc"),
+        hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
         region=regions_of_interest
     )
 
@@ -84,10 +86,11 @@ def train(
                 imgs['height_icecap'].to(device),
                 imgs['velocity'].to(device),
                 imgs['mass_balance'].to(device),
+                imgs['hillshade'].to(device)
             )
             hr_imgs = imgs['hr_bed_elevation'].to(device)
 
-            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3]).detach()
+            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4]).detach()
             d_real = discriminator(hr_imgs)
             d_fake = discriminator(fake_imgs)
             d_loss = bce_loss(d_real, torch.ones_like(d_real)) + bce_loss(d_fake, torch.zeros_like(d_fake))
@@ -96,7 +99,7 @@ def train(
             d_optimizer.step()
 
             # Train Generator
-            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
+            fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
             g_adv_loss = bce_loss(discriminator(fake_imgs), torch.ones_like(d_real))
             g_pixel_loss = mse_loss(fake_imgs, hr_imgs)
             g_loss = g_adv_loss + g_pixel_loss
@@ -113,9 +116,10 @@ def train(
                     imgs['height_icecap'].to(device),
                     imgs['velocity'].to(device),
                     imgs['mass_balance'].to(device),
+                    imgs['hillshade'].to(device)
                 )
                 hr_imgs = imgs['hr_bed_elevation'].to(device)
-                preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3])
+                preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3], lr_imgs[4])
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
 
         plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
@@ -144,6 +148,7 @@ def train(
                             imgs['height_icecap'].to(device),
                             imgs['velocity'].to(device),
                             imgs['mass_balance'].to(device),
+                            imgs['hillshade'].to(device),
                         )
                         hr_imgs = imgs['hr_bed_elevation'].to(device)
                         preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])

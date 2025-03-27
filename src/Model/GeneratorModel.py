@@ -42,7 +42,7 @@ class GeneratorModel(nn.Module):
         # Initial Input and Residual Blocks
         self.input_block = inblock_class()
         self.pre_residual_conv_layer = nn.Conv2d(
-            in_channels=128,  # Adjust based on input_block output
+            in_channels=160,  # Adjust based on input_block output
             out_channels=64,
             kernel_size=3,
             stride=1,
@@ -102,7 +102,7 @@ class GeneratorModel(nn.Module):
                 if m.bias is not None:
                     nn.init.constant_(m.bias, 0)
 
-    def forward(self, x: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor, w3: torch.Tensor):
+    def forward(self, x: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor, w3: torch.Tensor, w4: torch.Tensor):
         """
         Forward computation, i.e., evaluate based on input tensors.
 
@@ -110,8 +110,7 @@ class GeneratorModel(nn.Module):
         """
         # 0 part: Resize inputs to the right scale using convolution
         # and concatenate all inputs
-        a0 = self.input_block(x=x, w1=w1, w2=w2, w3=w3)
-        #print(a0.size())
+        a0 = self.input_block(x=x, w1=w1, w2=w2, w3=w3, w4=w4)
 
         # 1st part: Pre-residual convolution k3n64s1
         a1 = self.pre_residual_conv_layer(a0)
@@ -156,7 +155,7 @@ if __name__ == "__main__":
                                 bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
                                 arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
                                 ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-                                mass_balance_path="data/Snow_acc/...",
+                                snow_acc_path="data/Snow_acc/...",
                                 true_crops="data/downscaled_true_crops"
     )
 

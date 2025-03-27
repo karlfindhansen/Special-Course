@@ -15,8 +15,8 @@ import tqdm
 import pandas as pd
 #from train import plot_fake_real
 
-region_of_interest_org = pd.read_csv('data/true_crops/large_crops/original_crops.csv')
-region_of_interest_proj = pd.read_csv('data/true_crops/large_crops/projected_crops.csv')
+region_of_interest_org = pd.read_csv('data/crops/true_crops/large_crops/original_crops.csv')
+region_of_interest_proj = pd.read_csv('data/crops/true_crops/large_crops/projected_crops.csv')
 
 regions_of_interest = {
     "Projected": {
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        snow_acc_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         region=regions_of_interest
     )
 

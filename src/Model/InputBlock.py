@@ -17,7 +17,7 @@ class InputBlock(nn.Module):
     MEaSUREs Ice Surface Velocity x and y components (W2) : size 16x16
     Snow Accumulation (W3) : size 16x16
 
-    Each filter kernel is 4x4 in size, with a stride of 2 and padding of 1.
+    Each filter kernel is 3x3 in size, with a stride of 1 and padding of 0.
     """
 
     def __init__(self, out_channels=32):
@@ -39,6 +39,10 @@ class InputBlock(nn.Module):
             in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
         )
 
+        self.conv_on_W4 = nn.Conv2d(
+            in_channels=1, out_channels=out_channels, kernel_size=(3,3), stride=(1,1), padding=(0,0)
+        )
+
         # Initialize weights with He (Kaiming) initialization
         self._initialize_weights()
 
@@ -47,16 +51,17 @@ class InputBlock(nn.Module):
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='relu')
 
-    def forward(self, x, w1, w2, w3):
+    def forward(self, x, w1, w2, w3, w4):
         """Forward computation based on inputs X, W1, W2, and W3"""
 
         x_ = self.conv_on_X(x)
         w1_ = self.conv_on_W1(w1)
         w2_ = self.conv_on_W2(w2)
         w3_ = self.conv_on_W3(w3)
+        w4_ = self.conv_on_W4(w4)
 
         # Concatenate along the channel dimension (dim=1 for NCHW format)
-        output = torch.cat((x_, w1_, w2_, w3_), dim=1)
+        output = torch.cat((x_, w1_, w2_, w3_, w4_), dim=1)
         return output
 
 if __name__ == "__main__":
@@ -65,7 +70,7 @@ if __name__ == "__main__":
         bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        snow_acc_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         hillshade_path="data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
     )
 
@@ -81,8 +86,9 @@ if __name__ == "__main__":
         w1 = batch['height_icecap']
         w2 = batch['velocity']
         w3 = batch['mass_balance']
+        w4 = batch['hillshade']
         break
 
-    output = input_block(x, w1, w2, w3)
-    print("Output size: ", output.size())
+    output = input_block(x, w1, w2, w3, w4)
+    # this is the goal: Output shape: torch.Size([32, 128, 9, 9])
     print("Output shape:", output.shape)

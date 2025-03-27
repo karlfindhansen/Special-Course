@@ -1,0 +1,28 @@
+The following files are provided for GMB temporal mass changes derived by DTU Space within the ESA CCI GIS project.
+GIS00_grace.dat : all GIS
+GIS01_grace.dat : Basin 1
+GIS02_grace.dat : Basin 2
+GIS03_grace.dat : Basin 3
+GIS04_grace.dat : Basin 4
+GIS05_grace.dat : Basin 5
+GIS06_grace.dat : Basin 6
+GIS07_grace.dat : Basin 7
+GIS08_grace.dat : Basin 8
+
+The files contain the following information:
+
+time [decimal year], mass change [gigatons], error [gigatons]
+
+Each file is complemented by a quicklook image in png format.
+
+Data source:    GRACE and GRACE-FO monthly solutions RL06.2 provided by CSR 
+				and GRACE-FO monthly solutions R06.2 provided by CSR 
+GIA correction: Caron et al. 2018
+
+Basin definitions and further data descriptions can be found in the ST-DTU-ESA-GISCCI-ATBD-001_v3.0.doc and ST-DTU-ESA-GISCCI-PSD_v2.2.doc which can be found on the project website 
+
+GMB products by DTU Space are derived with the inversion method described in Barletta et a. 2013.
+(http://www.the-cryosphere.net/7/1411/2013/tc-7-1411-2013.html)
+
+Citation: 
+Barletta, V. R., Sorensen, L. S., and Forsberg, R.: Scatter of mass changes estimates at basin scale for Greenland and Antarctica, The Cryosphere, 7, 1411-1432, doi:10.5194/tc-7-1411-2013, 2013.

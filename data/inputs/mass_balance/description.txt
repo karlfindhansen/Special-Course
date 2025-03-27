@@ -1,0 +1,1 @@
+GMB products for the Greenland Ice Sheet from GRACE satellite gravimetry (GRACE L2 CSR RL06.2 and GRACE-FO L2 CSR RL06.2) by DTU Space.
