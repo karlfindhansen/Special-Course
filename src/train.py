@@ -4,6 +4,7 @@ import torch.optim as optim
 import tqdm
 import sys
 import os
+import xarray as xr
 import shutil
 from torch.utils.data import DataLoader, random_split
 
@@ -28,7 +29,7 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=11,
+    epochs=50,
 ):
     # Load dataset
     dataset = ArcticDataloader(
@@ -152,9 +153,8 @@ def train(
                         preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
 
                         save_specified_area(imgs, preds) 
+                        plot_fake_real(preds, hr_imgs, epoch, output_dir=f'comparison/figures/fake_real/')
         
-            
-
         else:
             epochs_no_improve += 1
             print(f"Validation RMSE did not improve from {best_rmse:.4f}, early stopping counter: {epochs_no_improve}")
@@ -168,6 +168,9 @@ def train(
     return best_rmse
 
 def save_specified_area(imgs, preds):
+    hr_bed_machine = xr.open_dataset('data/inputs/Bedmachine/BedMachineGreenland-v5.nc')['bed']
+    vmin = hr_bed_machine.min()
+    vmax = hr_bed_machine.max()
     records = []
     save_path="figures/specified_area/"
     csv_filename = f"{save_path}coordinates.csv"
@@ -187,7 +190,7 @@ def save_specified_area(imgs, preds):
         num_imgs_in_folder = len(os.listdir(save_path))
 
         image_filename = f'pred_{num_imgs_in_folder+1}.png'
-        plt.imsave(f'{save_path}{image_filename}', pred_img, cmap='terrain')
+        plt.imsave(f'{save_path}{image_filename}', pred_img, cmap='terrain', vmin=vmin, vmax=vmax)
 
         records.append({
             "image_id": i,
@@ -203,7 +206,7 @@ def save_specified_area(imgs, preds):
 def plot_val_rmse(val_rmse_ls, epochs):
     sns.set_style("darkgrid")  
 
-    x = np.arange(1, epochs + 1)
+    x = np.arange(1, epochs + 2)
     y = np.array(val_rmse_ls)
 
     if epochs > 3:  
@@ -229,6 +232,9 @@ def plot_val_rmse(val_rmse_ls, epochs):
     plt.close()
 
 def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated_imgs/', show=False):
+    hr_bed_machine = xr.open_dataset('data/inputs/Bedmachine/BedMachineGreenland-v5.nc')['bed']
+    vmin = hr_bed_machine.min()
+    vmax = hr_bed_machine.max()
     sns.set_style("darkgrid")  
     
     fake_imgs = fake_imgs[:4].squeeze(1).cpu().numpy() 
@@ -237,11 +243,11 @@ def plot_fake_real(fake_imgs, real_imgs, epoch_nr, output_dir='figures/generated
     fig, axes = plt.subplots(4, 2, figsize=(8, 16)) 
     
     for i in range(4):
-        axes[i, 0].imshow(fake_imgs[i], cmap="terrain")
+        axes[i, 0].imshow(fake_imgs[i], cmap="terrain", vmin=vmin, vmax=vmax)
         axes[i, 0].set_title(f"Generated (Fake) Image {i+1}", fontsize=12, fontweight="bold")
         axes[i, 0].axis("off")
         
-        axes[i, 1].imshow(real_imgs[i], cmap="terrain")
+        axes[i, 1].imshow(real_imgs[i], cmap="terrain", vmin=vmin, vmax=vmax)
         axes[i, 1].set_title(f"Ground Truth (Real) Image {i+1}", fontsize=12, fontweight="bold")
         axes[i, 1].axis("off")
 

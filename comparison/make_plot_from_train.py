@@ -39,19 +39,26 @@ stitched_image_1 = np.vstack([
 # For demonstration, use the same stitched image as the second plot
 stitched_image_2 = cropped_bed_machine  # Replace this with another stitched image if needed
 
-# Create subplots
-fig, axes = plt.subplots(1, 2, figsize=(20, 10))  # 1 row, 2 columns
+hr_bed_machine = xr.open_dataset('data/inputs/Bedmachine/BedMachineGreenland-v5.nc')['bed']
+vmin = hr_bed_machine.min()
+vmax = hr_bed_machine.max()
 
-# Plot the first stitched image
-axes[0].imshow(stitched_image_1, cmap='terrain')
+fig, axes = plt.subplots(1, 2, figsize=(20, 10))  
+
+im1 = axes[0].imshow(stitched_image_1, cmap='terrain', vmin=vmin, vmax=vmax)
 axes[0].axis('off')  # Turn off axes
 axes[0].set_title("Stitched Image 1")
 
 # Plot the second stitched image
-axes[1].imshow(stitched_image_2, cmap='terrain')
+im2 = axes[1].imshow(stitched_image_2, cmap='terrain', vmin=vmin, vmax=vmax)
 axes[1].axis('off')  # Turn off axes
 axes[1].set_title("Stitched Image 2")
 
-# Adjust layout and show the plot
-plt.tight_layout()
+# Add a colorbar to the figure
+cbar = fig.colorbar(im1, ax=axes, orientation='vertical', fraction=0.046, pad=0.04)
+cbar.set_label('Elevation')
+
+# Adjust layout and save the plot
+#plt.tight_layout()
+plt.savefig("comparison/hopeful_plot_with_same_cmap.png", dpi=300)
 plt.show()
