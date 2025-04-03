@@ -7,7 +7,7 @@ import xarray as xr
 import rioxarray
 import csv
 from PIL import Image
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader, random_split, Subset
 import matplotlib.pyplot as plt
 
 Image.MAX_IMAGE_PIXELS = None
@@ -62,30 +62,35 @@ class ArcticDataloader(Dataset):
 
         self.hillshade_path = hillshade_path
         self.hillshade_tensor = self.read_hillshade_data()
-            
-        with open(true_crops, newline='') as f:
-            reader = csv.reader(f)
-            next(reader)
-            all_true_crops = [list(map(int, row)) for row in reader]
-
-        with open(bedmachine_crops, newline='') as f:
-            reader = csv.reader(f)
-            next(reader)
-            all_bedmachine_crops = [list(map(int, row)) for row in reader]
         
-        self.crop_size = all_true_crops[0][2] - all_true_crops[0][0]
-        self.bedmachine_crops_size = all_bedmachine_crops[0][2] - all_bedmachine_crops[0][0]
+        if region is None:
+            with open(true_crops, newline='') as f:
+                reader = csv.reader(f)
+                next(reader)
+                self.true_crops = [list(map(int, row)) for row in reader]
+
+            with open(bedmachine_crops, newline='') as f:
+                reader = csv.reader(f)
+                next(reader)
+                self.bedmachine_crops  = [list(map(int, row)) for row in reader]
+        
+        else:
+            with open(os.path.join("data","crops", "true_crops", "large_crops", "projected_crops.csv"), newline='') as f:
+                reader = csv.reader(f)
+                next(reader)
+                self.true_crops = [list(map(int, row)) for row in reader]
+
+            with open(os.path.join("data","crops", "true_crops", "large_crops", "original_crops.csv"), newline='') as f:
+                reader = csv.reader(f)
+                next(reader)
+                self.bedmachine_crops  = [list(map(int, row)) for row in reader]
+
+        print(f"Dataloader created with {len(self.true_crops)} crops")
+
+        self.crop_size = self.true_crops[0][2] - self.true_crops[0][0]
+        self.bedmachine_crops_size = self.bedmachine_crops[0][2] - self.bedmachine_crops[0][0]
 
         self.bed_elevation_hr = torch.tensor(self.bedmachine_data['bed'].values.astype(np.float32)).unsqueeze(0)
-
-        if region is not None:
-            self.true_crops = [crop for crop in all_true_crops if min(region['Projected']['x_1']) <= crop[1] <= max(region['Projected']['x_2']) and min(region['Projected']['y_1']) <= crop[0] <= max(region['Projected']['y_2'])]
-            self.bedmachine_crops = [crop for crop in all_bedmachine_crops if min(region['Original']['x_1']) <= crop[1] <= max(region['Original']['x_2']) and min(region['Original']['y_1']) <= crop[0] <= max(region['Original']['y_2'])]
-            print(f"Loaded {len(self.true_crops)} crops in the selected region.")
-        else:
-            self.true_crops = all_true_crops
-            self.bedmachine_crops = all_bedmachine_crops
-            print(f"Loaded {len(self.true_crops)} crops.")
 
         
     def read_icecap_height_data(self):
@@ -180,9 +185,13 @@ if __name__ == "__main__":
         region=regions_of_interest
     )
 
-    train_size = int(0.95 * len(dataset)) 
-    val_size = len(dataset) - train_size 
-    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+    train_size = int(0.95 * len(dataset))
+    val_size = len(dataset) - train_size
+
+    train_dataset = Subset(dataset, list(range(train_size)))  # First 95%
+    val_dataset = Subset(dataset, list(range(train_size, len(dataset))))  # Last 5%
+
+    #train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     dataloader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=False)
 
