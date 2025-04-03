@@ -20,19 +20,18 @@ region_of_interest_proj = pd.read_csv('data/crops/true_crops/large_crops/project
 
 regions_of_interest = {
     "Projected": {
-        'y_1': region_of_interest_proj['y_1'].astype(int).to_list()[0],
-        'x_1': region_of_interest_proj['x_1'].astype(int).to_list()[0],
-        'y_2': region_of_interest_proj['y_2'].astype(int).to_list()[0],
-        'x_2': region_of_interest_proj['x_2'].astype(int).to_list()[0]
+        'y_1': region_of_interest_proj['y_1'].astype(int).to_list(),
+        'x_1': region_of_interest_proj['x_1'].astype(int).to_list(),
+        'y_2': region_of_interest_proj['y_2'].astype(int).to_list(),
+        'x_2': region_of_interest_proj['x_2'].astype(int).to_list()
     },
     "Original": {
-        'y_1': region_of_interest_org['y_1'].astype(int).to_list()[0],
-        'x_1': region_of_interest_org['x_1'].astype(int).to_list()[0],
-        'y_2': region_of_interest_org['y_2'].astype(int).to_list()[0],
-        'x_2': region_of_interest_org['x_2'].astype(int).to_list()[0]
+        'y_1': region_of_interest_org['y_1'].astype(int).to_list(),
+        'x_1': region_of_interest_org['x_1'].astype(int).to_list(),
+        'y_2': region_of_interest_org['y_2'].astype(int).to_list(),
+        'x_2': region_of_interest_org['x_2'].astype(int).to_list()
     }
 }
-
 
 if __name__ == '__main__':
     dataset = ArcticDataloader(

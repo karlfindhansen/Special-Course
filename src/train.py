@@ -28,14 +28,14 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=250,
+    epochs=11,
 ):
     # Load dataset
     dataset = ArcticDataloader(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
-        snow_acc_path=os.path.join("data", "inputs", "mass_balance", "GrIS-Annual-RA-VMB-1992-2020.nc"),
+        snow_acc_path=os.path.join("data", "inputs", "Snow_acc", "snow_acc_rate.tif"),
         hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
     )
 
@@ -43,7 +43,7 @@ def train(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
-        snow_acc_path=os.path.join("data", "inputs", "mass_balance", "GrIS-Annual-RA-VMB-1992-2020.nc"),
+        snow_acc_path=os.path.join("data", "inputs", "Snow_acc", "snow_acc_rate.tif"),
         hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
         region=regions_of_interest
     )
@@ -85,11 +85,12 @@ def train(
                 imgs['lr_bed_elevation'].to(device),
                 imgs['height_icecap'].to(device),
                 imgs['velocity'].to(device),
-                imgs['mass_balance'].to(device),
+                imgs['snow_acc'].to(device),
                 imgs['hillshade'].to(device)
             )
             hr_imgs = imgs['hr_bed_elevation'].to(device)
 
+            # Train discriminator
             fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4]).detach()
             d_real = discriminator(hr_imgs)
             d_fake = discriminator(fake_imgs)
@@ -98,7 +99,7 @@ def train(
             d_loss.backward()
             d_optimizer.step()
 
-            # Train Generator
+            # Train optimizer
             fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
             g_adv_loss = bce_loss(discriminator(fake_imgs), torch.ones_like(d_real))
             g_pixel_loss = mse_loss(fake_imgs, hr_imgs)
@@ -115,7 +116,7 @@ def train(
                     imgs['lr_bed_elevation'].to(device),
                     imgs['height_icecap'].to(device),
                     imgs['velocity'].to(device),
-                    imgs['mass_balance'].to(device),
+                    imgs['snow_acc'].to(device),
                     imgs['hillshade'].to(device)
                 )
                 hr_imgs = imgs['hr_bed_elevation'].to(device)
@@ -134,9 +135,6 @@ def train(
             epochs_no_improve = 0
 
             if epoch%5 == 0:
-                org_y1, org_y2 = int(regions_of_interest['Original']['y_1']), int(regions_of_interest['Original']['y_2'])
-                org_x1, org_x2 = int(regions_of_interest['Original']['x_1']), int(regions_of_interest['Original']['x_2'])
-
                 shutil.rmtree('figures/specified_area')
                 os.mkdir('figures/specified_area')
 
@@ -147,13 +145,13 @@ def train(
                             imgs['lr_bed_elevation'].to(device),
                             imgs['height_icecap'].to(device),
                             imgs['velocity'].to(device),
-                            imgs['mass_balance'].to(device),
+                            imgs['snow_acc'].to(device),
                             imgs['hillshade'].to(device),
                         )
                         hr_imgs = imgs['hr_bed_elevation'].to(device)
-                        preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3])
+                        preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
 
-                        save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2) 
+                        save_specified_area(imgs, preds) 
         
             
 
@@ -169,7 +167,7 @@ def train(
 
     return best_rmse
 
-def save_specified_area(imgs, preds, org_y1, org_y2, org_x1, org_x2):
+def save_specified_area(imgs, preds):
     records = []
     save_path="figures/specified_area/"
     csv_filename = f"{save_path}coordinates.csv"

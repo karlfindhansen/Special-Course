@@ -2,6 +2,7 @@ import os
 import tarfile
 import torch
 import numpy as np
+import pandas as pd
 import xarray as xr
 import rioxarray
 import csv
@@ -78,13 +79,13 @@ class ArcticDataloader(Dataset):
         self.bed_elevation_hr = torch.tensor(self.bedmachine_data['bed'].values.astype(np.float32)).unsqueeze(0)
 
         if region is not None:
-            self.true_crops = [crop for crop in all_true_crops if region['Projected']['x_1'] <= crop[1] <= region['Projected']['x_2'] and region['Projected']['y_1'] <= crop[0] <= region['Projected']['y_2']]
-            self.bedmachine_crops = [crop for crop in all_bedmachine_crops if region['Original']['x_1'] <= crop[1] <= region['Original']['x_2'] and region['Original']['y_1'] <= crop[0] <= region['Original']['y_2']]
+            self.true_crops = [crop for crop in all_true_crops if min(region['Projected']['x_1']) <= crop[1] <= max(region['Projected']['x_2']) and min(region['Projected']['y_1']) <= crop[0] <= max(region['Projected']['y_2'])]
+            self.bedmachine_crops = [crop for crop in all_bedmachine_crops if min(region['Original']['x_1']) <= crop[1] <= max(region['Original']['x_2']) and min(region['Original']['y_1']) <= crop[0] <= max(region['Original']['y_2'])]
+            print(f"Loaded {len(self.true_crops)} crops in the selected region.")
         else:
             self.true_crops = all_true_crops
             self.bedmachine_crops = all_bedmachine_crops
-
-        print(f"Loaded {len(self.true_crops)} crops in the selected region.")
+            print(f"Loaded {len(self.true_crops)} crops.")
 
         
     def read_icecap_height_data(self):
@@ -150,13 +151,33 @@ class ArcticDataloader(Dataset):
 if __name__ == "__main__":
     os.makedirs("figures", exist_ok=True)
 
+    region_of_interest_org = pd.read_csv('data/crops/true_crops/large_crops/original_crops.csv')
+    region_of_interest_proj = pd.read_csv('data/crops/true_crops/large_crops/projected_crops.csv')
+
+    regions_of_interest = {
+        "Projected": {
+            'y_1': region_of_interest_proj['y_1'].astype(int).to_list(),
+            'x_1': region_of_interest_proj['x_1'].astype(int).to_list(),
+            'y_2': region_of_interest_proj['y_2'].astype(int).to_list(),
+            'x_2': region_of_interest_proj['x_2'].astype(int).to_list()
+        },
+        "Original": {
+            'y_1': region_of_interest_org['y_1'].astype(int).to_list(),
+            'x_1': region_of_interest_org['x_1'].astype(int).to_list(),
+            'y_2': region_of_interest_org['y_2'].astype(int).to_list(),
+            'x_2': region_of_interest_org['x_2'].astype(int).to_list()
+        }
+    }
+
+
     dataset = ArcticDataloader(
         bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
         #mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         snow_acc_path="data/inputs/Snow_acc/snow_acc_rate.tif",
-        hillshade_path = "data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
+        hillshade_path = "data/inputs/hillshade/macgregortest_flowalignedhillshade.tif",
+        region=regions_of_interest
     )
 
     train_size = int(0.95 * len(dataset)) 

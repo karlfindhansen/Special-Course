@@ -75,6 +75,7 @@ class CroppedAreaGenerator:
         occupied = np.zeros((h, w), dtype=bool)
         valid_crops_info = []
         edge_margin = 5
+        base_size = 11
         crop_count = 0
 
         tqdm_bar = tqdm(range(edge_margin, h - self.crop_size - edge_margin + 1), desc="Finding valid crops")
@@ -90,13 +91,32 @@ class CroppedAreaGenerator:
 
                 if torch.all(crop_mask == 1) and torch.all(crop_bed > 0) and torch.all(~torch.isnan(crop_velocity)) and torch.all(~torch.isnan(crop_mass_balance)):
                     end_row, end_col = i + self.crop_size, j + self.crop_size
-                    orig_y1, orig_x1 = self._projected_to_original_coords(i, j)
-                    orig_y2, orig_x2 = self._projected_to_original_coords(end_row, end_col)
 
-                    valid_crops_info.append({"projected": [i, j, end_row, end_col], "original": [orig_y1, orig_x1, orig_y2, orig_x2]})
-                    occupied[i:end_row, j:end_col] = True
-                    crop_count += 1
-                    tqdm_bar.set_postfix(total_crops=crop_count)
+                    if self.crop_size > base_size:
+                        for sub_i in range(i, end_row, base_size):
+                            for sub_j in range(j, end_col, base_size):
+                                sub_end_row = min(sub_i + base_size, end_row)
+                                sub_end_col = min(sub_j + base_size, end_col)
+                                orig_y1, orig_x1 = self._projected_to_original_coords(sub_i, sub_j)
+                                orig_y2, orig_x2 = self._projected_to_original_coords(sub_end_row, sub_end_col)
+                                
+                                valid_crops_info.append({
+                                    "projected": [sub_i, sub_j, sub_end_row, sub_end_col],
+                                    "original": [orig_y1, orig_x1, orig_y2, orig_x2]
+                                })
+                                occupied[sub_i:sub_end_row, sub_j:sub_end_col] = True
+                                crop_count += 1
+
+                    else:
+                        orig_y1, orig_x1 = self._projected_to_original_coords(i, j)
+                        orig_y2, orig_x2 = self._projected_to_original_coords(end_row, end_col)
+
+                        valid_crops_info.append({"projected": [i, j, end_row, end_col], 
+                                                 "original": [orig_y1, orig_x1, orig_y2, orig_x2]})
+                        occupied[i:end_row, j:end_col] = True
+                        crop_count += 1
+
+                    tqdm_bar.set_postfix(total_crops=crop_count if self.crop_size == 11 else crop_count/self.crop_size)
 
         return valid_crops_info
 
@@ -117,7 +137,7 @@ class CroppedAreaGenerator:
             "data",
             "crops",
             "true_crops" if self.precise else "unprecise_crops",
-            "large_crops" if self.crop_size == 121 else ""
+            "large_crops" if self.crop_size > 11 else ""
         ).rstrip(os.sep)
         if self.downscale:
             output_dir = os.path.join(output_dir, "downscaled")
@@ -162,7 +182,7 @@ if __name__ == '__main__':
     velocity_path = "data/inputs/Ice_velocity/Promice_AVG5year.nc"
     mass_balance_path = "data/inputs/Snow_acc/snow_acc_rate.tif"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, mass_balance_path, crop_size=11) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, mass_balance_path, crop_size=121) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:
