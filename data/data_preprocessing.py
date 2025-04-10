@@ -14,11 +14,11 @@ Image.MAX_IMAGE_PIXELS = None
 
 class ArcticDataloader(Dataset):
     def __init__(self,
-                 bedmachine_path,
-                 arcticdem_path,
-                 ice_velocity_path,
-                 mass_balance_path,
-                 hillshade_path,
+                 bedmachine_path=os.path.join("data", "inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+                 arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+                 ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
+                 mass_balance_path=os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
+                 hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
                  true_crops = os.path.join("data","crops", "true_crops", "projected_crops.csv"),
                  bedmachine_crops = os.path.join("data","crops", "true_crops","original_crops.csv"),
                  region = None
@@ -171,16 +171,7 @@ if __name__ == "__main__":
         }
     }
 
-
-    dataset = ArcticDataloader(
-        bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
-        arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
-        ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/inputs/mass_balance/combined_mass_balance.tif",
-        #snow_acc_path="data/inputs/Snow_acc/snow_acc_rate.tif",
-        hillshade_path = "data/inputs/hillshade/macgregortest_flowalignedhillshade.tif",
-        #region=regions_of_interest
-    )
+    dataset = ArcticDataloader()
 
     train_size = int(0.95 * len(dataset))
     val_size = len(dataset) - train_size
@@ -214,7 +205,6 @@ if __name__ == "__main__":
 
     batch = next(iter(dataloader))
     
-
     image_types = ['height_icecap', 'lr_bed_elevation', 'hr_bed_elevation', 'velocity', 'velocity', 'snow_acc', 'hillshade']
     titles = ["Height Icecap", "Low-res Bed Elevation",  "High res Bed Elevation", "Velocity X", "Velocity Y", "Mass balance", "Flow aware hillshade"]
 

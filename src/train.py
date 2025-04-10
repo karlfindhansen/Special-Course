@@ -25,7 +25,7 @@ from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
 def train(
-    batch_size=64,
+    batch_size=128,
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
@@ -38,6 +38,16 @@ def train(
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
         mass_balance_path=os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
         hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
+    )
+
+    dataset_for_validation = ArcticDataloader(
+        bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+        arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+        ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
+        mass_balance_path=os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
+        hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
+        true_crops=os.path.join("data", "crops", "unprecise_crops", "projected_crops.csv"),
+        bedmachine_crops=os.path.join("data", "crops", "unprecise_crops", "original_crops.csv"),
     )
 
     dataset_for_generation = ArcticDataloader(
@@ -55,8 +65,9 @@ def train(
 
     print(f"Number of items in train_dataset: {len(train_dataset)}")
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=3, pin_memory=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    val_loader2_unprecise = DataLoader(dataset_for_validation, batch_size=batch_size, shuffle=False) 
     gen_loader = DataLoader(dataset_for_generation, batch_size=batch_size, shuffle=False)
 
     # Initialize models
@@ -112,6 +123,7 @@ def train(
         generator.eval()
         with torch.no_grad():
             val_rmse = 0
+            val_rmse_unprecise = 0
             for imgs in val_loader:
                 lr_imgs = (
                     imgs['lr_bed_elevation'].to(device),
@@ -124,10 +136,23 @@ def train(
                 preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3], lr_imgs[4])
                 val_rmse += torch.sqrt(mse_loss(preds, hr_imgs)).item()
 
+            for imgs in val_loader2_unprecise:
+                lr_imgs = (
+                    imgs['lr_bed_elevation'].to(device),
+                    imgs['height_icecap'].to(device),
+                    imgs['velocity'].to(device),
+                    imgs['snow_acc'].to(device),
+                    imgs['hillshade'].to(device)
+                )
+                hr_imgs = imgs['hr_bed_elevation'].to(device)
+                preds = generator(lr_imgs[0], lr_imgs[1],lr_imgs[2],lr_imgs[3], lr_imgs[4])
+                val_rmse_unprecise += torch.sqrt(mse_loss(preds, hr_imgs)).item()
+
         plot_fake_real(fake_imgs=preds, real_imgs = hr_imgs, epoch_nr=epoch)
         val_rmse /= len(val_loader)
+        val_rmse_unprecise /= len(val_loader2_unprecise)
         validation_rmse.append(float(val_rmse))
-        print(f"Epoch {epoch+1}: Validation RMSE = {val_rmse:.4f}")
+        print(f"Epoch {epoch+1}: Validation RMSE = {val_rmse:.4f}. Unprecise: {val_rmse_unprecise:.4f}")
 
         if val_rmse < best_rmse:
             best_rmse = val_rmse
