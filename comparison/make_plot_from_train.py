@@ -1,64 +1,50 @@
-import matplotlib.pyplot as plt
+import os
+import re
 import numpy as np
 import pandas as pd
-import os
 import xarray as xr
-import re
+import matplotlib.pyplot as plt
 from skimage.io import imread
 
-img_path_l = 'figures/specified_area/'
+img_dir = 'figures/specified_area/'
+csv_path = 'data/crops/true_crops/large_crops/original_crops.csv'
+netcdf_path = 'data/inputs/Bedmachine/BedMachineGreenland-v5.nc'
+save_path = 'comparison/hopeful_plot_with_same_cmap.png'
 
-# Sort filenames numerically based on the numeric part of the filename
-images_in_folder = sorted(
-    [img for img in os.listdir(img_path_l) if img.endswith('.png')],
+image_files = sorted(
+    [img for img in os.listdir(img_dir) if img.endswith('.png')],
     key=lambda x: int(re.search(r'\d+', x).group())
 )
 
-img_2_path = 'data/crops/true_crops/large_crops/original_crops.csv'
-df = pd.read_csv(img_2_path)
-y1,y2 = min(df['y_1']), max(df['y_2'])
-x1,x2 = min(df['x_1']), max(df['x_2'])
+df = pd.read_csv(csv_path)
+y1, y2 = df['y_1'].min(), df['y_2'].max()
+x1, x2 = df['x_1'].min(), df['x_2'].max()
 
-hr_bed_machine = xr.open_dataset('data/inputs/Bedmachine/BedMachineGreenland-v5.nc')['bed']
+hr_bed_machine = xr.open_dataset(netcdf_path)['bed']
 cropped_bed_machine = hr_bed_machine[y1:y2, x1:x2]
 
-# Read and resize images to ensure they have the same dimensions
-images = []
-for img_file in images_in_folder[:121]:  # Limit to the first 121 images (11x11 grid)
-    img = imread(os.path.join(img_path_l, img_file))
-    images.append(img)
+images = [imread(os.path.join(img_dir, img)) for img in image_files[:121]]
 
-# Determine the number of rows and columns
 rows, cols = 11, 11
 
-# Stitch images together into a single large image
 stitched_image_1 = np.vstack([
     np.hstack(images[row * cols:(row + 1) * cols]) for row in range(rows)
 ])
 
-# For demonstration, use the same stitched image as the second plot
-stitched_image_2 = cropped_bed_machine  # Replace this with another stitched image if needed
+vmin, vmax = hr_bed_machine.min(), hr_bed_machine.max()
 
-hr_bed_machine = xr.open_dataset('data/inputs/Bedmachine/BedMachineGreenland-v5.nc')['bed']
-vmin = hr_bed_machine.min()
-vmax = hr_bed_machine.max()
-
-fig, axes = plt.subplots(1, 2, figsize=(20, 10))  
+fig, axes = plt.subplots(1, 2, figsize=(20, 10))
 
 im1 = axes[0].imshow(stitched_image_1, cmap='terrain', vmin=vmin, vmax=vmax)
-axes[0].axis('off')  # Turn off axes
-axes[0].set_title("Stitched Image 1")
+axes[0].axis('off')
+axes[0].set_title("Generated image")
 
-# Plot the second stitched image
-im2 = axes[1].imshow(stitched_image_2, cmap='terrain', vmin=vmin, vmax=vmax)
-axes[1].axis('off')  # Turn off axes
-axes[1].set_title("Stitched Image 2")
+im2 = axes[1].imshow(cropped_bed_machine, cmap='terrain', vmin=vmin, vmax=vmax)
+axes[1].axis('off')
+axes[1].set_title("Bedmachine")
 
-# Add a colorbar to the figure
 cbar = fig.colorbar(im1, ax=axes, orientation='vertical', fraction=0.046, pad=0.04)
 cbar.set_label('Elevation')
 
-# Adjust layout and save the plot
-#plt.tight_layout()
-plt.savefig("comparison/hopeful_plot_with_same_cmap.png", dpi=300)
+plt.savefig(save_path, dpi=300)
 plt.show()

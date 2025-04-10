@@ -17,7 +17,7 @@ class ArcticDataloader(Dataset):
                  bedmachine_path,
                  arcticdem_path,
                  ice_velocity_path,
-                 snow_acc_path,
+                 mass_balance_path,
                  hillshade_path,
                  true_crops = os.path.join("data","crops", "true_crops", "projected_crops.csv"),
                  bedmachine_crops = os.path.join("data","crops", "true_crops","original_crops.csv"),
@@ -39,10 +39,12 @@ class ArcticDataloader(Dataset):
         self.arcticdem_tif_path = os.path.join(extracted_path, tif_file)
 
         self.height_map_icecap_data = self.read_icecap_height_data()
+
         self.height_map_icecap_tensor = self.align_to_velocity(self.height_map_icecap_data)
 
-        self.snow_acc_data = xr.open_dataset(snow_acc_path)
-        self.snow_acc_data.rio.write_crs("EPSG:3413", inplace=True)
+        self.mass_balance = rioxarray.open_rasterio(mass_balance_path)
+        self.mass_balance.rio.write_crs("EPSG:3413", inplace=True)
+        self.mass_balance = torch.tensor(self.mass_balance.values.astype(np.float32))
 
         self.ice_velocity_x_tensor = self.align_to_velocity(
             self.ice_velocity_data['land_ice_surface_easting_velocity']
@@ -55,10 +57,6 @@ class ArcticDataloader(Dataset):
         self.bedmachine_projected = self.align_to_velocity(
             self.bedmachine_data['bed']
         ).unsqueeze(0)
-
-        self.projected_snow_acc_data = self.align_to_velocity(
-            self.snow_acc_data["band_data"]
-        )
 
         self.hillshade_path = hillshade_path
         self.hillshade_tensor = self.read_hillshade_data()
@@ -91,8 +89,7 @@ class ArcticDataloader(Dataset):
         self.bedmachine_crops_size = self.bedmachine_crops[0][2] - self.bedmachine_crops[0][0]
 
         self.bed_elevation_hr = torch.tensor(self.bedmachine_data['bed'].values.astype(np.float32)).unsqueeze(0)
-
-        
+            
     def read_icecap_height_data(self):
         arcticdem_data = rioxarray.open_rasterio(self.arcticdem_tif_path)
         arcticdem_data.rio.write_crs("EPSG:3413", inplace=True)
@@ -128,7 +125,7 @@ class ArcticDataloader(Dataset):
         bed_elevation_hr = self.bed_elevation_hr[:, y_1_b:y_2_b, x_1_b:x_2_b]
         ice_velocity_x = self.ice_velocity_x_tensor[:, y_1:y_2, x_1:x_2]
         ice_velocity_y = self.ice_velocity_y_tensor[:, y_1:y_2, x_1:x_2]
-        snow_acc_rate = self.projected_snow_acc_data[:, y_1:y_2, x_1:x_2]
+        snow_acc_rate = self.mass_balance[:, y_1:y_2, x_1:x_2]
         hillshade = self.hillshade_tensor[:, y_1:y_2, x_1:x_2]
 
         velocity = torch.cat((ice_velocity_x, ice_velocity_y), dim=0)
@@ -179,10 +176,10 @@ if __name__ == "__main__":
         bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        #mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
-        snow_acc_path="data/inputs/Snow_acc/snow_acc_rate.tif",
+        mass_balance_path="data/inputs/mass_balance/combined_mass_balance.tif",
+        #snow_acc_path="data/inputs/Snow_acc/snow_acc_rate.tif",
         hillshade_path = "data/inputs/hillshade/macgregortest_flowalignedhillshade.tif",
-        region=regions_of_interest
+        #region=regions_of_interest
     )
 
     train_size = int(0.95 * len(dataset))

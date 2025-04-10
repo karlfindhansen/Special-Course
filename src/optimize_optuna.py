@@ -22,7 +22,7 @@ def objective(trial):
         bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),
-        snow_acc_path="data/Snow_acc/...",
+        mass_balance_path="data/Snow_acc/...",
         crop_size=crop_size
     )
     train_size = int(0.95 * len(dataset))

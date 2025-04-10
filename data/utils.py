@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+import pygmt as gmt
+
 
 def plot_tensor(tensor, title, filename, cmap='viridis', show=False):
     """ Generic function to plot PyTorch tensors and save the figure. """
@@ -15,3 +19,19 @@ def plot_tensor(tensor, title, filename, cmap='viridis', show=False):
     if show:
         plt.show()
     
+def plot_greenland():
+    fig = gmt.Figure()
+    gmt.makecpt(cmap="jet", series=[-2800, 2800, 200], D="o")
+    fig.grdimage(
+        region=[-2700000, 2800000, -2200000, 2300000],
+        projection="X8c/7c",
+       # grid="lowres/bedmap2_bed.tif",
+        cmap=True,
+        I="+d",
+        Q=True,
+        # frame='+t"BEDMAP2"'
+    )
+    fig.show()
+        
+if __name__ == '__main__':
+    plot_greenland()

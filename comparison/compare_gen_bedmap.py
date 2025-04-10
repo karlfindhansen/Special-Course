@@ -38,7 +38,7 @@ if __name__ == '__main__':
         bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-        snow_acc_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         region=regions_of_interest
     )
 

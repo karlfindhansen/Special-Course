@@ -2,7 +2,7 @@ import os
 import csv
 import numpy as np
 import torch
-import torch.nn.functional as F
+import rioxarray as rio
 import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -20,11 +20,11 @@ class CroppedAreaGenerator:
 
         self.bedmachine_data = xr.open_dataset(self.bedmachine_path)
         self.ice_velocity_data = xr.open_dataset(self.ice_velocity_path)
-        self.snow_accumulation_rate = xr.open_dataset(self.mass_balance_path)
+        self.mass_balance = rio.open_rasterio(self.mass_balance_path)
 
         self.bedmachine_data.rio.write_crs("EPSG:3413", inplace=True)
         self.ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
-        self.snow_accumulation_rate.rio.write_crs("EPSG:3413", inplace=True)
+        self.mass_balance.rio.write_crs("EPSG:3413", inplace=True)
 
         self.bed_tensor, self.mask_tensor, self.ice_velocity_tensor, self.mass_balance_tensor, self.transform_info = self._load_and_preprocess_data()
                 
@@ -33,11 +33,11 @@ class CroppedAreaGenerator:
     def _load_and_preprocess_data(self):
         original_bed = self.bedmachine_data["bed"]
         original_errbed = self.bedmachine_data["errbed"]
-        snow_acc_rate = self.snow_accumulation_rate["band_data"]
+        mass_balance =  self.mass_balance
 
         bed_reprojected = original_bed.rio.reproject_match(self.ice_velocity_data)
         errbed_reprojected = original_errbed.rio.reproject_match(self.ice_velocity_data)
-        snow_acc_rate_reprojected = snow_acc_rate.rio.reproject_match(self.ice_velocity_data)
+        snow_acc_rate_reprojected = mass_balance.rio.reproject_match(self.ice_velocity_data)
 
         reproj_transform = bed_reprojected.rio.transform()
 
@@ -48,7 +48,7 @@ class CroppedAreaGenerator:
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
         ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)
 
-        mask_tensor = (errbed_tensor < 20).float() if self.precise else (errbed_tensor > 11).float()
+        mask_tensor = (errbed_tensor < 25).float() if self.precise else (errbed_tensor > 11).float()
 
         transform_info = {
             "original_shape": original_bed.shape,
@@ -180,9 +180,9 @@ if __name__ == '__main__':
 
     bedmachine_path = "data/inputs/Bedmachine/BedMachineGreenland-v5.nc"
     velocity_path = "data/inputs/Ice_velocity/Promice_AVG5year.nc"
-    mass_balance_path = "data/inputs/Snow_acc/snow_acc_rate.tif"
+    mass_balance_path = "data/inputs/mass_balance/combined_mass_balance.tif"
 
-    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, mass_balance_path, crop_size=121) 
+    crop_generator = CroppedAreaGenerator(bedmachine_path, velocity_path, mass_balance_path, crop_size=11) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:

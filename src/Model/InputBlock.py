@@ -70,7 +70,7 @@ if __name__ == "__main__":
         bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
         arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
         ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        snow_acc_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
         hillshade_path="data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
     )
 
