@@ -7,10 +7,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from tqdm import tqdm
-import re
-import pyproj
-from affine import Affine
-
+from utils import create_mask
 class CroppedAreaGenerator:
     def __init__(self, 
                  bedmachine_path = os.path.join("data", "inputs", "Bedmachine", "BedMachineGreenland-v5.nc"), 
@@ -36,87 +33,13 @@ class CroppedAreaGenerator:
         self.bed_tensor, self.mask_tensor, self.ice_velocity_tensor, self.mass_balance_tensor, self.transform_info = self._load_and_preprocess_data()
         self.bed_tensor_transform = self.transform_info["reprojected_transform"]
 
-        if coordinates is not None:
-            lat, lon = coordinates
-            source_crs = pyproj.CRS("EPSG:4326")
-            target_crs = pyproj.CRS("EPSG:3413")
-            transformer = pyproj.Transformer.from_crs(source_crs, target_crs, always_xy=True)
-            x_3413, y_3413 = transformer.transform(lon, lat)
-            print(f"Original Coordinates (Lat, Lon): ({lat}, {lon})")
-            print(f"Reprojected Point (X, Y in EPSG:3413): ({x_3413}, {y_3413})")
-            print(f"Size of ice_velocity_tensor: {self.ice_velocity_tensor.shape}")
+        self.coordinates = coordinates
+        self.coordinate_tensor = create_mask(self.ice_velocity_data['land_ice_surface_easting_velocity'],
+                                            coordinates['lat_deg'], coordinates['lat_min'], coordinates['lat_hem'],
+                                            coordinates['lon_deg'], coordinates['lon_min'], coordinates['lon_hem'],
+                                            area_around_point=50)
 
-            fig, ax = plt.subplots(figsize=(10, 8))
-
-            plot_data = self.ice_velocity_data['land_ice_surface_easting_velocity'].plot(
-                ax=ax,
-                cmap='viridis', 
-                cbar_kwargs={'label': 'Ice Velocity (m/s)'},
-            )
-
-            ax.scatter(
-                x_3413,      
-                y_3413,       
-                color='red',  
-                s=100,       
-                edgecolor='black', 
-                marker='*',   
-                label=f'Point ({lat:.2f}N, {lon:.2f}E)', # Label for legend
-                zorder=10     # Ensure point is drawn on top
-            )
-
-            # --- 4. Customize Plot ---
-            ax.set_title('Ice Velocity Data with Reprojected Point Location')
-            # xarray.plot usually sets reasonable labels based on coordinate names and attrs
-            # ax.set_xlabel("X Coordinate (EPSG:3413 meters)")
-            # ax.set_ylabel("Y Coordinate (EPSG:3413 meters)")
-            ax.legend() # Show the legend to identify the point
-            ax.set_aspect('equal', adjustable='box') # Maintain aspect ratio for map data
-            plt.grid(True, linestyle='--', alpha=0.5) # Add a light grid
-            plt.tight_layout() # Adjust layout to prevent labels overlapping
-            plt.show() # Display the plot
-            plt.savefig("blablabla.png")
-                
-            exit()
-            x, y, row, col = self.convert_latlon_to_pixel_ice_velocity(lat, lon)
-            self.valid_indices = [self.find_largest_crop_around(col, row)]
-        else:
-            self.valid_indices = self._find_valid_crop_indices()
-
-
-    
-    def find_largest_crop_around(self, center_row, center_col, max_size=101):
-        step = 0
-        while True:
-            top = center_row - step - 1
-            bottom = center_row + step + 2
-            left = center_col - step - 1
-            right = center_col + step + 2
-
-            if top < 0 or bottom > self.mask_tensor.shape[0] or left < 0 or right > self.mask_tensor.shape[1]:
-                break
-
-            crop_mask = self.mask_tensor[top:bottom, left:right]
-            crop_bed = self.bed_tensor[top:bottom, left:right]
-            crop_vel = self.ice_velocity_tensor[top:bottom, left:right]
-            crop_mb = self.mass_balance_tensor[top:bottom, left:right]
-
-            if torch.all(crop_mask == 1) and torch.all(crop_bed > 0) and torch.all(~torch.isnan(crop_vel)) and torch.all(~torch.isnan(crop_mb)):
-                step += 1
-                continue
-            else:
-                break
-
-        step -= 1
-        top = center_row - step
-        left = center_col - step
-        bottom = center_row + step + 1
-        right = center_col + step + 1
-
-        return {
-            "projected": [top, left, bottom, right],
-            "original": self._projected_to_original_coords(top, left) + self._projected_to_original_coords(bottom, right)
-        }
+        self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
         original_bed = self.bedmachine_data["bed"]
@@ -136,8 +59,8 @@ class CroppedAreaGenerator:
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
         ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)
 
-        self.uncertaincy_criteria = 30
-        mask_tensor = (errbed_tensor < self.uncertaincy_criteria).float() if self.precise else (errbed_tensor >= self.uncertaincy_criteria).float()
+        self.uncertaincy_criteria = 50
+        mask_tensor = (errbed_tensor <= self.uncertaincy_criteria).float() if self.precise else (errbed_tensor > self.uncertaincy_criteria).float()
 
         transform_info = {
             "original_shape": original_bed.shape,
@@ -170,7 +93,7 @@ class CroppedAreaGenerator:
         tqdm_bar = tqdm(range(edge_margin, h - self.crop_size - edge_margin + 1), desc="Finding valid crops")
         for i in tqdm_bar:
             for j in range(edge_margin, w - self.crop_size - edge_margin + 1):
-                if not self.precise and occupied[i:i + self.crop_size, j:j + self.crop_size].any():
+                if not self.precise and occupied[i:i + self.crop_size, j:j + self.crop_size].any() or (self.coordinates and self.coordinate_tensor[i:i + self.crop_size, j:j + self.crop_size].any()):
                     continue
 
                 crop_mask = self.mask_tensor[i:i + self.crop_size, j:j + self.crop_size]
@@ -267,9 +190,10 @@ class CroppedAreaGenerator:
 
 if __name__ == '__main__':
 
-    coordinates = (68.38, 33.00)
-    coordinates = (round(int(coordinates[0]) + (coordinates[0] % 1*100 / 60),4), round(int(coordinates[1]) + (coordinates[1] % 1*100 / 60),4))
-    crop_generator = CroppedAreaGenerator(crop_size=11, precise=True, coordinates=coordinates) 
+    coordinate = {'lat_deg': 68, 'lat_min': 38, 'lat_hem': 'N',
+                  'lon_deg': 33, 'lon_min': 0, 'lon_hem': 'W'}
+
+    crop_generator = CroppedAreaGenerator(crop_size=11, precise=True, coordinates=coordinate) 
     cropped_areas = crop_generator.generate_and_save_crops()
 
     if cropped_areas:
