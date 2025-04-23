@@ -1,0 +1,16 @@
+program: src/optimize_wandb.py
+project: greenland-bedmap-generation
+method: bayes
+metric:
+  name: val_rmse
+  goal: minimize
+parameters:
+  batch_size:
+    values: [64, 128]
+  learning_rate:
+    min: 0.00001
+    max: 0.001
+  num_residual_blocks:
+    values: [8, 12, 16]
+  residual_scaling:
+    values: [0.1, 0.2, 0.3]

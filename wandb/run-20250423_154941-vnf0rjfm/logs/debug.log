@@ -1,0 +1,23 @@
+2025-04-23 15:49:41,188 INFO    MainThread:41433 [wandb_setup.py:_flush():68] Current SDK version is 0.19.10
+2025-04-23 15:49:41,189 INFO    MainThread:41433 [wandb_setup.py:_flush():68] Configure stats pid to 41433
+2025-04-23 15:49:41,189 INFO    MainThread:41433 [wandb_setup.py:_flush():68] Loading settings from /Users/karlfindhansen/.config/wandb/settings
+2025-04-23 15:49:41,189 INFO    MainThread:41433 [wandb_setup.py:_flush():68] Loading settings from /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/settings
+2025-04-23 15:49:41,193 INFO    MainThread:41433 [wandb_setup.py:_flush():68] Loading settings from environment variables
+2025-04-23 15:49:41,193 INFO    MainThread:41433 [wandb_init.py:setup_run_log_directory():724] Logging user logs to /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/logs/debug.log
+2025-04-23 15:49:41,193 INFO    MainThread:41433 [wandb_init.py:setup_run_log_directory():725] Logging internal logs to /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/logs/debug-internal.log
+2025-04-23 15:49:41,193 INFO    MainThread:41433 [wandb_init.py:init():852] calling init triggers
+2025-04-23 15:49:41,194 INFO    MainThread:41433 [wandb_init.py:init():857] wandb.init called with sweep_config: {'batch_size': 64, 'learning_rate': 0.00012878171319672096, 'num_residual_blocks': 16, 'residual_scaling': 0.2}
+config: {'batch_size': 128, 'learning_rate': 0.0001, 'num_residual_blocks': 12, 'residual_scaling': 0.2, 'epochs': 50, '_wandb': {}}
+2025-04-23 15:49:41,194 INFO    MainThread:41433 [wandb_init.py:init():893] starting backend
+2025-04-23 15:49:41,194 INFO    MainThread:41433 [wandb_init.py:init():897] sending inform_init request
+2025-04-23 15:49:41,228 INFO    MainThread:41433 [backend.py:_multiprocessing_setup():101] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2025-04-23 15:49:41,228 INFO    MainThread:41433 [wandb_init.py:init():907] backend started and connected
+2025-04-23 15:49:41,229 INFO    MainThread:41433 [wandb_run.py:_config_callback():1429] config_cb None None {'batch_size': 64, 'learning_rate': 0.00012878171319672096, 'num_residual_blocks': 16, 'residual_scaling': 0.2}
+2025-04-23 15:49:41,231 INFO    MainThread:41433 [wandb_init.py:init():1002] updated telemetry
+2025-04-23 15:49:41,250 INFO    MainThread:41433 [wandb_init.py:init():1026] communicating run to backend with 90.0 second timeout
+2025-04-23 15:49:41,767 INFO    MainThread:41433 [wandb_init.py:init():1101] starting run threads in backend
+2025-04-23 15:49:43,587 INFO    MainThread:41433 [wandb_run.py:_console_start():2566] atexit reg
+2025-04-23 15:49:43,587 INFO    MainThread:41433 [wandb_run.py:_redirect():2414] redirect: wrap_raw
+2025-04-23 15:49:43,587 INFO    MainThread:41433 [wandb_run.py:_redirect():2483] Wrapping output streams.
+2025-04-23 15:49:43,587 INFO    MainThread:41433 [wandb_run.py:_redirect():2506] Redirects installed.
+2025-04-23 15:49:43,588 INFO    MainThread:41433 [wandb_init.py:init():1147] run started, returning control to user process

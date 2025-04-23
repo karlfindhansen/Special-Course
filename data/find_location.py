@@ -13,14 +13,13 @@ class CroppedAreaGenerator:
                  bedmachine_path = os.path.join("data", "inputs", "Bedmachine", "BedMachineGreenland-v5.nc"), 
                  ice_velocity_path= os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
                  mass_balance_path= os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
-                 precise=True, crop_size=11, downscale=False, coordinates=None):
+                 precise=True, crop_size=11, coordinates=None):
         """Initializes the CroppedAreaGenerator with paths, processing settings, and data loading."""
         self.bedmachine_path = bedmachine_path
         self.ice_velocity_path = ice_velocity_path
         self.mass_balance_path = mass_balance_path
         self.precise = precise
         self.crop_size = crop_size
-        self.downscale = downscale
 
         self.bedmachine_data = xr.open_dataset(self.bedmachine_path)
         self.ice_velocity_data = xr.open_dataset(self.ice_velocity_path)
@@ -34,11 +33,8 @@ class CroppedAreaGenerator:
         self.bed_tensor_transform = self.transform_info["reprojected_transform"]
 
         self.coordinates = coordinates
-        self.coordinate_tensor = create_mask(self.ice_velocity_data['land_ice_surface_easting_velocity'],
-                                            coordinates['lat_deg'], coordinates['lat_min'], coordinates['lat_hem'],
-                                            coordinates['lon_deg'], coordinates['lon_min'], coordinates['lon_hem'],
-                                            area_around_point=50)
 
+        self.coordinate_indices, self.coordinate_tensor = self._find_valid_coordinate_indicies()
         self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
@@ -59,7 +55,7 @@ class CroppedAreaGenerator:
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
         ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)
 
-        self.uncertaincy_criteria = 50
+        self.uncertaincy_criteria = 30
         mask_tensor = (errbed_tensor <= self.uncertaincy_criteria).float() if self.precise else (errbed_tensor > self.uncertaincy_criteria).float()
 
         transform_info = {
@@ -81,6 +77,23 @@ class CroppedAreaGenerator:
         orig_y_idx = np.abs(self.transform_info["original_dims"]["y"] - reproj_y).argmin()
         orig_x_idx = np.abs(self.transform_info["original_dims"]["x"] - reproj_x).argmin()
         return orig_y_idx, orig_x_idx
+
+    def _find_valid_coordinate_indicies(self):
+        """Find and return 11x11 crops specifically within the coordinate tensor region."""
+        valid_crops_info = []
+        coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.coordinates['lat_deg'], self.coordinates['lat_min'], self.coordinates['lat_hem'],
+                    self.coordinates['lon_deg'], self.coordinates['lon_min'], self.coordinates['lon_hem'], 64)
+
+        for i,j in valid_crops_coordinates:
+            orig_y1, orig_x1 = self._projected_to_original_coords(i, j)
+            orig_y2, orig_x2 = self._projected_to_original_coords(i+11, j+11)
+
+            valid_crops_info.append({
+                "projected": [i, j, i+11, j+11],
+                "original": [orig_y1, orig_x1, orig_y2, orig_x2]
+            })
+
+        return valid_crops_info, coordinate_tensor
 
     def _find_valid_crop_indices(self):
         h, w = self.mask_tensor.shape
@@ -142,28 +155,26 @@ class CroppedAreaGenerator:
                 writer.writerow(crop)
 
     def generate_and_save_crops(self):
-        if not self.valid_indices:
-            return []
-
+        output_dir_coordinates = os.path.join("data", "crops", "coordinate_crops")
         output_dir = os.path.join(
             "data",
             "crops",
             "true_crops" if self.precise else "unprecise_crops",
             "large_crops" if self.crop_size > 11 else ""
         ).rstrip(os.sep)
-        if self.downscale:
-            output_dir = os.path.join(output_dir, "downscaled")
 
         projected_csv = os.path.join(output_dir, "projected_crops.csv")
         original_csv = os.path.join(output_dir, "original_crops.csv")
 
+        projected_coordinates_csv = os.path.join(output_dir_coordinates, "projected_crops.csv")
+        original_coordinates_csv = os.path.join(output_dir_coordinates, "original_crops.csv")
+
         self._save_crops_to_csv([crop["projected"] for crop in self.valid_indices], projected_csv)
         self._save_crops_to_csv([crop["original"] for crop in self.valid_indices], original_csv)
 
-        print(f"Saved projected crop coordinates: {projected_csv}")
-        print(f"Saved original crop coordinates: {original_csv}")
+        self._save_crops_to_csv([crop["projected"] for crop in self.coordinate_indices], projected_coordinates_csv)
+        self._save_crops_to_csv([crop["original"] for crop in self.coordinate_indices], original_coordinates_csv)
 
-        return self.valid_indices
 
     def overlay_crops_on_mask(self, output_path="figures/with_crops"):
         os.makedirs(output_path, exist_ok=True)
@@ -194,9 +205,6 @@ if __name__ == '__main__':
                   'lon_deg': 33, 'lon_min': 0, 'lon_hem': 'W'}
 
     crop_generator = CroppedAreaGenerator(crop_size=11, precise=True, coordinates=coordinate) 
-    cropped_areas = crop_generator.generate_and_save_crops()
-
-    if cropped_areas:
-        print(f"Generated {len(cropped_areas)} cropped areas.")
-        crop_generator.overlay_crops_on_mask()
+    crop_generator.generate_and_save_crops()
+    crop_generator.overlay_crops_on_mask()
     

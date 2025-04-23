@@ -1,0 +1,55 @@
+{
+    "os": "macOS-15.4.1-arm64-arm-64bit",
+    "python": "CPython 3.12.9",
+    "heartbeatAt": "2025-04-23T13:49:41.797450",
+    "startedAt": "2025-04-23T13:49:41.179891",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/var/folders/_k/m1mygzyn5n7f9s1mcnb2hgxm0000gn/T/tmptlwzuqcn/port-41433.txt",
+        "--pid",
+        "41433"
+    ],
+    "state": "running",
+    "program": "/Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/src/optimize_wandb.py",
+    "codePathLocal": "src/optimize_wandb.py",
+    "codePath": "src/optimize_wandb.py",
+    "git": {
+        "remote": "https://github.com/karlfindhansen/Special-Course.git",
+        "commit": "d11dd01eefdcbea052120fdd616f38e5e5f1f3de"
+    },
+    "email": "karl.find.hansen@gmail.com",
+    "root": "/Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course",
+    "host": "Karls-MacBook-Air.local",
+    "username": null,
+    "executable": "/opt/anaconda3/envs/polartoolkit/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 4056,
+        "min": 744,
+        "max": 4056
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4056,
+            "min": 744,
+            "max": 4056
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 245107195904,
+            "used": 11244556288
+        },
+        "/System/Volumes/Data": {
+            "total": 245107195904,
+            "used": 178150813696
+        }
+    },
+    "memory": {
+        "total": 17179869184
+    }
+}

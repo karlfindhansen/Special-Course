@@ -1,0 +1,10 @@
+wandb_version: 1
+
+batch_size:
+  value: 64
+learning_rate:
+  value: 0.00012878171319672096
+num_residual_blocks:
+  value: 16
+residual_scaling:
+  value: 0.2

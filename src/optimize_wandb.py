@@ -6,6 +6,7 @@ import sys
 import os
 import xarray as xr
 import shutil
+import wandb
 from torch.utils.data import DataLoader, random_split
 
 # For plot
@@ -29,8 +30,19 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=100,
+    epochs=50,
 ):
+    wandb.init(
+        project="greenland-bedmap-generation",
+        config={
+            "batch_size": batch_size,
+            "learning_rate": learning_rate,
+            "num_residual_blocks": num_residual_blocks,
+            "residual_scaling": residual_scaling,
+            "epochs": epochs,
+        }
+    )
+    config = wandb.config
     # Load dataset
     dataset = ArcticDataloader(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
@@ -120,6 +132,7 @@ def train(
             g_loss.backward()
             g_optimizer.step()
 
+
         generator.eval()
         with torch.no_grad():
             val_rmse = 0
@@ -152,6 +165,19 @@ def train(
         val_rmse /= len(val_loader)
         val_rmse_unprecise /= len(val_loader2_unprecise)
         validation_rmse.append(float(val_rmse))
+
+        wandb.log({
+                "epoch": epoch,
+                "g_loss": g_loss.item(),
+                "d_loss": d_loss.item(),
+                "val_rmse": val_rmse,
+                "val_rmse_unprecise": val_rmse_unprecise,
+            })
+        
+        if epoch % 5 == 0:
+            wandb.log({"Generated Image": wandb.Image(preds[0].detach().cpu().numpy(), caption="Fake Image")})
+
+
         print(f"Epoch {epoch+1}: Validation RMSE = {val_rmse:.4f}. Unprecise: {val_rmse_unprecise:.4f}")
 
         if val_rmse < best_rmse:
@@ -159,6 +185,10 @@ def train(
             torch.save(generator.state_dict(), os.path.join("res", "best_generator.pth"))
             torch.save(discriminator.state_dict(), os.path.join("res", "best_discriminator.pth"))
             epochs_no_improve = 0
+
+            wandb.run.summary["best_val_rmse"] = best_rmse
+            wandb.save("res/best_generator.pth")
+            wandb.save("res/best_discriminator.pth")
 
             if epoch%5 == 0:
                 shutil.rmtree('figures/specified_area')

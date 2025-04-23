@@ -71,8 +71,26 @@ def create_mask(ice_velocity, lat_deg: int, lat_min: float, lat_hem: str,
         for j in range(-area_around_point, area_around_point + 1):
             if 0 <= y_idx + i < ice_velocity_tensor.shape[0] and 0 <= x_idx + j < ice_velocity_tensor.shape[1]:
                 mask[y_idx + i, x_idx + j] = True
+    
+    block_size = 11
+    H, W = mask.shape
+    blocks = []
+    coords = []
 
-    return mask
+    for i in range(0, H - block_size + 1, block_size):
+        for j in range(0, W - block_size + 1, block_size):
+            block = mask[i:i+block_size, j:j+block_size]
+            if block.all(): 
+                blocks.append(block)
+                coords.append((i, j)) 
+                 
+    return mask, coords
 
 if __name__ == '__main__':
     dms_to_epsg3413(38, 33, 'N', 33, 0, 'W')
+    import os
+    import xarray as xr
+    ice_velocity_path = os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc")
+    ice_velocity_data = xr.open_dataset(ice_velocity_path)
+    ice_velocity_data.rio.write_crs("EPSG:3413", inplace=True)
+    create_mask(ice_velocity_data['land_ice_surface_easting_velocity'], 68, 33, 'N', 33, 0, 'W', 64)

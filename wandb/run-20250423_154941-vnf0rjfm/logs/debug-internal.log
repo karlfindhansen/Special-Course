@@ -1,0 +1,37 @@
+2025-04-23 15:49:41,230 INFO    StreamThr :41447 [internal.py:wandb_internal():83] W&B internal server running at pid: 41447, started at: 2025-04-23 15:49:41.229440
+2025-04-23 15:49:41,231 INFO    WriterThread:41447 [datastore.py:open_for_write():87] open: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/run-vnf0rjfm.wandb
+2025-04-23 15:49:41,771 INFO    SenderThread:41447 [dir_watcher.py:__init__():211] watching files in: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files
+2025-04-23 15:49:41,771 INFO    SenderThread:41447 [sender.py:_start_run_threads():1134] run started: vnf0rjfm with start time 1745416181.228871
+2025-04-23 15:49:41,772 INFO    HandlerThread:41447 [system_monitor.py:start():187] Starting system monitor
+2025-04-23 15:49:41,772 INFO    SystemMonitor:41447 [system_monitor.py:_start():151] Starting system asset monitoring threads
+2025-04-23 15:49:41,772 INFO    HandlerThread:41447 [system_monitor.py:probe():207] Collecting system info
+2025-04-23 15:49:41,773 INFO    SystemMonitor:41447 [interfaces.py:start():186] Started cpu monitoring
+2025-04-23 15:49:41,775 INFO    SystemMonitor:41447 [interfaces.py:start():186] Started disk monitoring
+2025-04-23 15:49:41,775 INFO    SystemMonitor:41447 [interfaces.py:start():186] Started memory monitoring
+2025-04-23 15:49:41,782 INFO    SystemMonitor:41447 [interfaces.py:start():186] Started network monitoring
+2025-04-23 15:49:41,824 INFO    HandlerThread:41447 [system_monitor.py:probe():217] Finished collecting system info
+2025-04-23 15:49:41,824 INFO    HandlerThread:41447 [system_monitor.py:probe():220] Publishing system info
+2025-04-23 15:49:42,771 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_created():272] file/dir created: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/conda-environment.yaml
+2025-04-23 15:49:43,533 INFO    HandlerThread:41447 [system_monitor.py:probe():222] Finished publishing system info
+2025-04-23 15:49:43,536 INFO    SenderThread:41447 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2025-04-23 15:49:43,771 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/conda-environment.yaml
+2025-04-23 15:49:43,771 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_created():272] file/dir created: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/wandb-metadata.json
+2025-04-23 15:49:43,771 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_created():272] file/dir created: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/requirements.txt
+2025-04-23 15:49:44,418 INFO    wandb-upload_0:41447 [upload_job.py:push():130] Uploaded file /var/folders/_k/m1mygzyn5n7f9s1mcnb2hgxm0000gn/T/tmpfb1y09u8wandb/ts3xu0f2-wandb-metadata.json
+2025-04-23 15:49:50,797 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_created():272] file/dir created: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/output.log
+2025-04-23 15:49:52,805 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/output.log
+2025-04-23 15:49:58,830 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/output.log
+2025-04-23 15:50:06,859 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/output.log
+2025-04-23 15:50:08,870 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/output.log
+2025-04-23 15:50:14,913 INFO    Thread-12 :41447 [dir_watcher.py:_on_file_modified():289] file/dir modified: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/files/config.yaml
+2025-04-23 15:50:30,425 WARNING StreamThr :41447 [internal.py:is_dead():399] Internal process exiting, parent pid 41433 disappeared
+2025-04-23 15:50:30,425 ERROR   StreamThr :41447 [internal.py:wandb_internal():145] Internal process shutdown.
+2025-04-23 15:50:30,913 INFO    SenderThread:41447 [sender.py:finish():1584] shutting down sender
+2025-04-23 15:50:30,914 INFO    HandlerThread:41447 [handler.py:finish():897] shutting down handler
+2025-04-23 15:50:30,916 INFO    WriterThread:41447 [datastore.py:close():296] close: /Users/karlfindhansen/Desktop/DTU/Kandidat/3. Semester/Special Course/Special-Course/wandb/run-20250423_154941-vnf0rjfm/run-vnf0rjfm.wandb
+2025-04-23 15:50:30,921 INFO    HandlerThread:41447 [system_monitor.py:finish():196] Stopping system monitor
+2025-04-23 15:50:30,928 INFO    HandlerThread:41447 [interfaces.py:finish():198] Joined cpu monitor
+2025-04-23 15:50:30,928 INFO    HandlerThread:41447 [interfaces.py:finish():198] Joined disk monitor
+2025-04-23 15:50:30,928 INFO    HandlerThread:41447 [interfaces.py:finish():198] Joined memory monitor
+2025-04-23 15:50:30,928 INFO    HandlerThread:41447 [interfaces.py:finish():198] Joined network monitor
+2025-04-23 15:50:31,887 INFO    MainThread:41447 [internal.py:handle_exit():73] Internal process exited
