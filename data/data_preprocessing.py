@@ -73,12 +73,12 @@ class ArcticDataloader(Dataset):
                 self.bedmachine_crops  = [list(map(int, row)) for row in reader]
         
         else:
-            with open(os.path.join("data","crops", "true_crops", "large_crops", "projected_crops.csv"), newline='') as f:
+            with open(os.path.join("data","crops", "coordinate_crops", "projected_crops.csv"), newline='') as f:
                 reader = csv.reader(f)
                 next(reader)
                 self.true_crops = [list(map(int, row)) for row in reader]
 
-            with open(os.path.join("data","crops", "true_crops", "large_crops", "original_crops.csv"), newline='') as f:
+            with open(os.path.join("data","crops", "coordinate_crops", "original_crops.csv"), newline='') as f:
                 reader = csv.reader(f)
                 next(reader)
                 self.bedmachine_crops  = [list(map(int, row)) for row in reader]

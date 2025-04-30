@@ -1,0 +1,124 @@
+2025-04-27 18:55:34,649 INFO    StreamThr :2831408 [internal.py:wandb_internal():83] W&B internal server running at pid: 2831408, started at: 2025-04-27 18:55:34.633620
+2025-04-27 18:55:34,651 INFO    WriterThread:2831408 [datastore.py:open_for_write():87] open: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/run-cjkx2cyg.wandb
+2025-04-27 18:55:35,110 INFO    HandlerThread:2831408 [system_monitor.py:start():187] Starting system monitor
+2025-04-27 18:55:35,110 INFO    SystemMonitor:2831408 [system_monitor.py:_start():151] Starting system asset monitoring threads
+2025-04-27 18:55:35,110 INFO    HandlerThread:2831408 [system_monitor.py:probe():207] Collecting system info
+2025-04-27 18:55:35,111 INFO    SystemMonitor:2831408 [interfaces.py:start():186] Started cpu monitoring
+2025-04-27 18:55:35,111 INFO    SystemMonitor:2831408 [interfaces.py:start():186] Started disk monitoring
+2025-04-27 18:55:35,114 INFO    SystemMonitor:2831408 [interfaces.py:start():186] Started gpu monitoring
+2025-04-27 18:55:35,114 INFO    SystemMonitor:2831408 [interfaces.py:start():186] Started memory monitoring
+2025-04-27 18:55:35,115 INFO    SystemMonitor:2831408 [interfaces.py:start():186] Started network monitoring
+2025-04-27 18:55:35,118 INFO    SenderThread:2831408 [dir_watcher.py:__init__():211] watching files in: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files
+2025-04-27 18:55:35,118 INFO    SenderThread:2831408 [sender.py:_start_run_threads():1134] run started: cjkx2cyg with start time 1745772934.632915
+2025-04-27 18:55:35,158 INFO    HandlerThread:2831408 [system_monitor.py:probe():217] Finished collecting system info
+2025-04-27 18:55:35,158 INFO    HandlerThread:2831408 [system_monitor.py:probe():220] Publishing system info
+2025-04-27 18:55:35,178 INFO    HandlerThread:2831408 [system_monitor.py:probe():222] Finished publishing system info
+2025-04-27 18:55:35,501 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2025-04-27 18:55:36,119 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/9x9b2jdl-wandb-metadata.json
+2025-04-27 18:55:36,120 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-metadata.json
+2025-04-27 18:55:40,125 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/requirements.txt
+2025-04-27 18:56:06,053 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/config.yaml
+2025-04-27 18:57:07,629 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:57:09,735 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:57:37,648 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:57:57,202 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:57:59,219 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:01,229 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:31,349 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:33,370 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:35,379 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:37,410 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:39,432 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:41,443 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:43,468 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:45,505 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:47,518 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:49,525 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:51,531 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:53,538 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:55,545 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:57,550 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:58:59,561 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:01,567 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:03,573 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:05,580 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:07,586 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:09,596 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:11,602 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:13,612 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:15,630 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:17,638 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:19,646 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:21,653 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:23,703 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:25,760 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:27,768 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:29,775 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:31,782 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:44,462 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2025-04-27 18:59:44,831 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/media/images/Generated Image_1_44df95af4b69b646671d.png
+2025-04-27 18:59:44,831 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-summary.json
+2025-04-27 18:59:44,832 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/media/images
+2025-04-27 18:59:44,832 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/media
+2025-04-27 18:59:44,851 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file media/images/Generated Image_1_44df95af4b69b646671d.png with policy now
+2025-04-27 18:59:44,876 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2025-04-27 18:59:45,340 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/ixwha1a4-media/images/Generated Image_1_44df95af4b69b646671d.png
+2025-04-27 18:59:45,795 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/fhm0r3i9-media/images/Generated Image_1_44df95af4b69b646671d.png
+2025-04-27 18:59:45,835 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/media/images/Generated Image_1_44df95af4b69b646671d.png
+2025-04-27 18:59:45,835 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-summary.json
+2025-04-27 18:59:46,301 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/hf6xgilo-media/images/Generated Image_1_44df95af4b69b646671d.png
+2025-04-27 18:59:47,175 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2025-04-27 18:59:47,176 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file res/best_generator.pth with policy live
+2025-04-27 18:59:47,187 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file res/best_discriminator.pth with policy live
+2025-04-27 18:59:47,856 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-summary.json
+2025-04-27 18:59:47,856 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:47,856 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/res/best_generator.pth
+2025-04-27 18:59:47,857 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/res/best_discriminator.pth
+2025-04-27 18:59:47,857 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_created():272] file/dir created: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/res
+2025-04-27 18:59:49,502 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/zvpyqpw6-res/best_generator.pth
+2025-04-27 18:59:49,954 INFO    wandb-upload_1:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/vd3r125f-res/best_discriminator.pth
+2025-04-27 18:59:50,913 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/config.yaml
+2025-04-27 18:59:57,951 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 18:59:59,962 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:01,972 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:03,995 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:06,007 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:08,027 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:10,164 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:11,172 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:13,187 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:15,218 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:17,229 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:19,240 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:21,253 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:23,272 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:25,308 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:27,327 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:29,339 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:31,378 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:33,390 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:35,402 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:37,417 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:39,429 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:41,465 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:43,497 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:45,508 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:47,520 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:49,532 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:51,544 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:53,561 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:00:55,572 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:01:07,232 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2025-04-27 19:01:07,876 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-summary.json
+2025-04-27 19:01:07,876 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/res/best_generator.pth
+2025-04-27 19:01:08,423 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2025-04-27 19:01:08,455 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file res/best_generator.pth with policy live
+2025-04-27 19:01:08,455 INFO    SenderThread:2831408 [sender.py:_save_file():1403] saving file res/best_discriminator.pth with policy live
+2025-04-27 19:01:08,889 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/wandb-summary.json
+2025-04-27 19:01:08,889 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/res/best_discriminator.pth
+2025-04-27 19:01:09,915 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:01:10,887 INFO    wandb-upload_0:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/73c9fet5-res/best_generator.pth
+2025-04-27 19:01:11,287 INFO    wandb-upload_1:2831408 [upload_job.py:push():130] Uploaded file /tmp/tmptcoc0v0owandb/hz44gp6r-res/best_discriminator.pth
+2025-04-27 19:01:11,927 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:01:13,937 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log
+2025-04-27 19:01:15,949 INFO    Thread-12 :2831408 [dir_watcher.py:_on_file_modified():289] file/dir modified: /zhome/a1/4/145993/courses/special course/Special-Course/wandb/run-20250427_185534-cjkx2cyg/files/output.log

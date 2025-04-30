@@ -1,0 +1,56 @@
+Overlay image saved to 'figures/with_crops'
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 24766138: <findlocations> in cluster <dcc> Done
+
+Job <findlocations> was submitted from host <n-62-12-19> by user <s193624> in cluster <dcc> at Wed Apr 23 16:00:55 2025
+Job was executed on host(s) <n-62-31-22>, in queue <hpc>, as user <s193624> in cluster <dcc> at Wed Apr 23 16:00:56 2025
+</zhome/a1/4/145993> was used as the home directory.
+</zhome/a1/4/145993/courses/special course/Special-Course> was used as the working directory.
+Started at Wed Apr 23 16:00:56 2025
+Terminated at Wed Apr 23 16:13:31 2025
+Results reported at Wed Apr 23 16:13:31 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J findlocations
+#BSUB -q hpc
+#BSUB -W 40:00
+#BSUB -R "rusage[mem=8192MB]"
+#BSUB -n 1         
+#BSUB -R "span[hosts=1]"   
+#BSUB -o data/batch_out/sleeper_%J.out
+#BSUB -e data/batch_out/sleeper_%J.err  
+
+source '../special_course/bin/activate'
+python data/find_location.py
+
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   748.99 sec.
+    Max Memory :                                 3123 MB
+    Average Memory :                             2581.12 MB
+    Total Requested Memory :                     8192.00 MB
+    Delta Memory :                               5069.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                7
+    Run time :                                   782 sec.
+    Turnaround time :                            756 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <data/batch_out/sleeper_24766138.err> for stderr output of this job.
+

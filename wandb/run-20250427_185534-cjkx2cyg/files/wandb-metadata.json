@@ -1,0 +1,174 @@
+{
+    "os": "Linux-6.1.132-1.el9.elrepo.x86_64-x86_64-with-glibc2.34",
+    "python": "CPython 3.13.0",
+    "heartbeatAt": "2025-04-27T16:55:35.136282",
+    "startedAt": "2025-04-27T16:55:34.473052",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/tmp/tmpkjqgu90y/port-2829950.txt",
+        "--pid",
+        "2829950"
+    ],
+    "state": "running",
+    "program": "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py",
+    "codePathLocal": "src/optimize_wandb.py",
+    "codePath": "src/optimize_wandb.py",
+    "git": {
+        "remote": "https://github.com/karlfindhansen/Special-Course.git",
+        "commit": "c1b58f4baef9e1605e8943fcf44dd9bff0eb5ec5"
+    },
+    "email": "karl.find.hansen@gmail.com",
+    "root": "/zhome/a1/4/145993/courses/special course/Special-Course",
+    "host": "n-62-20-4",
+    "username": null,
+    "executable": "/zhome/a1/4/145993/courses/special course/special_course/bin/python",
+    "cpu_count": 24,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 2796.596125,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3307.605,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3299.994,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3389.61,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3327.012,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3327.252,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3389.493,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3313.707,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3400.453,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3398.809,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2610.35,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1000.03,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 76817485824,
+            "used": 6239924224
+        }
+    },
+    "gpu": "Tesla V100-PCIE-16GB",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Tesla V100-PCIE-16GB",
+            "memory_total": 17179869184
+        }
+    ],
+    "memory": {
+        "total": 201902448640
+    }
+}

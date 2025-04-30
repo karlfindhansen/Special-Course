@@ -30,7 +30,7 @@ def train(
     learning_rate=1.0e-4,
     num_residual_blocks=12,
     residual_scaling=0.2,
-    epochs=50,
+    epochs=100,
 ):
     wandb.init(
         project="greenland-bedmap-generation",
@@ -76,6 +76,7 @@ def train(
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
     print(f"Number of items in train_dataset: {len(train_dataset)}")
+    print(f"Parameters are: {config}")
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=3, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)

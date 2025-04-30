@@ -26,9 +26,9 @@ from DiscriminatorModel import DiscriminatorModel
 
 def train(
     batch_size=128,
-    learning_rate=1.0e-4,
+    learning_rate=0.0006921253577657427,
     num_residual_blocks=12,
-    residual_scaling=0.2,
+    residual_scaling=0.3,
     epochs=100,
 ):
     # Load dataset
@@ -50,7 +50,7 @@ def train(
         bedmachine_crops=os.path.join("data", "crops", "unprecise_crops", "original_crops.csv"),
     )
 
-    dataset_for_generation = ArcticDataloader(
+    dataset_for_comparison = ArcticDataloader(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
@@ -68,7 +68,7 @@ def train(
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=3, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     val_loader2_unprecise = DataLoader(dataset_for_validation, batch_size=batch_size, shuffle=False) 
-    gen_loader = DataLoader(dataset_for_generation, batch_size=batch_size, shuffle=False)
+    compare_loader = DataLoader(dataset_for_comparison, batch_size=batch_size, shuffle=False)
 
     # Initialize models
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
@@ -124,6 +124,7 @@ def train(
         with torch.no_grad():
             val_rmse = 0
             val_rmse_unprecise = 0
+            val_rmse_generate = 0
             for imgs in val_loader:
                 lr_imgs = (
                     imgs['lr_bed_elevation'].to(device),
@@ -166,7 +167,7 @@ def train(
 
                 generator.eval()  
                 with torch.no_grad():
-                    for imgs in gen_loader:
+                    for imgs in compare_loader:
                         lr_imgs = (
                             imgs['lr_bed_elevation'].to(device),
                             imgs['height_icecap'].to(device),
@@ -176,9 +177,12 @@ def train(
                         )
                         hr_imgs = imgs['hr_bed_elevation'].to(device)
                         preds = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
+                        val_rmse_generate += torch.sqrt(mse_loss(preds, hr_imgs)).item()
 
                         save_specified_area(imgs, preds) 
                         plot_fake_real(preds, hr_imgs, epoch, output_dir='comparison/figures/fake_real/')
+                    val_rmse_generate /= len(compare_loader)
+                    print(f"Epoch {epoch+1}: Validation RMSE for generated images = {val_rmse_generate:.4f}")
         
         else:
             epochs_no_improve += 1

@@ -1,0 +1,61 @@
+
+Dataloader created with 39848 crops
+Dataloader created with 31456 crops
+Dataloader created with 121 crops
+/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/utils/data/dataloader.py:624: UserWarning: This DataLoader will create 3 worker processes in total. Our suggested max number of worker in current system is 2, which is smaller than what this DataLoader is going to create. Please be aware that excessive worker creation might get DataLoader running slow or even freeze, lower the worker number to avoid potential slowness/freeze if necessary.
+  warnings.warn(
+Epoch 1/50:   0%|          | 0/281 [00:00<?, ?it/s]
+Number of items in train_dataset: 35863
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 1/50:   7%|▋         | 21/281 [06:42<1:23:04, 19.17s/it]
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 322, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 132, in train
+    g_loss.backward()
+    ~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/_tensor.py", line 626, in backward
+    torch.autograd.backward(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self, gradient, retain_graph, create_graph, inputs=inputs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/__init__.py", line 347, in backward
+    _engine_run_backward(
+    ~~~~~~~~~~~~~~~~~~~~^
+        tensors,
+        ^^^^^^^^
+    ...<5 lines>...
+        accumulate_grad=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/graph.py", line 823, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        t_outputs, *args, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )  # Calls into the C++ engine to run the backward pass
+    ^

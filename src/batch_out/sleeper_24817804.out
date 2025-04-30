@@ -1,0 +1,1167 @@
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007758453661068394, 'num_residual_blocks': 8, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 650.9529. Unprecise: 807.9388
+Epoch 2: Validation RMSE = 472.2402. Unprecise: 561.9766
+Epoch 3: Validation RMSE = 389.0297. Unprecise: 442.0777
+Epoch 4: Validation RMSE = 336.9153. Unprecise: 370.0962
+Epoch 5: Validation RMSE = 299.0564. Unprecise: 319.7708
+Epoch 6: Validation RMSE = 269.5056. Unprecise: 282.4350
+Epoch 7: Validation RMSE = 245.7947. Unprecise: 252.2126
+Epoch 8: Validation RMSE = 226.1658. Unprecise: 226.7676
+Epoch 9: Validation RMSE = 209.3883. Unprecise: 205.0194
+Epoch 10: Validation RMSE = 194.6994. Unprecise: 186.4890
+Epoch 11: Validation RMSE = 181.8983. Unprecise: 171.1237
+Epoch 12: Validation RMSE = 170.4714. Unprecise: 157.7463
+Epoch 13: Validation RMSE = 160.0603. Unprecise: 146.0890
+Epoch 14: Validation RMSE = 150.5972. Unprecise: 135.5030
+Epoch 15: Validation RMSE = 141.9921. Unprecise: 126.3012
+Epoch 16: Validation RMSE = 134.3201. Unprecise: 117.9116
+Epoch 17: Validation RMSE = 127.2616. Unprecise: 110.1506
+Epoch 18: Validation RMSE = 120.8762. Unprecise: 102.8863
+Epoch 19: Validation RMSE = 115.5025. Unprecise: 96.5417
+Epoch 20: Validation RMSE = 112.8787. Unprecise: 92.0958
+Epoch 21: Validation RMSE = 104.1563. Unprecise: 84.7333
+Epoch 22: Validation RMSE = 98.9689. Unprecise: 78.7978
+Epoch 23: Validation RMSE = 94.6644. Unprecise: 74.1097
+Epoch 24: Validation RMSE = 90.5296. Unprecise: 69.5082
+Epoch 25: Validation RMSE = 86.8324. Unprecise: 65.6648
+Epoch 26: Validation RMSE = 83.2504. Unprecise: 62.0148
+Epoch 27: Validation RMSE = 79.9258. Unprecise: 58.2007
+Epoch 28: Validation RMSE = 78.1395. Unprecise: 56.9438
+Epoch 29: Validation RMSE = 78.8187. Unprecise: 59.9835
+Validation RMSE did not improve from 78.1395, early stopping counter: 1
+Epoch 30: Validation RMSE = 72.6761. Unprecise: 50.2504
+Epoch 31: Validation RMSE = 68.4429. Unprecise: 47.1902
+Epoch 32: Validation RMSE = 65.9826. Unprecise: 44.7921
+Epoch 33: Validation RMSE = 77.1324. Unprecise: 64.3978
+Validation RMSE did not improve from 65.9826, early stopping counter: 1
+Epoch 34: Validation RMSE = 61.7602. Unprecise: 40.4956
+Epoch 35: Validation RMSE = 60.9571. Unprecise: 39.3727
+Epoch 36: Validation RMSE = 58.2151. Unprecise: 40.0390
+Epoch 37: Validation RMSE = 59.4298. Unprecise: 38.1213
+Validation RMSE did not improve from 58.2151, early stopping counter: 1
+Epoch 38: Validation RMSE = 54.3711. Unprecise: 33.3915
+Epoch 39: Validation RMSE = 54.7131. Unprecise: 35.6779
+Validation RMSE did not improve from 54.3711, early stopping counter: 1
+Epoch 40: Validation RMSE = 50.9748. Unprecise: 29.8898
+Epoch 41: Validation RMSE = 49.8574. Unprecise: 29.4780
+Epoch 42: Validation RMSE = 52.2563. Unprecise: 31.7043
+Validation RMSE did not improve from 49.8574, early stopping counter: 1
+Epoch 43: Validation RMSE = 50.7036. Unprecise: 33.7106
+Validation RMSE did not improve from 49.8574, early stopping counter: 2
+Epoch 44: Validation RMSE = 51.7335. Unprecise: 38.2618
+Validation RMSE did not improve from 49.8574, early stopping counter: 3
+Epoch 45: Validation RMSE = 57.4181. Unprecise: 40.6204
+Validation RMSE did not improve from 49.8574, early stopping counter: 4
+Epoch 46: Validation RMSE = 44.0429. Unprecise: 25.5987
+Epoch 47: Validation RMSE = 193.8805. Unprecise: 239.0812
+Validation RMSE did not improve from 44.0429, early stopping counter: 1
+Epoch 48: Validation RMSE = 150.8245. Unprecise: 180.3677
+Validation RMSE did not improve from 44.0429, early stopping counter: 2
+Epoch 49: Validation RMSE = 130.0798. Unprecise: 150.8140
+Validation RMSE did not improve from 44.0429, early stopping counter: 3
+Epoch 50: Validation RMSE = 117.1179. Unprecise: 131.6970
+Validation RMSE did not improve from 44.0429, early stopping counter: 4
+Epoch 51: Validation RMSE = 107.7817. Unprecise: 118.2094
+Validation RMSE did not improve from 44.0429, early stopping counter: 5
+Epoch 52: Validation RMSE = 100.4948. Unprecise: 107.5592
+Validation RMSE did not improve from 44.0429, early stopping counter: 6
+Epoch 53: Validation RMSE = 94.4638. Unprecise: 98.5559
+Validation RMSE did not improve from 44.0429, early stopping counter: 7
+Epoch 54: Validation RMSE = 89.4720. Unprecise: 91.2004
+Validation RMSE did not improve from 44.0429, early stopping counter: 8
+Epoch 55: Validation RMSE = 85.1662. Unprecise: 84.7561
+Validation RMSE did not improve from 44.0429, early stopping counter: 9
+Epoch 56: Validation RMSE = 81.4820. Unprecise: 78.9646
+Validation RMSE did not improve from 44.0429, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007123687642136168, 'num_residual_blocks': 8, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 593.5091. Unprecise: 731.9234
+Epoch 2: Validation RMSE = 424.0090. Unprecise: 496.2156
+Epoch 3: Validation RMSE = 346.8244. Unprecise: 382.5465
+Epoch 4: Validation RMSE = 299.8672. Unprecise: 312.1583
+Epoch 5: Validation RMSE = 267.1234. Unprecise: 264.8478
+Epoch 6: Validation RMSE = 241.4251. Unprecise: 230.0050
+Epoch 7: Validation RMSE = 220.8989. Unprecise: 203.5133
+Epoch 8: Validation RMSE = 203.9722. Unprecise: 182.2088
+Epoch 9: Validation RMSE = 189.1461. Unprecise: 164.0766
+Epoch 10: Validation RMSE = 176.5705. Unprecise: 149.7719
+Epoch 11: Validation RMSE = 167.0437. Unprecise: 139.8329
+Epoch 12: Validation RMSE = 156.4070. Unprecise: 127.1271
+Epoch 13: Validation RMSE = 147.0775. Unprecise: 117.4266
+Epoch 14: Validation RMSE = 140.4367. Unprecise: 111.3279
+Epoch 15: Validation RMSE = 194.3448. Unprecise: 180.5706
+Validation RMSE did not improve from 140.4367, early stopping counter: 1
+Epoch 16: Validation RMSE = 132.1616. Unprecise: 102.5093
+Epoch 17: Validation RMSE = 118.6309. Unprecise: 88.8940
+Epoch 18: Validation RMSE = 112.8928. Unprecise: 82.5156
+Epoch 19: Validation RMSE = 108.3138. Unprecise: 79.3618
+Epoch 20: Validation RMSE = 105.0169. Unprecise: 76.9954
+Epoch 21: Validation RMSE = 98.2908. Unprecise: 70.1481
+Epoch 22: Validation RMSE = 94.2258. Unprecise: 66.4455
+Epoch 23: Validation RMSE = 90.3793. Unprecise: 63.7648
+Epoch 24: Validation RMSE = 86.4873. Unprecise: 59.9909
+Epoch 25: Validation RMSE = 82.6127. Unprecise: 56.3343
+Epoch 26: Validation RMSE = 82.6852. Unprecise: 56.9736
+Validation RMSE did not improve from 82.6127, early stopping counter: 1
+Epoch 27: Validation RMSE = 81.3312. Unprecise: 63.3963
+Epoch 28: Validation RMSE = 73.8702. Unprecise: 49.1487
+Epoch 29: Validation RMSE = 70.7134. Unprecise: 46.1898
+Epoch 30: Validation RMSE = 68.0567. Unprecise: 44.0293
+Epoch 31: Validation RMSE = 71.4572. Unprecise: 53.9201
+Validation RMSE did not improve from 68.0567, early stopping counter: 1
+Epoch 32: Validation RMSE = 62.8483. Unprecise: 38.1292
+Epoch 33: Validation RMSE = 61.0738. Unprecise: 37.3277
+Epoch 34: Validation RMSE = 58.8234. Unprecise: 35.1691
+Epoch 35: Validation RMSE = 56.8586. Unprecise: 33.8737
+Epoch 36: Validation RMSE = 55.2126. Unprecise: 32.2586
+Epoch 37: Validation RMSE = 53.4909. Unprecise: 30.2666
+Epoch 38: Validation RMSE = 74.3215. Unprecise: 66.5425
+Validation RMSE did not improve from 53.4909, early stopping counter: 1
+Epoch 39: Validation RMSE = 52.1477. Unprecise: 31.2642
+Epoch 40: Validation RMSE = 50.3706. Unprecise: 29.4774
+Epoch 41: Validation RMSE = 192.7896. Unprecise: 232.7065
+Validation RMSE did not improve from 50.3706, early stopping counter: 1
+Epoch 42: Validation RMSE = 153.0160. Unprecise: 176.9712
+Validation RMSE did not improve from 50.3706, early stopping counter: 2
+Epoch 43: Validation RMSE = 133.9211. Unprecise: 150.3409
+Validation RMSE did not improve from 50.3706, early stopping counter: 3
+Epoch 44: Validation RMSE = 121.9429. Unprecise: 133.2736
+Validation RMSE did not improve from 50.3706, early stopping counter: 4
+Epoch 45: Validation RMSE = 113.0753. Unprecise: 120.1524
+Validation RMSE did not improve from 50.3706, early stopping counter: 5
+Epoch 46: Validation RMSE = 105.7059. Unprecise: 109.4896
+Validation RMSE did not improve from 50.3706, early stopping counter: 6
+Epoch 47: Validation RMSE = 100.2639. Unprecise: 100.7003
+Validation RMSE did not improve from 50.3706, early stopping counter: 7
+Epoch 48: Validation RMSE = 94.9807. Unprecise: 93.1867
+Validation RMSE did not improve from 50.3706, early stopping counter: 8
+Epoch 49: Validation RMSE = 90.1094. Unprecise: 86.0214
+Validation RMSE did not improve from 50.3706, early stopping counter: 9
+Epoch 50: Validation RMSE = 86.4024. Unprecise: 80.4473
+Validation RMSE did not improve from 50.3706, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007841900959101343, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 490.3750. Unprecise: 617.0401
+Epoch 2: Validation RMSE = 354.8041. Unprecise: 410.8319
+Epoch 3: Validation RMSE = 294.1049. Unprecise: 322.3517
+Epoch 4: Validation RMSE = 255.3851. Unprecise: 268.8664
+Epoch 5: Validation RMSE = 227.3923. Unprecise: 231.3298
+Epoch 6: Validation RMSE = 205.0159. Unprecise: 200.3660
+Epoch 7: Validation RMSE = 187.3267. Unprecise: 176.2224
+Epoch 8: Validation RMSE = 172.6178. Unprecise: 157.6552
+Epoch 9: Validation RMSE = 160.2397. Unprecise: 143.1095
+Epoch 10: Validation RMSE = 149.3804. Unprecise: 130.0269
+Epoch 11: Validation RMSE = 140.4920. Unprecise: 119.9713
+Epoch 12: Validation RMSE = 131.9764. Unprecise: 109.9879
+Epoch 13: Validation RMSE = 127.3634. Unprecise: 107.0044
+Epoch 14: Validation RMSE = 118.0805. Unprecise: 94.5593
+Epoch 15: Validation RMSE = 113.7110. Unprecise: 92.4295
+Epoch 16: Validation RMSE = 116.8908. Unprecise: 89.5330
+Validation RMSE did not improve from 113.7110, early stopping counter: 1
+Epoch 17: Validation RMSE = 102.2358. Unprecise: 79.1499
+Epoch 18: Validation RMSE = 97.3060. Unprecise: 72.7707
+Epoch 19: Validation RMSE = 92.9099. Unprecise: 67.7195
+Epoch 20: Validation RMSE = 89.9958. Unprecise: 67.4887
+Epoch 21: Validation RMSE = 85.5792. Unprecise: 60.6592
+Epoch 22: Validation RMSE = 82.1999. Unprecise: 59.3301
+Epoch 23: Validation RMSE = 78.7158. Unprecise: 53.4712
+Epoch 24: Validation RMSE = 76.5003. Unprecise: 53.8731
+Epoch 25: Validation RMSE = 72.8141. Unprecise: 49.2593
+Epoch 26: Validation RMSE = 69.6808. Unprecise: 45.2227
+Epoch 27: Validation RMSE = 67.1535. Unprecise: 43.0713
+Epoch 28: Validation RMSE = 78.1423. Unprecise: 68.2272
+Validation RMSE did not improve from 67.1535, early stopping counter: 1
+Epoch 29: Validation RMSE = 73.8072. Unprecise: 47.4032
+Validation RMSE did not improve from 67.1535, early stopping counter: 2
+Epoch 30: Validation RMSE = 97.6548. Unprecise: 99.3571
+Validation RMSE did not improve from 67.1535, early stopping counter: 3
+Epoch 31: Validation RMSE = 57.9443. Unprecise: 34.4590
+Epoch 32: Validation RMSE = 56.7656. Unprecise: 34.8165
+Epoch 33: Validation RMSE = 54.9352. Unprecise: 33.8391
+Epoch 34: Validation RMSE = 53.7192. Unprecise: 32.2592
+Epoch 35: Validation RMSE = 51.4856. Unprecise: 30.7156
+Epoch 36: Validation RMSE = 88.7671. Unprecise: 89.3389
+Validation RMSE did not improve from 51.4856, early stopping counter: 1
+Epoch 37: Validation RMSE = 56.2242. Unprecise: 44.6092
+Validation RMSE did not improve from 51.4856, early stopping counter: 2
+Epoch 38: Validation RMSE = 46.9312. Unprecise: 25.3467
+Epoch 39: Validation RMSE = 46.3785. Unprecise: 26.5500
+Epoch 40: Validation RMSE = 47.5625. Unprecise: 34.5673
+Validation RMSE did not improve from 46.3785, early stopping counter: 1
+Epoch 41: Validation RMSE = 46.8055. Unprecise: 30.9618
+Validation RMSE did not improve from 46.3785, early stopping counter: 2
+Epoch 42: Validation RMSE = 47.2003. Unprecise: 37.3955
+Validation RMSE did not improve from 46.3785, early stopping counter: 3
+Epoch 43: Validation RMSE = 43.5875. Unprecise: 23.9868
+Epoch 44: Validation RMSE = 41.1678. Unprecise: 22.0213
+Epoch 45: Validation RMSE = 52.7047. Unprecise: 60.1169
+Validation RMSE did not improve from 41.1678, early stopping counter: 1
+Epoch 46: Validation RMSE = 39.7530. Unprecise: 21.4126
+Epoch 47: Validation RMSE = 39.4414. Unprecise: 22.7204
+Epoch 48: Validation RMSE = 48.6556. Unprecise: 40.7141
+Validation RMSE did not improve from 39.4414, early stopping counter: 1
+Epoch 49: Validation RMSE = 44.9229. Unprecise: 37.3924
+Validation RMSE did not improve from 39.4414, early stopping counter: 2
+Epoch 50: Validation RMSE = 36.9106. Unprecise: 19.0029
+Epoch 51: Validation RMSE = 36.0444. Unprecise: 17.1512
+Epoch 52: Validation RMSE = 38.7355. Unprecise: 34.6522
+Validation RMSE did not improve from 36.0444, early stopping counter: 1
+Epoch 53: Validation RMSE = 200.7246. Unprecise: 255.2349
+Validation RMSE did not improve from 36.0444, early stopping counter: 2
+Epoch 54: Validation RMSE = 127.8405. Unprecise: 150.3955
+Validation RMSE did not improve from 36.0444, early stopping counter: 3
+Epoch 55: Validation RMSE = 107.6897. Unprecise: 121.6785
+Validation RMSE did not improve from 36.0444, early stopping counter: 4
+Epoch 56: Validation RMSE = 96.2523. Unprecise: 104.0851
+Validation RMSE did not improve from 36.0444, early stopping counter: 5
+Epoch 57: Validation RMSE = 88.1949. Unprecise: 91.4574
+Validation RMSE did not improve from 36.0444, early stopping counter: 6
+Epoch 58: Validation RMSE = 82.5198. Unprecise: 82.1129
+Validation RMSE did not improve from 36.0444, early stopping counter: 7
+Epoch 59: Validation RMSE = 77.4971. Unprecise: 74.1929
+Validation RMSE did not improve from 36.0444, early stopping counter: 8
+Epoch 60: Validation RMSE = 73.5719. Unprecise: 67.9070
+Validation RMSE did not improve from 36.0444, early stopping counter: 9
+Epoch 61: Validation RMSE = 70.2187. Unprecise: 62.5081
+Validation RMSE did not improve from 36.0444, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.000824077211775804, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 824.6148. Unprecise: 954.6688
+Epoch 2: Validation RMSE = 623.1091. Unprecise: 677.5621
+Epoch 3: Validation RMSE = 522.4591. Unprecise: 549.4187
+Epoch 4: Validation RMSE = 453.7352. Unprecise: 463.0833
+Epoch 5: Validation RMSE = 403.2117. Unprecise: 402.5904
+Epoch 6: Validation RMSE = 363.6295. Unprecise: 356.0685
+Epoch 7: Validation RMSE = 331.7900. Unprecise: 318.2628
+Epoch 8: Validation RMSE = 305.1668. Unprecise: 288.2159
+Epoch 9: Validation RMSE = 282.8835. Unprecise: 262.4379
+Epoch 10: Validation RMSE = 263.1978. Unprecise: 240.8463
+Epoch 11: Validation RMSE = 246.8321. Unprecise: 222.3759
+Epoch 12: Validation RMSE = 232.2145. Unprecise: 206.2411
+Epoch 13: Validation RMSE = 216.6741. Unprecise: 189.5820
+Epoch 14: Validation RMSE = 206.9950. Unprecise: 178.5232
+Epoch 15: Validation RMSE = 211.5765. Unprecise: 183.0723
+Validation RMSE did not improve from 206.9950, early stopping counter: 1
+Epoch 16: Validation RMSE = 182.2346. Unprecise: 153.2608
+Epoch 17: Validation RMSE = 172.5079. Unprecise: 144.3244
+Epoch 18: Validation RMSE = 167.4681. Unprecise: 139.0231
+Epoch 19: Validation RMSE = 156.1034. Unprecise: 126.3042
+Epoch 20: Validation RMSE = 149.5407. Unprecise: 120.4090
+Epoch 21: Validation RMSE = 143.8630. Unprecise: 113.4742
+Epoch 22: Validation RMSE = 134.7767. Unprecise: 105.3298
+Epoch 23: Validation RMSE = 140.4732. Unprecise: 107.0370
+Validation RMSE did not improve from 134.7767, early stopping counter: 1
+Epoch 24: Validation RMSE = 122.9948. Unprecise: 94.7623
+Epoch 25: Validation RMSE = 121.4335. Unprecise: 94.2863
+Epoch 26: Validation RMSE = 214.1437. Unprecise: 222.6412
+Validation RMSE did not improve from 121.4335, early stopping counter: 1
+Epoch 27: Validation RMSE = 110.0322. Unprecise: 81.8064
+Epoch 28: Validation RMSE = 104.8332. Unprecise: 77.3706
+Epoch 29: Validation RMSE = 103.6824. Unprecise: 79.9035
+Epoch 30: Validation RMSE = 102.3436. Unprecise: 72.1749
+Epoch 31: Validation RMSE = 90.0129. Unprecise: 61.7529
+Epoch 32: Validation RMSE = 86.7662. Unprecise: 60.2116
+Epoch 33: Validation RMSE = 100.0613. Unprecise: 68.7416
+Validation RMSE did not improve from 86.7662, early stopping counter: 1
+Epoch 34: Validation RMSE = 79.2455. Unprecise: 52.8483
+Epoch 35: Validation RMSE = 87.7382. Unprecise: 73.9005
+Validation RMSE did not improve from 79.2455, early stopping counter: 1
+Epoch 36: Validation RMSE = 74.9878. Unprecise: 50.8956
+Epoch 37: Validation RMSE = 145.0014. Unprecise: 131.2251
+Validation RMSE did not improve from 74.9878, early stopping counter: 1
+Epoch 38: Validation RMSE = 69.2178. Unprecise: 45.0790
+Epoch 39: Validation RMSE = 478.2015. Unprecise: 646.8069
+Validation RMSE did not improve from 69.2178, early stopping counter: 1
+Epoch 40: Validation RMSE = 275.7582. Unprecise: 342.0015
+Validation RMSE did not improve from 69.2178, early stopping counter: 2
+Epoch 41: Validation RMSE = 228.4237. Unprecise: 273.8986
+Validation RMSE did not improve from 69.2178, early stopping counter: 3
+Epoch 42: Validation RMSE = 200.9116. Unprecise: 236.4092
+Validation RMSE did not improve from 69.2178, early stopping counter: 4
+Epoch 43: Validation RMSE = 182.2785. Unprecise: 211.2666
+Validation RMSE did not improve from 69.2178, early stopping counter: 5
+Epoch 44: Validation RMSE = 168.5195. Unprecise: 192.5525
+Validation RMSE did not improve from 69.2178, early stopping counter: 6
+Epoch 45: Validation RMSE = 157.5172. Unprecise: 177.3452
+Validation RMSE did not improve from 69.2178, early stopping counter: 7
+Epoch 46: Validation RMSE = 148.0875. Unprecise: 164.5233
+Validation RMSE did not improve from 69.2178, early stopping counter: 8
+Epoch 47: Validation RMSE = 139.9285. Unprecise: 153.0387
+Validation RMSE did not improve from 69.2178, early stopping counter: 9
+Epoch 48: Validation RMSE = 132.7670. Unprecise: 142.8565
+Validation RMSE did not improve from 69.2178, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.000764973159683035, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 671.4909. Unprecise: 859.6768
+Epoch 2: Validation RMSE = 490.4245. Unprecise: 582.5099
+Epoch 3: Validation RMSE = 403.2417. Unprecise: 458.1012
+Epoch 4: Validation RMSE = 348.8467. Unprecise: 378.7035
+Epoch 5: Validation RMSE = 311.8237. Unprecise: 324.5160
+Epoch 6: Validation RMSE = 283.6123. Unprecise: 284.5073
+Epoch 7: Validation RMSE = 260.9959. Unprecise: 253.8320
+Epoch 8: Validation RMSE = 241.8932. Unprecise: 228.7866
+Epoch 9: Validation RMSE = 225.5634. Unprecise: 208.5415
+Epoch 10: Validation RMSE = 211.2481. Unprecise: 190.6774
+Epoch 11: Validation RMSE = 198.4217. Unprecise: 174.8598
+Epoch 12: Validation RMSE = 186.6863. Unprecise: 160.8241
+Epoch 13: Validation RMSE = 176.2752. Unprecise: 148.5141
+Epoch 14: Validation RMSE = 178.4712. Unprecise: 152.7713
+Validation RMSE did not improve from 176.2752, early stopping counter: 1
+Epoch 15: Validation RMSE = 159.4328. Unprecise: 129.4612
+Epoch 16: Validation RMSE = 155.0175. Unprecise: 126.4114
+Epoch 17: Validation RMSE = 144.6799. Unprecise: 114.7892
+Epoch 18: Validation RMSE = 166.2448. Unprecise: 127.7185
+Validation RMSE did not improve from 144.6799, early stopping counter: 1
+Epoch 19: Validation RMSE = 129.0005. Unprecise: 96.3920
+Epoch 20: Validation RMSE = 129.2691. Unprecise: 102.1482
+Validation RMSE did not improve from 129.0005, early stopping counter: 1
+Epoch 21: Validation RMSE = 118.5092. Unprecise: 86.4428
+Epoch 22: Validation RMSE = 112.6865. Unprecise: 79.5475
+Epoch 23: Validation RMSE = 107.8326. Unprecise: 75.0687
+Epoch 24: Validation RMSE = 107.0916. Unprecise: 84.6369
+Epoch 25: Validation RMSE = 99.1468. Unprecise: 67.8634
+Epoch 26: Validation RMSE = 101.0491. Unprecise: 69.4375
+Validation RMSE did not improve from 99.1468, early stopping counter: 1
+Epoch 27: Validation RMSE = 91.1488. Unprecise: 59.1415
+Epoch 28: Validation RMSE = 93.5280. Unprecise: 59.3529
+Validation RMSE did not improve from 91.1488, early stopping counter: 1
+Epoch 29: Validation RMSE = 84.1046. Unprecise: 52.9775
+Epoch 30: Validation RMSE = 96.7463. Unprecise: 86.1154
+Validation RMSE did not improve from 84.1046, early stopping counter: 1
+Epoch 31: Validation RMSE = 80.6601. Unprecise: 58.1447
+Epoch 32: Validation RMSE = 94.8536. Unprecise: 72.9063
+Validation RMSE did not improve from 80.6601, early stopping counter: 1
+Epoch 33: Validation RMSE = 152.5075. Unprecise: 183.2130
+Validation RMSE did not improve from 80.6601, early stopping counter: 2
+Epoch 34: Validation RMSE = 69.6282. Unprecise: 40.8981
+Epoch 35: Validation RMSE = 66.7222. Unprecise: 39.0885
+Epoch 36: Validation RMSE = 66.3096. Unprecise: 40.4935
+Epoch 37: Validation RMSE = 62.9231. Unprecise: 37.0575
+Epoch 38: Validation RMSE = 61.9609. Unprecise: 35.7624
+Epoch 39: Validation RMSE = 60.6889. Unprecise: 36.7812
+Epoch 40: Validation RMSE = 259.0925. Unprecise: 359.5560
+Validation RMSE did not improve from 60.6889, early stopping counter: 1
+Epoch 41: Validation RMSE = 178.0095. Unprecise: 228.3710
+Validation RMSE did not improve from 60.6889, early stopping counter: 2
+Epoch 42: Validation RMSE = 149.4508. Unprecise: 181.8250
+Validation RMSE did not improve from 60.6889, early stopping counter: 3
+Epoch 43: Validation RMSE = 133.0860. Unprecise: 155.0401
+Validation RMSE did not improve from 60.6889, early stopping counter: 4
+Epoch 44: Validation RMSE = 121.8523. Unprecise: 136.4891
+Validation RMSE did not improve from 60.6889, early stopping counter: 5
+Epoch 45: Validation RMSE = 113.3657. Unprecise: 122.2038
+Validation RMSE did not improve from 60.6889, early stopping counter: 6
+Epoch 46: Validation RMSE = 106.3935. Unprecise: 110.8168
+Validation RMSE did not improve from 60.6889, early stopping counter: 7
+Epoch 47: Validation RMSE = 100.7032. Unprecise: 101.8803
+Validation RMSE did not improve from 60.6889, early stopping counter: 8
+Epoch 48: Validation RMSE = 95.7867. Unprecise: 94.1805
+Validation RMSE did not improve from 60.6889, early stopping counter: 9
+Epoch 49: Validation RMSE = 91.4674. Unprecise: 87.5092
+Validation RMSE did not improve from 60.6889, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0006921253577657427, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 650.0162. Unprecise: 795.8622
+Epoch 2: Validation RMSE = 470.2339. Unprecise: 546.4556
+Epoch 3: Validation RMSE = 384.5280. Unprecise: 423.0159
+Epoch 4: Validation RMSE = 330.1598. Unprecise: 347.8722
+Epoch 5: Validation RMSE = 290.9689. Unprecise: 295.3345
+Epoch 6: Validation RMSE = 261.5952. Unprecise: 257.6997
+Epoch 7: Validation RMSE = 238.3653. Unprecise: 229.0258
+Epoch 8: Validation RMSE = 219.0461. Unprecise: 206.6206
+Epoch 9: Validation RMSE = 202.5591. Unprecise: 187.7257
+Epoch 10: Validation RMSE = 189.0314. Unprecise: 171.8648
+Epoch 11: Validation RMSE = 176.4068. Unprecise: 156.7008
+Epoch 12: Validation RMSE = 165.6305. Unprecise: 144.0037
+Epoch 13: Validation RMSE = 156.7076. Unprecise: 135.1805
+Epoch 14: Validation RMSE = 147.5016. Unprecise: 123.6401
+Epoch 15: Validation RMSE = 138.8126. Unprecise: 113.8693
+Epoch 16: Validation RMSE = 132.9534. Unprecise: 109.6631
+Epoch 17: Validation RMSE = 125.0265. Unprecise: 99.2254
+Epoch 18: Validation RMSE = 119.3919. Unprecise: 92.5800
+Epoch 19: Validation RMSE = 113.4190. Unprecise: 86.1355
+Epoch 20: Validation RMSE = 107.7080. Unprecise: 81.2760
+Epoch 21: Validation RMSE = 106.6224. Unprecise: 89.9391
+Epoch 22: Validation RMSE = 98.5637. Unprecise: 72.0263
+Epoch 23: Validation RMSE = 95.4782. Unprecise: 69.2744
+Epoch 24: Validation RMSE = 98.3870. Unprecise: 79.3492
+Validation RMSE did not improve from 95.4782, early stopping counter: 1
+Epoch 25: Validation RMSE = 87.4690. Unprecise: 64.0711
+Epoch 26: Validation RMSE = 83.0614. Unprecise: 56.8387
+Epoch 27: Validation RMSE = 83.2976. Unprecise: 70.9809
+Validation RMSE did not improve from 83.0614, early stopping counter: 1
+Epoch 28: Validation RMSE = 76.7830. Unprecise: 51.7927
+Epoch 29: Validation RMSE = 79.2537. Unprecise: 69.6721
+Validation RMSE did not improve from 76.7830, early stopping counter: 1
+Epoch 30: Validation RMSE = 71.9324. Unprecise: 51.8499
+Epoch 31: Validation RMSE = 69.2514. Unprecise: 49.0211
+Epoch 32: Validation RMSE = 88.0177. Unprecise: 81.4864
+Validation RMSE did not improve from 69.2514, early stopping counter: 1
+Epoch 33: Validation RMSE = 63.7672. Unprecise: 39.9261
+Epoch 34: Validation RMSE = 61.3446. Unprecise: 37.3002
+Epoch 35: Validation RMSE = 59.7203. Unprecise: 36.4980
+Epoch 36: Validation RMSE = 62.1798. Unprecise: 45.1419
+Validation RMSE did not improve from 59.7203, early stopping counter: 1
+Epoch 37: Validation RMSE = 55.4441. Unprecise: 32.0509
+Epoch 38: Validation RMSE = 54.1141. Unprecise: 32.1574
+Epoch 39: Validation RMSE = 54.6742. Unprecise: 32.6131
+Validation RMSE did not improve from 54.1141, early stopping counter: 1
+Epoch 40: Validation RMSE = 51.8691. Unprecise: 31.2642
+Epoch 41: Validation RMSE = 50.2575. Unprecise: 28.9864
+Epoch 42: Validation RMSE = 49.5072. Unprecise: 27.7842
+Epoch 43: Validation RMSE = 47.1684. Unprecise: 25.1007
+Epoch 44: Validation RMSE = 46.5683. Unprecise: 30.4205
+Epoch 45: Validation RMSE = 44.7067. Unprecise: 24.1207
+Epoch 46: Validation RMSE = 43.5597. Unprecise: 22.7167
+Epoch 47: Validation RMSE = 42.5457. Unprecise: 23.8009
+Epoch 48: Validation RMSE = 53.1615. Unprecise: 37.8851
+Validation RMSE did not improve from 42.5457, early stopping counter: 1
+Epoch 49: Validation RMSE = 41.0494. Unprecise: 22.0075
+Epoch 50: Validation RMSE = 41.3096. Unprecise: 24.0456
+Validation RMSE did not improve from 41.0494, early stopping counter: 1
+Epoch 51: Validation RMSE = 43.8879. Unprecise: 42.6383
+Validation RMSE did not improve from 41.0494, early stopping counter: 2
+Epoch 52: Validation RMSE = 39.1543. Unprecise: 20.2813
+Epoch 53: Validation RMSE = 38.4430. Unprecise: 20.9748
+Epoch 54: Validation RMSE = 38.3262. Unprecise: 24.5998
+Epoch 55: Validation RMSE = 36.5092. Unprecise: 18.0677
+Epoch 56: Validation RMSE = 36.1588. Unprecise: 18.5044
+Epoch 57: Validation RMSE = 35.1481. Unprecise: 16.1034
+Epoch 58: Validation RMSE = 36.5246. Unprecise: 18.3113
+Validation RMSE did not improve from 35.1481, early stopping counter: 1
+Epoch 59: Validation RMSE = 34.6261. Unprecise: 15.7332
+Epoch 60: Validation RMSE = 37.2776. Unprecise: 21.4868
+Validation RMSE did not improve from 34.6261, early stopping counter: 1
+Epoch 61: Validation RMSE = 35.7597. Unprecise: 17.5903
+Validation RMSE did not improve from 34.6261, early stopping counter: 2
+Epoch 62: Validation RMSE = 33.6957. Unprecise: 17.0792
+Epoch 63: Validation RMSE = 177.7738. Unprecise: 201.6460
+Validation RMSE did not improve from 33.6957, early stopping counter: 1
+Epoch 64: Validation RMSE = 137.1791. Unprecise: 148.0744
+Validation RMSE did not improve from 33.6957, early stopping counter: 2
+Epoch 65: Validation RMSE = 119.7860. Unprecise: 124.6780
+Validation RMSE did not improve from 33.6957, early stopping counter: 3
+Epoch 66: Validation RMSE = 108.1732. Unprecise: 109.4270
+Validation RMSE did not improve from 33.6957, early stopping counter: 4
+Epoch 67: Validation RMSE = 99.5228. Unprecise: 98.0626
+Validation RMSE did not improve from 33.6957, early stopping counter: 5
+Epoch 68: Validation RMSE = 92.5680. Unprecise: 88.7286
+Validation RMSE did not improve from 33.6957, early stopping counter: 6
+Epoch 69: Validation RMSE = 86.9767. Unprecise: 80.9214
+Validation RMSE did not improve from 33.6957, early stopping counter: 7
+Epoch 70: Validation RMSE = 82.1695. Unprecise: 74.0450
+Validation RMSE did not improve from 33.6957, early stopping counter: 8
+Epoch 71: Validation RMSE = 78.4385. Unprecise: 68.4301
+Validation RMSE did not improve from 33.6957, early stopping counter: 9
+Epoch 72: Validation RMSE = 74.6442. Unprecise: 63.1362
+Validation RMSE did not improve from 33.6957, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.000700769277728292, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 577.2437. Unprecise: 751.4521
+Epoch 2: Validation RMSE = 414.9003. Unprecise: 518.6658
+Epoch 3: Validation RMSE = 340.8875. Unprecise: 406.8689
+Epoch 4: Validation RMSE = 296.0709. Unprecise: 336.6618
+Epoch 5: Validation RMSE = 264.3828. Unprecise: 289.1242
+Epoch 6: Validation RMSE = 239.9520. Unprecise: 254.3281
+Epoch 7: Validation RMSE = 220.2859. Unprecise: 227.7630
+Epoch 8: Validation RMSE = 203.4148. Unprecise: 205.7747
+Epoch 9: Validation RMSE = 189.2215. Unprecise: 187.7534
+Epoch 10: Validation RMSE = 177.1438. Unprecise: 171.9812
+Epoch 11: Validation RMSE = 166.5645. Unprecise: 158.0248
+Epoch 12: Validation RMSE = 157.0986. Unprecise: 145.5042
+Epoch 13: Validation RMSE = 148.4446. Unprecise: 134.2925
+Epoch 14: Validation RMSE = 140.7858. Unprecise: 124.6029
+Epoch 15: Validation RMSE = 134.3722. Unprecise: 117.4520
+Epoch 16: Validation RMSE = 131.7934. Unprecise: 113.4313
+Epoch 17: Validation RMSE = 121.0386. Unprecise: 100.3138
+Epoch 18: Validation RMSE = 115.5232. Unprecise: 93.7358
+Epoch 19: Validation RMSE = 113.4616. Unprecise: 88.8085
+Epoch 20: Validation RMSE = 129.5663. Unprecise: 99.4173
+Validation RMSE did not improve from 113.4616, early stopping counter: 1
+Epoch 21: Validation RMSE = 100.8895. Unprecise: 77.0221
+Epoch 22: Validation RMSE = 101.8633. Unprecise: 81.8685
+Validation RMSE did not improve from 100.8895, early stopping counter: 1
+Epoch 23: Validation RMSE = 92.7227. Unprecise: 68.1276
+Epoch 24: Validation RMSE = 88.6488. Unprecise: 63.8684
+Epoch 25: Validation RMSE = 88.5720. Unprecise: 65.6571
+Epoch 26: Validation RMSE = 83.0148. Unprecise: 58.5457
+Epoch 27: Validation RMSE = 78.9008. Unprecise: 53.7344
+Epoch 28: Validation RMSE = 78.0366. Unprecise: 54.8938
+Epoch 29: Validation RMSE = 73.8011. Unprecise: 50.5390
+Epoch 30: Validation RMSE = 71.2328. Unprecise: 46.3691
+Epoch 31: Validation RMSE = 76.5630. Unprecise: 56.3205
+Validation RMSE did not improve from 71.2328, early stopping counter: 1
+Epoch 32: Validation RMSE = 71.0898. Unprecise: 46.9038
+Epoch 33: Validation RMSE = 63.5054. Unprecise: 38.7960
+Epoch 34: Validation RMSE = 61.5885. Unprecise: 37.3839
+Epoch 35: Validation RMSE = 59.5327. Unprecise: 35.4512
+Epoch 36: Validation RMSE = 61.4793. Unprecise: 38.0053
+Validation RMSE did not improve from 59.5327, early stopping counter: 1
+Epoch 37: Validation RMSE = 58.4860. Unprecise: 37.8729
+Epoch 38: Validation RMSE = 67.6476. Unprecise: 41.8923
+Validation RMSE did not improve from 58.4860, early stopping counter: 1
+Epoch 39: Validation RMSE = 55.9534. Unprecise: 35.8892
+Epoch 40: Validation RMSE = 148.7863. Unprecise: 117.3767
+Validation RMSE did not improve from 55.9534, early stopping counter: 1
+Epoch 41: Validation RMSE = 52.6973. Unprecise: 32.5663
+Epoch 42: Validation RMSE = 49.5893. Unprecise: 27.8651
+Epoch 43: Validation RMSE = 49.0789. Unprecise: 26.1209
+Epoch 44: Validation RMSE = 46.7451. Unprecise: 24.8256
+Epoch 45: Validation RMSE = 447.9399. Unprecise: 549.6750
+Validation RMSE did not improve from 46.7451, early stopping counter: 1
+Epoch 46: Validation RMSE = 162.6295. Unprecise: 203.9197
+Validation RMSE did not improve from 46.7451, early stopping counter: 2
+Epoch 47: Validation RMSE = 133.9776. Unprecise: 161.8794
+Validation RMSE did not improve from 46.7451, early stopping counter: 3
+Epoch 48: Validation RMSE = 119.2849. Unprecise: 139.8327
+Validation RMSE did not improve from 46.7451, early stopping counter: 4
+Epoch 49: Validation RMSE = 109.3097. Unprecise: 124.3885
+Validation RMSE did not improve from 46.7451, early stopping counter: 5
+Epoch 50: Validation RMSE = 102.0136. Unprecise: 112.6609
+Validation RMSE did not improve from 46.7451, early stopping counter: 6
+Epoch 51: Validation RMSE = 96.2575. Unprecise: 103.2514
+Validation RMSE did not improve from 46.7451, early stopping counter: 7
+Epoch 52: Validation RMSE = 91.4724. Unprecise: 95.3779
+Validation RMSE did not improve from 46.7451, early stopping counter: 8
+Epoch 53: Validation RMSE = 87.2937. Unprecise: 88.6021
+Validation RMSE did not improve from 46.7451, early stopping counter: 9
+Epoch 54: Validation RMSE = 83.5482. Unprecise: 82.5920
+Validation RMSE did not improve from 46.7451, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007460230419925858, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 534.9252. Unprecise: 736.4312
+Epoch 2: Validation RMSE = 387.6155. Unprecise: 507.8119
+Epoch 3: Validation RMSE = 316.6750. Unprecise: 397.2672
+Epoch 4: Validation RMSE = 273.3033. Unprecise: 329.9350
+Epoch 5: Validation RMSE = 243.1969. Unprecise: 283.3686
+Epoch 6: Validation RMSE = 220.6632. Unprecise: 248.3330
+Epoch 7: Validation RMSE = 202.6260. Unprecise: 220.5977
+Epoch 8: Validation RMSE = 186.9518. Unprecise: 197.5573
+Epoch 9: Validation RMSE = 173.5469. Unprecise: 179.0127
+Epoch 10: Validation RMSE = 162.3443. Unprecise: 163.6144
+Epoch 11: Validation RMSE = 153.1313. Unprecise: 151.2736
+Epoch 12: Validation RMSE = 143.6012. Unprecise: 138.5256
+Epoch 13: Validation RMSE = 136.3071. Unprecise: 129.7159
+Epoch 14: Validation RMSE = 128.5988. Unprecise: 118.9748
+Epoch 15: Validation RMSE = 122.6697. Unprecise: 111.3154
+Epoch 16: Validation RMSE = 119.6171. Unprecise: 119.8412
+Epoch 17: Validation RMSE = 111.7793. Unprecise: 101.0999
+Epoch 18: Validation RMSE = 105.8917. Unprecise: 90.4238
+Epoch 19: Validation RMSE = 101.3309. Unprecise: 85.6833
+Epoch 20: Validation RMSE = 115.4791. Unprecise: 106.9251
+Validation RMSE did not improve from 101.3309, early stopping counter: 1
+Epoch 21: Validation RMSE = 95.0534. Unprecise: 83.4884
+Epoch 22: Validation RMSE = 92.6570. Unprecise: 76.4508
+Epoch 23: Validation RMSE = 85.1854. Unprecise: 66.1865
+Epoch 24: Validation RMSE = 81.9030. Unprecise: 63.2405
+Epoch 25: Validation RMSE = 78.7899. Unprecise: 59.4239
+Epoch 26: Validation RMSE = 76.3454. Unprecise: 57.3075
+Epoch 27: Validation RMSE = 77.7559. Unprecise: 72.5176
+Validation RMSE did not improve from 76.3454, early stopping counter: 1
+Epoch 28: Validation RMSE = 72.5249. Unprecise: 54.1857
+Epoch 29: Validation RMSE = 69.8689. Unprecise: 57.6348
+Epoch 30: Validation RMSE = 257.6718. Unprecise: 323.1085
+Validation RMSE did not improve from 69.8689, early stopping counter: 1
+Epoch 31: Validation RMSE = 183.3570. Unprecise: 228.6642
+Validation RMSE did not improve from 69.8689, early stopping counter: 2
+Epoch 32: Validation RMSE = 156.2574. Unprecise: 190.9027
+Validation RMSE did not improve from 69.8689, early stopping counter: 3
+Epoch 33: Validation RMSE = 140.0163. Unprecise: 167.7348
+Validation RMSE did not improve from 69.8689, early stopping counter: 4
+Epoch 34: Validation RMSE = 128.6929. Unprecise: 150.7587
+Validation RMSE did not improve from 69.8689, early stopping counter: 5
+Epoch 35: Validation RMSE = 119.9905. Unprecise: 137.3241
+Validation RMSE did not improve from 69.8689, early stopping counter: 6
+Epoch 36: Validation RMSE = 112.9000. Unprecise: 125.9453
+Validation RMSE did not improve from 69.8689, early stopping counter: 7
+Epoch 37: Validation RMSE = 106.9197. Unprecise: 116.4958
+Validation RMSE did not improve from 69.8689, early stopping counter: 8
+Epoch 38: Validation RMSE = 101.6623. Unprecise: 108.1217
+Validation RMSE did not improve from 69.8689, early stopping counter: 9
+Epoch 39: Validation RMSE = 96.9474. Unprecise: 100.8338
+Validation RMSE did not improve from 69.8689, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0006507212465263727, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 519.5533. Unprecise: 673.9874
+Epoch 2: Validation RMSE = 370.9225. Unprecise: 465.4557
+Epoch 3: Validation RMSE = 303.1106. Unprecise: 362.9290
+Epoch 4: Validation RMSE = 261.6041. Unprecise: 298.7831
+Epoch 5: Validation RMSE = 232.1948. Unprecise: 255.5650
+Epoch 6: Validation RMSE = 209.9063. Unprecise: 222.8409
+Epoch 7: Validation RMSE = 192.3827. Unprecise: 198.1658
+Epoch 8: Validation RMSE = 177.8742. Unprecise: 178.1096
+Epoch 9: Validation RMSE = 165.5197. Unprecise: 161.6624
+Epoch 10: Validation RMSE = 154.6070. Unprecise: 147.7854
+Epoch 11: Validation RMSE = 145.1295. Unprecise: 136.1492
+Epoch 12: Validation RMSE = 136.7239. Unprecise: 125.2573
+Epoch 13: Validation RMSE = 129.2647. Unprecise: 116.2763
+Epoch 14: Validation RMSE = 122.0430. Unprecise: 107.4412
+Epoch 15: Validation RMSE = 115.9935. Unprecise: 100.0502
+Epoch 16: Validation RMSE = 113.2047. Unprecise: 99.2296
+Epoch 17: Validation RMSE = 105.4814. Unprecise: 87.2984
+Epoch 18: Validation RMSE = 99.8752. Unprecise: 80.8874
+Epoch 19: Validation RMSE = 96.7217. Unprecise: 77.6751
+Epoch 20: Validation RMSE = 91.1120. Unprecise: 70.7265
+Epoch 21: Validation RMSE = 89.5394. Unprecise: 67.3210
+Epoch 22: Validation RMSE = 84.1149. Unprecise: 63.7144
+Epoch 23: Validation RMSE = 86.1959. Unprecise: 78.6129
+Validation RMSE did not improve from 84.1149, early stopping counter: 1
+Epoch 24: Validation RMSE = 77.0204. Unprecise: 55.5001
+Epoch 25: Validation RMSE = 77.9318. Unprecise: 54.5219
+Validation RMSE did not improve from 77.0204, early stopping counter: 1
+Epoch 26: Validation RMSE = 71.4774. Unprecise: 50.6323
+Epoch 27: Validation RMSE = 88.0347. Unprecise: 113.0714
+Validation RMSE did not improve from 71.4774, early stopping counter: 1
+Epoch 28: Validation RMSE = 66.6088. Unprecise: 44.9921
+Epoch 29: Validation RMSE = 64.0521. Unprecise: 41.7288
+Epoch 30: Validation RMSE = 65.8106. Unprecise: 46.5573
+Validation RMSE did not improve from 64.0521, early stopping counter: 1
+Epoch 31: Validation RMSE = 62.2576. Unprecise: 42.6107
+Epoch 32: Validation RMSE = 294.6342. Unprecise: 381.4967
+Validation RMSE did not improve from 62.2576, early stopping counter: 1
+Epoch 33: Validation RMSE = 202.8500. Unprecise: 248.1128
+Validation RMSE did not improve from 62.2576, early stopping counter: 2
+Epoch 34: Validation RMSE = 170.8739. Unprecise: 201.5193
+Validation RMSE did not improve from 62.2576, early stopping counter: 3
+Epoch 35: Validation RMSE = 151.1560. Unprecise: 172.2013
+Validation RMSE did not improve from 62.2576, early stopping counter: 4
+Epoch 36: Validation RMSE = 137.3439. Unprecise: 152.2387
+Validation RMSE did not improve from 62.2576, early stopping counter: 5
+Epoch 37: Validation RMSE = 126.6309. Unprecise: 136.3482
+Validation RMSE did not improve from 62.2576, early stopping counter: 6
+Epoch 38: Validation RMSE = 118.0487. Unprecise: 123.7242
+Validation RMSE did not improve from 62.2576, early stopping counter: 7
+Epoch 39: Validation RMSE = 111.0548. Unprecise: 113.3686
+Validation RMSE did not improve from 62.2576, early stopping counter: 8
+Epoch 40: Validation RMSE = 105.1415. Unprecise: 104.5453
+Validation RMSE did not improve from 62.2576, early stopping counter: 9
+Epoch 41: Validation RMSE = 99.8867. Unprecise: 97.2625
+Validation RMSE did not improve from 62.2576, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007102855844696704, 'num_residual_blocks': 8, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 737.2944. Unprecise: 937.3207
+Epoch 2: Validation RMSE = 529.7916. Unprecise: 637.1152
+Epoch 3: Validation RMSE = 433.4902. Unprecise: 503.0803
+Epoch 4: Validation RMSE = 374.2730. Unprecise: 418.0037
+Epoch 5: Validation RMSE = 331.7914. Unprecise: 359.2469
+Epoch 6: Validation RMSE = 299.1966. Unprecise: 315.4299
+Epoch 7: Validation RMSE = 273.4739. Unprecise: 281.5475
+Epoch 8: Validation RMSE = 252.3185. Unprecise: 253.8045
+Epoch 9: Validation RMSE = 234.2735. Unprecise: 230.6686
+Epoch 10: Validation RMSE = 218.7920. Unprecise: 211.1690
+Epoch 11: Validation RMSE = 205.2622. Unprecise: 194.9705
+Epoch 12: Validation RMSE = 192.9183. Unprecise: 179.4515
+Epoch 13: Validation RMSE = 181.7037. Unprecise: 165.4593
+Epoch 14: Validation RMSE = 171.6661. Unprecise: 153.0504
+Epoch 15: Validation RMSE = 162.2094. Unprecise: 141.3502
+Epoch 16: Validation RMSE = 153.7950. Unprecise: 131.2265
+Epoch 17: Validation RMSE = 146.0140. Unprecise: 121.9801
+Epoch 18: Validation RMSE = 139.5033. Unprecise: 117.2936
+Epoch 19: Validation RMSE = 137.5820. Unprecise: 114.0182
+Epoch 20: Validation RMSE = 130.2124. Unprecise: 110.1367
+Epoch 21: Validation RMSE = 120.0728. Unprecise: 92.5990
+Epoch 22: Validation RMSE = 115.5522. Unprecise: 86.8461
+Epoch 23: Validation RMSE = 126.3660. Unprecise: 96.4845
+Validation RMSE did not improve from 115.5522, early stopping counter: 1
+Epoch 24: Validation RMSE = 108.0045. Unprecise: 84.8693
+Epoch 25: Validation RMSE = 100.2925. Unprecise: 72.0367
+Epoch 26: Validation RMSE = 96.0679. Unprecise: 68.1634
+Epoch 27: Validation RMSE = 91.9339. Unprecise: 64.3876
+Epoch 28: Validation RMSE = 89.5160. Unprecise: 63.3803
+Epoch 29: Validation RMSE = 94.8975. Unprecise: 83.7595
+Validation RMSE did not improve from 89.5160, early stopping counter: 1
+Epoch 30: Validation RMSE = 81.7056. Unprecise: 56.2509
+Epoch 31: Validation RMSE = 201.8416. Unprecise: 217.7194
+Validation RMSE did not improve from 81.7056, early stopping counter: 1
+Epoch 32: Validation RMSE = 84.1824. Unprecise: 84.6733
+Validation RMSE did not improve from 81.7056, early stopping counter: 2
+Epoch 33: Validation RMSE = 81.9425. Unprecise: 59.9492
+Validation RMSE did not improve from 81.7056, early stopping counter: 3
+Epoch 34: Validation RMSE = 69.8318. Unprecise: 45.2062
+Epoch 35: Validation RMSE = 76.8456. Unprecise: 56.0975
+Validation RMSE did not improve from 69.8318, early stopping counter: 1
+Epoch 36: Validation RMSE = 70.9398. Unprecise: 50.6239
+Validation RMSE did not improve from 69.8318, early stopping counter: 2
+Epoch 37: Validation RMSE = 63.4946. Unprecise: 39.5689
+Epoch 38: Validation RMSE = 61.4182. Unprecise: 43.5547
+Epoch 39: Validation RMSE = 91.7235. Unprecise: 119.1438
+Validation RMSE did not improve from 61.4182, early stopping counter: 1
+Epoch 40: Validation RMSE = 66.7382. Unprecise: 63.6841
+Validation RMSE did not improve from 61.4182, early stopping counter: 2
+Epoch 41: Validation RMSE = 54.2284. Unprecise: 31.5505
+Epoch 42: Validation RMSE = 99.0923. Unprecise: 146.9581
+Validation RMSE did not improve from 54.2284, early stopping counter: 1
+Epoch 43: Validation RMSE = 52.6428. Unprecise: 33.8998
+Epoch 44: Validation RMSE = 55.4923. Unprecise: 61.1046
+Validation RMSE did not improve from 52.6428, early stopping counter: 1
+Epoch 45: Validation RMSE = 208.0684. Unprecise: 292.1987
+Validation RMSE did not improve from 52.6428, early stopping counter: 2
+Epoch 46: Validation RMSE = 167.0244. Unprecise: 223.4651
+Validation RMSE did not improve from 52.6428, early stopping counter: 3
+Epoch 47: Validation RMSE = 146.2050. Unprecise: 189.1422
+Validation RMSE did not improve from 52.6428, early stopping counter: 4
+Epoch 48: Validation RMSE = 132.4327. Unprecise: 166.2374
+Validation RMSE did not improve from 52.6428, early stopping counter: 5
+Epoch 49: Validation RMSE = 122.2987. Unprecise: 149.3724
+Validation RMSE did not improve from 52.6428, early stopping counter: 6
+Epoch 50: Validation RMSE = 114.2840. Unprecise: 136.0563
+Validation RMSE did not improve from 52.6428, early stopping counter: 7
+Epoch 51: Validation RMSE = 107.6172. Unprecise: 124.7291
+Validation RMSE did not improve from 52.6428, early stopping counter: 8
+Epoch 52: Validation RMSE = 101.9573. Unprecise: 115.1330
+Validation RMSE did not improve from 52.6428, early stopping counter: 9
+Epoch 53: Validation RMSE = 96.8778. Unprecise: 106.6863
+Validation RMSE did not improve from 52.6428, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007125152598497699, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 749.6725. Unprecise: 1015.2308
+Epoch 2: Validation RMSE = 553.1930. Unprecise: 721.7377
+Epoch 3: Validation RMSE = 454.5445. Unprecise: 570.3472
+Epoch 4: Validation RMSE = 391.3666. Unprecise: 473.3733
+Epoch 5: Validation RMSE = 346.6273. Unprecise: 406.9536
+Epoch 6: Validation RMSE = 312.1124. Unprecise: 359.0368
+Epoch 7: Validation RMSE = 284.4142. Unprecise: 318.8787
+Epoch 8: Validation RMSE = 261.4004. Unprecise: 287.6827
+Epoch 9: Validation RMSE = 242.0603. Unprecise: 260.4732
+Epoch 10: Validation RMSE = 225.5434. Unprecise: 236.7492
+Epoch 11: Validation RMSE = 210.9241. Unprecise: 216.3552
+Epoch 12: Validation RMSE = 197.7410. Unprecise: 199.0965
+Epoch 13: Validation RMSE = 191.1550. Unprecise: 186.6377
+Epoch 14: Validation RMSE = 178.1506. Unprecise: 172.5613
+Epoch 15: Validation RMSE = 169.8572. Unprecise: 161.7919
+Epoch 16: Validation RMSE = 167.2869. Unprecise: 154.3767
+Epoch 17: Validation RMSE = 150.3985. Unprecise: 138.5363
+Epoch 18: Validation RMSE = 145.0302. Unprecise: 132.1839
+Epoch 19: Validation RMSE = 135.9454. Unprecise: 120.9174
+Epoch 20: Validation RMSE = 129.9885. Unprecise: 113.5324
+Epoch 21: Validation RMSE = 132.0290. Unprecise: 112.3770
+Validation RMSE did not improve from 129.9885, early stopping counter: 1
+Epoch 22: Validation RMSE = 157.8472. Unprecise: 163.8450
+Validation RMSE did not improve from 129.9885, early stopping counter: 2
+Epoch 23: Validation RMSE = 123.1520. Unprecise: 122.3171
+Epoch 24: Validation RMSE = 115.5919. Unprecise: 110.8917
+Epoch 25: Validation RMSE = 104.7295. Unprecise: 84.6518
+Epoch 26: Validation RMSE = 102.7235. Unprecise: 85.3230
+Epoch 27: Validation RMSE = 96.1062. Unprecise: 75.9374
+Epoch 28: Validation RMSE = 112.0083. Unprecise: 83.2927
+Validation RMSE did not improve from 96.1062, early stopping counter: 1
+Epoch 29: Validation RMSE = 184.6746. Unprecise: 226.4224
+Validation RMSE did not improve from 96.1062, early stopping counter: 2
+Epoch 30: Validation RMSE = 84.9842. Unprecise: 64.0621
+Epoch 31: Validation RMSE = 115.4765. Unprecise: 104.8822
+Validation RMSE did not improve from 84.9842, early stopping counter: 1
+Epoch 32: Validation RMSE = 79.3838. Unprecise: 59.6476
+Epoch 33: Validation RMSE = 97.0166. Unprecise: 86.8245
+Validation RMSE did not improve from 79.3838, early stopping counter: 1
+Epoch 34: Validation RMSE = 73.4153. Unprecise: 55.7887
+Epoch 35: Validation RMSE = 72.3349. Unprecise: 52.5704
+Epoch 36: Validation RMSE = 69.6299. Unprecise: 51.3582
+Epoch 37: Validation RMSE = 66.1433. Unprecise: 45.7675
+Epoch 38: Validation RMSE = 75.8658. Unprecise: 70.3422
+Validation RMSE did not improve from 66.1433, early stopping counter: 1
+Epoch 39: Validation RMSE = 60.9598. Unprecise: 39.1480
+Epoch 40: Validation RMSE = 61.2649. Unprecise: 40.9567
+Validation RMSE did not improve from 60.9598, early stopping counter: 1
+Epoch 41: Validation RMSE = 83.4610. Unprecise: 65.3080
+Validation RMSE did not improve from 60.9598, early stopping counter: 2
+Epoch 42: Validation RMSE = 56.0462. Unprecise: 35.0346
+Epoch 43: Validation RMSE = 54.0269. Unprecise: 33.7572
+Epoch 44: Validation RMSE = 52.6796. Unprecise: 32.7233
+Epoch 45: Validation RMSE = 51.2992. Unprecise: 31.8049
+Epoch 46: Validation RMSE = 53.7492. Unprecise: 44.4320
+Validation RMSE did not improve from 51.2992, early stopping counter: 1
+Epoch 47: Validation RMSE = 49.3259. Unprecise: 31.2394
+Epoch 48: Validation RMSE = 48.3558. Unprecise: 30.4490
+Epoch 49: Validation RMSE = 46.7507. Unprecise: 29.6945
+Epoch 50: Validation RMSE = 63.3029. Unprecise: 80.9962
+Validation RMSE did not improve from 46.7507, early stopping counter: 1
+Epoch 51: Validation RMSE = 47.8482. Unprecise: 31.7206
+Validation RMSE did not improve from 46.7507, early stopping counter: 2
+Epoch 52: Validation RMSE = 43.5037. Unprecise: 24.5568
+Epoch 53: Validation RMSE = 44.3607. Unprecise: 28.0990
+Validation RMSE did not improve from 43.5037, early stopping counter: 1
+Epoch 54: Validation RMSE = 45.4992. Unprecise: 36.3083
+Validation RMSE did not improve from 43.5037, early stopping counter: 2
+Epoch 55: Validation RMSE = 49.1751. Unprecise: 45.1376
+Validation RMSE did not improve from 43.5037, early stopping counter: 3
+Epoch 56: Validation RMSE = 41.0511. Unprecise: 24.0292
+Epoch 57: Validation RMSE = 216.2798. Unprecise: 274.4121
+Validation RMSE did not improve from 41.0511, early stopping counter: 1
+Epoch 58: Validation RMSE = 153.0454. Unprecise: 185.1843
+Validation RMSE did not improve from 41.0511, early stopping counter: 2
+Epoch 59: Validation RMSE = 131.4356. Unprecise: 154.3703
+Validation RMSE did not improve from 41.0511, early stopping counter: 3
+Epoch 60: Validation RMSE = 118.5044. Unprecise: 134.6347
+Validation RMSE did not improve from 41.0511, early stopping counter: 4
+Epoch 61: Validation RMSE = 109.2207. Unprecise: 120.4289
+Validation RMSE did not improve from 41.0511, early stopping counter: 5
+Epoch 62: Validation RMSE = 102.0434. Unprecise: 108.8224
+Validation RMSE did not improve from 41.0511, early stopping counter: 6
+Epoch 63: Validation RMSE = 96.1021. Unprecise: 99.5216
+Validation RMSE did not improve from 41.0511, early stopping counter: 7
+Epoch 64: Validation RMSE = 91.0197. Unprecise: 91.3549
+Validation RMSE did not improve from 41.0511, early stopping counter: 8
+Epoch 65: Validation RMSE = 86.6501. Unprecise: 84.6204
+Validation RMSE did not improve from 41.0511, early stopping counter: 9
+Epoch 66: Validation RMSE = 82.7862. Unprecise: 78.8292
+Validation RMSE did not improve from 41.0511, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007351208257637576, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 891.2017. Unprecise: 1175.3081
+Epoch 2: Validation RMSE = 618.7525. Unprecise: 803.1688
+Epoch 3: Validation RMSE = 498.5209. Unprecise: 639.0522
+Epoch 4: Validation RMSE = 427.2348. Unprecise: 540.2380
+Epoch 5: Validation RMSE = 377.1431. Unprecise: 471.1660
+Epoch 6: Validation RMSE = 339.5520. Unprecise: 418.5476
+Epoch 7: Validation RMSE = 309.4421. Unprecise: 376.6717
+Epoch 8: Validation RMSE = 284.1999. Unprecise: 340.4450
+Epoch 9: Validation RMSE = 262.6205. Unprecise: 309.4051
+Epoch 10: Validation RMSE = 243.9865. Unprecise: 282.1361
+Epoch 11: Validation RMSE = 227.8695. Unprecise: 258.6123
+Epoch 12: Validation RMSE = 213.7928. Unprecise: 238.4306
+Epoch 13: Validation RMSE = 201.1719. Unprecise: 220.2695
+Epoch 14: Validation RMSE = 189.8587. Unprecise: 204.4611
+Epoch 15: Validation RMSE = 179.5160. Unprecise: 189.9625
+Epoch 16: Validation RMSE = 170.0687. Unprecise: 177.2198
+Epoch 17: Validation RMSE = 161.5661. Unprecise: 165.3074
+Epoch 18: Validation RMSE = 153.2604. Unprecise: 154.4435
+Epoch 19: Validation RMSE = 145.7561. Unprecise: 144.5631
+Epoch 20: Validation RMSE = 138.7269. Unprecise: 135.3269
+Epoch 21: Validation RMSE = 132.2730. Unprecise: 127.0562
+Epoch 22: Validation RMSE = 126.1369. Unprecise: 119.9249
+Epoch 23: Validation RMSE = 123.7410. Unprecise: 118.2924
+Epoch 24: Validation RMSE = 126.6404. Unprecise: 119.5513
+Validation RMSE did not improve from 123.7410, early stopping counter: 1
+Epoch 25: Validation RMSE = 109.8792. Unprecise: 100.3530
+Epoch 26: Validation RMSE = 105.2186. Unprecise: 94.6456
+Epoch 27: Validation RMSE = 109.8650. Unprecise: 96.3540
+Validation RMSE did not improve from 105.2186, early stopping counter: 1
+Epoch 28: Validation RMSE = 100.3099. Unprecise: 86.2337
+Epoch 29: Validation RMSE = 92.8834. Unprecise: 80.0462
+Epoch 30: Validation RMSE = 93.4445. Unprecise: 79.6355
+Validation RMSE did not improve from 92.8834, early stopping counter: 1
+Epoch 31: Validation RMSE = 86.5580. Unprecise: 73.3864
+Epoch 32: Validation RMSE = 83.6320. Unprecise: 69.4872
+Epoch 33: Validation RMSE = 79.3425. Unprecise: 64.8698
+Epoch 34: Validation RMSE = 76.5450. Unprecise: 61.4868
+Epoch 35: Validation RMSE = 73.5965. Unprecise: 57.5649
+Epoch 36: Validation RMSE = 74.5076. Unprecise: 57.5896
+Validation RMSE did not improve from 73.5965, early stopping counter: 1
+Epoch 37: Validation RMSE = 69.6502. Unprecise: 52.4940
+Epoch 38: Validation RMSE = 67.3899. Unprecise: 51.7040
+Epoch 39: Validation RMSE = 63.7173. Unprecise: 47.6816
+Epoch 40: Validation RMSE = 64.5045. Unprecise: 54.1361
+Validation RMSE did not improve from 63.7173, early stopping counter: 1
+Epoch 41: Validation RMSE = 59.7424. Unprecise: 43.7309
+Epoch 42: Validation RMSE = 58.5956. Unprecise: 44.2107
+Epoch 43: Validation RMSE = 60.2758. Unprecise: 40.1448
+Validation RMSE did not improve from 58.5956, early stopping counter: 1
+Epoch 44: Validation RMSE = 54.9874. Unprecise: 36.3342
+Epoch 45: Validation RMSE = 52.2519. Unprecise: 34.2074
+Epoch 46: Validation RMSE = 50.4039. Unprecise: 32.7317
+Epoch 47: Validation RMSE = 49.6800. Unprecise: 32.8589
+Epoch 48: Validation RMSE = 47.9366. Unprecise: 29.6520
+Epoch 49: Validation RMSE = 47.0826. Unprecise: 29.0563
+Epoch 50: Validation RMSE = 45.4402. Unprecise: 27.5221
+Epoch 51: Validation RMSE = 45.3796. Unprecise: 26.4157
+Epoch 52: Validation RMSE = 43.3179. Unprecise: 26.0467
+Epoch 53: Validation RMSE = 359.0990. Unprecise: 458.3432
+Validation RMSE did not improve from 43.3179, early stopping counter: 1
+Epoch 54: Validation RMSE = 188.6940. Unprecise: 229.2649
+Validation RMSE did not improve from 43.3179, early stopping counter: 2
+Epoch 55: Validation RMSE = 153.3644. Unprecise: 179.9133
+Validation RMSE did not improve from 43.3179, early stopping counter: 3
+Epoch 56: Validation RMSE = 134.8418. Unprecise: 155.7322
+Validation RMSE did not improve from 43.3179, early stopping counter: 4
+Epoch 57: Validation RMSE = 122.4992. Unprecise: 139.3965
+Validation RMSE did not improve from 43.3179, early stopping counter: 5
+Epoch 58: Validation RMSE = 113.2837. Unprecise: 126.8950
+Validation RMSE did not improve from 43.3179, early stopping counter: 6
+Epoch 59: Validation RMSE = 105.9955. Unprecise: 116.7646
+Validation RMSE did not improve from 43.3179, early stopping counter: 7
+Epoch 60: Validation RMSE = 99.8958. Unprecise: 108.1175
+Validation RMSE did not improve from 43.3179, early stopping counter: 8
+Epoch 61: Validation RMSE = 94.6813. Unprecise: 100.5297
+Validation RMSE did not improve from 43.3179, early stopping counter: 9
+Epoch 62: Validation RMSE = 90.1567. Unprecise: 93.5882
+Validation RMSE did not improve from 43.3179, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007000241345457201, 'num_residual_blocks': 12, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 557.0150. Unprecise: 701.1212
+Epoch 2: Validation RMSE = 403.9605. Unprecise: 486.3064
+Epoch 3: Validation RMSE = 332.6925. Unprecise: 384.6841
+Epoch 4: Validation RMSE = 287.4132. Unprecise: 322.8141
+Epoch 5: Validation RMSE = 254.7721. Unprecise: 279.1855
+Epoch 6: Validation RMSE = 229.8676. Unprecise: 246.2814
+Epoch 7: Validation RMSE = 210.0075. Unprecise: 219.8134
+Epoch 8: Validation RMSE = 193.7883. Unprecise: 198.7203
+Epoch 9: Validation RMSE = 180.0496. Unprecise: 180.0930
+Epoch 10: Validation RMSE = 168.3459. Unprecise: 163.9322
+Epoch 11: Validation RMSE = 157.7505. Unprecise: 149.2987
+Epoch 12: Validation RMSE = 148.5127. Unprecise: 136.5716
+Epoch 13: Validation RMSE = 140.0265. Unprecise: 125.2193
+Epoch 14: Validation RMSE = 132.7643. Unprecise: 115.6883
+Epoch 15: Validation RMSE = 133.5825. Unprecise: 118.7439
+Validation RMSE did not improve from 132.7643, early stopping counter: 1
+Epoch 16: Validation RMSE = 120.1148. Unprecise: 100.3132
+Epoch 17: Validation RMSE = 114.2187. Unprecise: 93.0074
+Epoch 18: Validation RMSE = 109.5591. Unprecise: 88.0577
+Epoch 19: Validation RMSE = 194.4040. Unprecise: 215.8623
+Validation RMSE did not improve from 109.5591, early stopping counter: 1
+Epoch 20: Validation RMSE = 102.0380. Unprecise: 82.5834
+Epoch 21: Validation RMSE = 105.7115. Unprecise: 99.7034
+Validation RMSE did not improve from 102.0380, early stopping counter: 1
+Epoch 22: Validation RMSE = 96.1609. Unprecise: 80.5938
+Epoch 23: Validation RMSE = 94.9983. Unprecise: 76.9313
+Epoch 24: Validation RMSE = 97.0380. Unprecise: 106.3603
+Validation RMSE did not improve from 94.9983, early stopping counter: 1
+Epoch 25: Validation RMSE = 80.9578. Unprecise: 56.3457
+Epoch 26: Validation RMSE = 78.0692. Unprecise: 53.9547
+Epoch 27: Validation RMSE = 75.1489. Unprecise: 50.2621
+Epoch 28: Validation RMSE = 72.7879. Unprecise: 47.6234
+Epoch 29: Validation RMSE = 70.0702. Unprecise: 47.6224
+Epoch 30: Validation RMSE = 70.9037. Unprecise: 51.4567
+Validation RMSE did not improve from 70.0702, early stopping counter: 1
+Epoch 31: Validation RMSE = 67.1432. Unprecise: 44.8776
+Epoch 32: Validation RMSE = 62.9019. Unprecise: 39.4308
+Epoch 33: Validation RMSE = 60.9586. Unprecise: 38.5710
+Epoch 34: Validation RMSE = 58.1692. Unprecise: 33.9526
+Epoch 35: Validation RMSE = 56.7770. Unprecise: 35.2627
+Epoch 36: Validation RMSE = 62.1696. Unprecise: 50.4330
+Validation RMSE did not improve from 56.7770, early stopping counter: 1
+Epoch 37: Validation RMSE = 56.1655. Unprecise: 40.7468
+Epoch 38: Validation RMSE = 54.8130. Unprecise: 36.6453
+Epoch 39: Validation RMSE = 51.3494. Unprecise: 30.6030
+Epoch 40: Validation RMSE = 63.7313. Unprecise: 65.3553
+Validation RMSE did not improve from 51.3494, early stopping counter: 1
+Epoch 41: Validation RMSE = 47.4585. Unprecise: 25.4702
+Epoch 42: Validation RMSE = 46.3248. Unprecise: 25.8964
+Epoch 43: Validation RMSE = 50.5318. Unprecise: 33.7526
+Validation RMSE did not improve from 46.3248, early stopping counter: 1
+Epoch 44: Validation RMSE = 298.1390. Unprecise: 409.1606
+Validation RMSE did not improve from 46.3248, early stopping counter: 2
+Epoch 45: Validation RMSE = 183.4243. Unprecise: 243.5215
+Validation RMSE did not improve from 46.3248, early stopping counter: 3
+Epoch 46: Validation RMSE = 153.1289. Unprecise: 200.2742
+Validation RMSE did not improve from 46.3248, early stopping counter: 4
+Epoch 47: Validation RMSE = 136.1633. Unprecise: 175.0594
+Validation RMSE did not improve from 46.3248, early stopping counter: 5
+Epoch 48: Validation RMSE = 124.8090. Unprecise: 157.4830
+Validation RMSE did not improve from 46.3248, early stopping counter: 6
+Epoch 49: Validation RMSE = 116.1109. Unprecise: 143.2261
+Validation RMSE did not improve from 46.3248, early stopping counter: 7
+Epoch 50: Validation RMSE = 108.9293. Unprecise: 131.3711
+Validation RMSE did not improve from 46.3248, early stopping counter: 8
+Epoch 51: Validation RMSE = 102.7897. Unprecise: 120.6493
+Validation RMSE did not improve from 46.3248, early stopping counter: 9
+Epoch 52: Validation RMSE = 97.5285. Unprecise: 111.4484
+Validation RMSE did not improve from 46.3248, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 64, 'learning_rate': 0.0008521099110590679, 'num_residual_blocks': 8, 'residual_scaling': 0.3, 'epochs': 100}
+Running on cuda
+Epoch 1: Validation RMSE = 707.1150. Unprecise: 896.8230
+Epoch 2: Validation RMSE = 504.3099. Unprecise: 584.7310
+Epoch 3: Validation RMSE = 412.3501. Unprecise: 452.7755
+Epoch 4: Validation RMSE = 354.2245. Unprecise: 376.0254
+Epoch 5: Validation RMSE = 313.0166. Unprecise: 324.3722
+Epoch 6: Validation RMSE = 281.5948. Unprecise: 286.1795
+Epoch 7: Validation RMSE = 256.6584. Unprecise: 255.2818
+Epoch 8: Validation RMSE = 235.9876. Unprecise: 229.6009
+Epoch 9: Validation RMSE = 218.4242. Unprecise: 207.2750
+Epoch 10: Validation RMSE = 203.4625. Unprecise: 189.0176
+Epoch 11: Validation RMSE = 190.2272. Unprecise: 172.7047
+Epoch 12: Validation RMSE = 178.7314. Unprecise: 159.3738
+Epoch 13: Validation RMSE = 169.1645. Unprecise: 148.2457
+Epoch 14: Validation RMSE = 159.1440. Unprecise: 136.5344
+Epoch 15: Validation RMSE = 150.9968. Unprecise: 127.4409
+Epoch 16: Validation RMSE = 180.3831. Unprecise: 154.5818
+Validation RMSE did not improve from 150.9968, early stopping counter: 1
+Epoch 17: Validation RMSE = 136.3904. Unprecise: 111.2498
+Epoch 18: Validation RMSE = 129.8726. Unprecise: 103.2239
+Epoch 19: Validation RMSE = 124.2380. Unprecise: 98.3294
+Epoch 20: Validation RMSE = 118.1621. Unprecise: 90.4888
+Epoch 21: Validation RMSE = 112.8996. Unprecise: 85.2233
+Epoch 22: Validation RMSE = 107.9248. Unprecise: 80.2041
+Epoch 23: Validation RMSE = 116.5633. Unprecise: 101.0054
+Validation RMSE did not improve from 107.9248, early stopping counter: 1
+Epoch 24: Validation RMSE = 99.8440. Unprecise: 72.9141
+Epoch 25: Validation RMSE = 94.9411. Unprecise: 67.4641
+Epoch 26: Validation RMSE = 91.8487. Unprecise: 63.7099
+Epoch 27: Validation RMSE = 87.4016. Unprecise: 59.7835
+Epoch 28: Validation RMSE = 84.3639. Unprecise: 57.2095
+Epoch 29: Validation RMSE = 80.9033. Unprecise: 54.3341
+Epoch 30: Validation RMSE = 77.7357. Unprecise: 51.1549
+Epoch 31: Validation RMSE = 75.2875. Unprecise: 49.5007
+Epoch 32: Validation RMSE = 72.8392. Unprecise: 47.2199
+Epoch 33: Validation RMSE = 77.0058. Unprecise: 62.0897
+Validation RMSE did not improve from 72.8392, early stopping counter: 1
+Epoch 34: Validation RMSE = 68.8243. Unprecise: 45.9350
+Epoch 35: Validation RMSE = 66.5892. Unprecise: 41.9680
+Epoch 36: Validation RMSE = 68.0399. Unprecise: 49.4324
+Validation RMSE did not improve from 66.5892, early stopping counter: 1
+Epoch 37: Validation RMSE = 61.2800. Unprecise: 37.7185
+Epoch 38: Validation RMSE = 84.4053. Unprecise: 68.1648
+Validation RMSE did not improve from 61.2800, early stopping counter: 1
+Epoch 39: Validation RMSE = 61.7361. Unprecise: 43.7412
+Validation RMSE did not improve from 61.2800, early stopping counter: 2
+Epoch 40: Validation RMSE = 56.8375. Unprecise: 33.8423
+Epoch 41: Validation RMSE = 53.5897. Unprecise: 29.7870
+Epoch 42: Validation RMSE = 52.8391. Unprecise: 31.1693
+Epoch 43: Validation RMSE = 58.5665. Unprecise: 49.7728
+Validation RMSE did not improve from 52.8391, early stopping counter: 1
+Epoch 44: Validation RMSE = 54.2958. Unprecise: 39.9905
+Validation RMSE did not improve from 52.8391, early stopping counter: 2
+Epoch 45: Validation RMSE = 52.3979. Unprecise: 34.7528
+Epoch 46: Validation RMSE = 46.5482. Unprecise: 23.9578
+Epoch 47: Validation RMSE = 241.3240. Unprecise: 317.2745
+Validation RMSE did not improve from 46.5482, early stopping counter: 1
+Epoch 48: Validation RMSE = 175.9903. Unprecise: 225.4123
+Validation RMSE did not improve from 46.5482, early stopping counter: 2
+Epoch 49: Validation RMSE = 150.2940. Unprecise: 185.9156
+Validation RMSE did not improve from 46.5482, early stopping counter: 3
+Epoch 50: Validation RMSE = 134.9283. Unprecise: 161.4867
+Validation RMSE did not improve from 46.5482, early stopping counter: 4
+Epoch 51: Validation RMSE = 123.7663. Unprecise: 143.2975
+Validation RMSE did not improve from 46.5482, early stopping counter: 5
+Epoch 52: Validation RMSE = 115.0376. Unprecise: 129.0497
+Validation RMSE did not improve from 46.5482, early stopping counter: 6
+Epoch 53: Validation RMSE = 107.8624. Unprecise: 117.5945
+Validation RMSE did not improve from 46.5482, early stopping counter: 7
+Epoch 54: Validation RMSE = 101.7871. Unprecise: 108.1131
+Validation RMSE did not improve from 46.5482, early stopping counter: 8
+Epoch 55: Validation RMSE = 96.5406. Unprecise: 100.0216
+Validation RMSE did not improve from 46.5482, early stopping counter: 9
+Epoch 56: Validation RMSE = 91.9280. Unprecise: 92.8413
+Validation RMSE did not improve from 46.5482, early stopping counter: 10
+Early stopping!
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007944310276574922, 'num_residual_blocks': 8, 'residual_scaling': 0.2, 'epochs': 100}
+Running on cuda
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 24817804: <wandb> in cluster <dcc> Exited
+
+Job <wandb> was submitted from host <n-62-12-19> by user <s193624> in cluster <dcc> at Sun Apr 27 19:33:56 2025
+Job was executed on host(s) <4*n-62-20-13>, in queue <gpuv100>, as user <s193624> in cluster <dcc> at Sun Apr 27 19:34:02 2025
+</zhome/a1/4/145993> was used as the home directory.
+</zhome/a1/4/145993/courses/special course/Special-Course> was used as the working directory.
+Started at Sun Apr 27 19:34:02 2025
+Terminated at Mon Apr 28 10:36:02 2025
+Results reported at Mon Apr 28 10:36:02 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J wandb
+#BSUB -q gpuv100
+#BSUB -W 900
+#BSUB -R "rusage[mem=4096MB]"
+#BSUB -n 4         
+#BSUB -R "span[hosts=1]"   
+#BSUB -o src/batch_out/sleeper_%J.out
+#BSUB -e src/batch_out/sleeper_%J.err 
+
+source '../special_course/bin/activate'
+wandb agent karl-find-hansen-technical-university-of-denmark/greenland-bedmap-generation/43odwsqx
+
+------------------------------------------------------------
+
+TERM_RUNLIMIT: job killed after reaching LSF run time limit.
+Exited with exit code 140.
+
+Resource usage summary:
+
+    CPU time :                                   57722.00 sec.
+    Max Memory :                                 11814 MB
+    Average Memory :                             10551.82 MB
+    Total Requested Memory :                     16384.00 MB
+    Delta Memory :                               4570.00 MB
+    Max Swap :                                   -
+    Max Processes :                              11
+    Max Threads :                                60
+    Run time :                                   54120 sec.
+    Turnaround time :                            54126 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <src/batch_out/sleeper_24817804.err> for stderr output of this job.
+

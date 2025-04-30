@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from skimage.io import imread
 
 img_dir = 'figures/specified_area/'
-csv_path = 'data/crops/true_crops/large_crops/original_crops.csv'
+csv_path = 'data/crops/coordinate_crops.csv'
 netcdf_path = 'data/inputs/Bedmachine/BedMachineGreenland-v5.nc'
 save_path = 'comparison/hopeful_plot_with_same_cmap.png'
 

@@ -1,0 +1,174 @@
+{
+    "os": "Linux-6.1.134-1.el9.elrepo.x86_64-x86_64-with-glibc2.34",
+    "python": "CPython 3.13.0",
+    "heartbeatAt": "2025-04-27T19:40:26.302962",
+    "startedAt": "2025-04-27T19:40:25.775677",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/tmp/tmp6_xexbqe/port-739604.txt",
+        "--pid",
+        "739604"
+    ],
+    "state": "running",
+    "program": "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py",
+    "codePathLocal": "src/optimize_wandb.py",
+    "codePath": "src/optimize_wandb.py",
+    "git": {
+        "remote": "https://github.com/karlfindhansen/Special-Course.git",
+        "commit": "c1b58f4baef9e1605e8943fcf44dd9bff0eb5ec5"
+    },
+    "email": "karl.find.hansen@gmail.com",
+    "root": "/zhome/a1/4/145993/courses/special course/Special-Course",
+    "host": "n-62-20-13",
+    "username": null,
+    "executable": "/zhome/a1/4/145993/courses/special course/special_course/bin/python",
+    "cpu_count": 24,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 3572.916833333333,
+        "min": 1000.0,
+        "max": 3700.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3302.011,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3299.998,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3299.999,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3300.866,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3300.862,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3300.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3299.795,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3700.0,
+            "min": 1000.0,
+            "max": 3700.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 76817485824,
+            "used": 8924938240
+        }
+    },
+    "gpu": "Tesla V100-PCIE-32GB",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Tesla V100-PCIE-32GB",
+            "memory_total": 34359738368
+        }
+    ],
+    "memory": {
+        "total": 404874960896
+    }
+}

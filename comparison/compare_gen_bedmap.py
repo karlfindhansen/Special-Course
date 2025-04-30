@@ -1,22 +1,25 @@
 import sys
+import os
 
 sys.path.append('data')
 sys.path.append('src/model')
 sys.path.append('src')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 import matplotlib.pyplot as plt
 from data_preprocessing import ArcticDataloader
 from torch.utils.data import DataLoader
 import torch.nn as nn
 from torchvision.utils import save_image
-from GeneratorModel import GeneratorModel
+from src.Model.GeneratorModel import GeneratorModel
 import torch
 import tqdm
 import pandas as pd
 #from train import plot_fake_real
 
-region_of_interest_org = pd.read_csv('data/crops/true_crops/large_crops/original_crops.csv')
-region_of_interest_proj = pd.read_csv('data/crops/true_crops/large_crops/projected_crops.csv')
+region_of_interest_org = pd.read_csv('data/crops/coordinate_crops/original_crops.csv')
+region_of_interest_proj = pd.read_csv('data/crops/coordinate_crops/projected_crops.csv')
 
 regions_of_interest = {
     "Projected": {
@@ -35,16 +38,20 @@ regions_of_interest = {
 
 if __name__ == '__main__':
     dataset = ArcticDataloader(
-        bedmachine_path="data/Bedmachine/BedMachineGreenland-v5.nc",
-        arcticdem_path="data/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
-        ice_velocity_path="data/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
+        bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+        arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
+        ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
+        mass_balance_path=os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
+        hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
         region=regions_of_interest
     )
+
+    print(regions_of_interest)
 
     mse_loss = nn.MSELoss()
 
     print(f"Dataset contains {len(dataset)} crops in the specified region.")
+    exit()
 
     dataloader = DataLoader(dataset=dataset, batch_size=16, shuffle=False)
 

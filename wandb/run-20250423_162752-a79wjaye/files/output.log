@@ -1,0 +1,62 @@
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 322, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 47, in train
+    dataset = ArcticDataloader(
+        bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
+    ...<3 lines>...
+        hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
+    )
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/data/data_preprocessing.py", line 43, in __init__
+    self.height_map_icecap_tensor = self.align_to_velocity(self.height_map_icecap_data)
+                                    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/data/data_preprocessing.py", line 104, in align_to_velocity
+    aligned = data.rio.reproject_match(self.ice_velocity_data['land_ice_surface_easting_velocity'])
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/rioxarray/raster_array.py", line 585, in reproject_match
+    reprojected_data_array = self.reproject(
+        match_data_array.rio.crs,
+    ...<3 lines>...
+        **reproject_kwargs,
+    )
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/rioxarray/raster_array.py", line 489, in reproject
+    source=self._obj.values,
+           ^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/dataarray.py", line 814, in values
+    return self.variable.values
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/variable.py", line 507, in values
+    return _as_array_or_item(self._data)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/variable.py", line 301, in _as_array_or_item
+    data = np.asarray(data)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 509, in __array__
+    return np.asarray(self.get_duck_array(), dtype=dtype, copy=copy)
+                      ~~~~~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 835, in get_duck_array
+    self._ensure_cached()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 832, in _ensure_cached
+    self.array = as_indexable(self.array.get_duck_array())
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 789, in get_duck_array
+    return self.array.get_duck_array()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 652, in get_duck_array
+    array = self.array[self.key]
+            ~~~~~~~~~~^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/rioxarray/_io.py", line 456, in __getitem__
+    return indexing.explicit_indexing_adapter(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        key, self.shape, indexing.IndexingSupport.OUTER, self._getitem
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/xarray/core/indexing.py", line 1013, in explicit_indexing_adapter
+    result = raw_indexing_method(raw_key.tuple)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/rioxarray/_io.py", line 433, in _getitem
+    out = riods.read(band_key, window=window, masked=self.masked)
+  File "rasterio/_io.pyx", line 644, in rasterio._io.DatasetReaderBase.read
+  File "rasterio/_io.pyx", line 969, in rasterio._io.DatasetReaderBase._read
+  File "rasterio/_io.pyx", line 199, in rasterio._io.io_multi_band
+  File "/appl9/python/3.13.0/lib/python3.13/contextlib.py", line 145, in __exit__
+    def __exit__(self, typ, value, traceback):

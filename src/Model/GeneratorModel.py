@@ -3,11 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, random_split
 import sys
-from ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
-from InputBlock import InputBlock
+
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.Model.ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
+from src.Model.InputBlock import InputBlock
 
 sys.path.append('data')
-
 from data_preprocessing import ArcticDataloader
 
 class GeneratorModel(nn.Module):

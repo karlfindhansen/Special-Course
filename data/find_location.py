@@ -33,8 +33,9 @@ class CroppedAreaGenerator:
         self.bed_tensor_transform = self.transform_info["reprojected_transform"]
 
         self.coordinates = coordinates
-
-        self.coordinate_indices, self.coordinate_tensor = self._find_valid_coordinate_indicies()
+        if coordinates:
+            self.coordinate_indices, self.coordinate_tensor = self._find_valid_coordinate_indicies()
+        
         self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
@@ -81,7 +82,7 @@ class CroppedAreaGenerator:
     def _find_valid_coordinate_indicies(self):
         """Find and return 11x11 crops specifically within the coordinate tensor region."""
         valid_crops_info = []
-        coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.coordinates['lat_deg'], self.coordinates['lat_min'], self.coordinates['lat_hem'],
+        coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.mass_balance_tensor, self.coordinates['lat_deg'], self.coordinates['lat_min'], self.coordinates['lat_hem'],
                     self.coordinates['lon_deg'], self.coordinates['lon_min'], self.coordinates['lon_hem'], 64)
 
         for i,j in valid_crops_coordinates:
@@ -171,9 +172,9 @@ class CroppedAreaGenerator:
 
         self._save_crops_to_csv([crop["projected"] for crop in self.valid_indices], projected_csv)
         self._save_crops_to_csv([crop["original"] for crop in self.valid_indices], original_csv)
-
-        self._save_crops_to_csv([crop["projected"] for crop in self.coordinate_indices], projected_coordinates_csv)
-        self._save_crops_to_csv([crop["original"] for crop in self.coordinate_indices], original_coordinates_csv)
+        if self.coordinates:
+            self._save_crops_to_csv([crop["projected"] for crop in self.coordinate_indices], projected_coordinates_csv)
+            self._save_crops_to_csv([crop["original"] for crop in self.coordinate_indices], original_coordinates_csv)
 
 
     def overlay_crops_on_mask(self, output_path="figures/with_crops"):
@@ -183,16 +184,35 @@ class CroppedAreaGenerator:
         axes[0].imshow(self.mask_tensor.numpy(), cmap="terrain")
         for crop in self.valid_indices:
             y1, x1, y2, x2 = crop["projected"]
-            rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size, linewidth=1, edgecolor="r")
+            rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size, 
+                                linewidth=1, edgecolor="r", facecolor="none")
             axes[0].add_patch(rect)
+        
+        if self.coordinates:
+            for crop in self.coordinate_indices:
+                y1, x1, y2, x2 = crop["projected"]
+                rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size,
+                                    linewidth=1, edgecolor="b", facecolor="none", label="Coordinate crops")
+                axes[0].add_patch(rect)
         axes[0].set_title("Cropped Areas on Mask")
+        axes[0].legend()
 
         axes[1].imshow(self.mass_balance_tensor.numpy(), cmap="terrain")
         for crop in self.valid_indices:
             y1, x1, y2, x2 = crop["projected"]
-            rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size, linewidth=1, edgecolor="r")
+            rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size,
+                                linewidth=1, edgecolor="r", facecolor="none")
             axes[1].add_patch(rect)
+        
+        if self.coordinates:
+            for crop in self.coordinate_indices:
+                y1, x1, y2, x2 = crop["projected"]
+                rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size,
+                                    linewidth=1, edgecolor="b", facecolor="none")
+                axes[1].add_patch(rect)
         axes[1].set_title("Cropped Areas on Mass Balance")
+        axes[1].legend()
+
         output_name = "crops_overlay.png" if self.precise else "unprecise_crops_overlay.png"
         plt.savefig(os.path.join(output_path, output_name), dpi=300)
         plt.close()

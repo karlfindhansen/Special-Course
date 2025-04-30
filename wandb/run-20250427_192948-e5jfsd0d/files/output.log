@@ -1,0 +1,88 @@
+
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 64, 'learning_rate': 0.0008757467637657545, 'num_residual_blocks': 16, 'residual_scaling': 0.2, 'epochs': 100}
+Epoch 1/100:   1%|▏         | 4/281 [00:01<01:16,  3.63it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 1/100: 100%|██████████| 281/281 [00:57<00:00,  4.85it/s]
+Epoch 1: Validation RMSE = 528.0306. Unprecise: 663.8924
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 2/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 2: Validation RMSE = 389.2807. Unprecise: 456.1825
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 3/100:  46%|████▋     | 130/281 [00:26<00:31,  4.86it/s]
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 323, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 110, in train
+    imgs['lr_bed_elevation'].to(device),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^

@@ -1,0 +1,12 @@
+
+Dataloader created with 39848 crops
+Dataloader created with 14080 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Parameters are: {'batch_size': 128, 'learning_rate': 0.0007944310276574922, 'num_residual_blocks': 8, 'residual_scaling': 0.2, 'epochs': 100}
+Running on cuda
+
+
+
+
+

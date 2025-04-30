@@ -1,0 +1,310 @@
+
+Dataloader created with 39848 crops
+Dataloader created with 31456 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Running on cuda
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 1/100: 100%|██████████| 281/281 [00:57<00:00,  4.85it/s]
+Epoch 1: Validation RMSE = 731.5610. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 2/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 2: Validation RMSE = 518.8461. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 3/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 3: Validation RMSE = 423.0118. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 4/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 4: Validation RMSE = 362.9971. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 5/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 5: Validation RMSE = 320.7383. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 6/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 6: Validation RMSE = 289.3907. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 7/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 7: Validation RMSE = 264.7152. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 8/100: 100%|██████████| 281/281 [00:57<00:00,  4.89it/s]
+Epoch 8: Validation RMSE = 244.2245. Unprecise: nan
+
+
+
+
+
+
+Epoch 9/100:  21%|██▏       | 60/281 [00:12<00:46,  4.79it/s]
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 322, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 127, in train
+    fake_imgs = generator(lr_imgs[0], lr_imgs[1], lr_imgs[2], lr_imgs[3], lr_imgs[4])
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/Model/GeneratorModel.py", line 120, in forward
+    a2 = self.residual_network(a1)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/container.py", line 250, in forward
+    input = module(input)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/Model/ResidualBlocks.py", line 72, in forward
+    a2 = self.residual_dense_block2(a1)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/Model/ResidualBlocks.py", line 37, in forward
+    a3 = F.leaky_relu(self.conv_layer3(a2_cat), negative_slope=0.2)
+                      ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/conv.py", line 554, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/nn/modules/conv.py", line 549, in _conv_forward
+    return F.conv2d(
+           ~~~~~~~~^
+        input, weight, bias, self.stride, self.padding, self.dilation, self.groups
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^

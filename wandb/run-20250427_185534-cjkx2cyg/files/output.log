@@ -1,0 +1,104 @@
+
+Dataloader created with 39848 crops
+Dataloader created with 31456 crops
+Dataloader created with 121 crops
+Number of items in train_dataset: 35863
+Epoch 1/100:   0%|          | 0/281 [00:00<?, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 1/100: 100%|██████████| 281/281 [01:29<00:00,  3.13it/s]
+Epoch 1: Validation RMSE = 632.7309. Unprecise: nan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Epoch 2/100: 100%|██████████| 281/281 [00:57<00:00,  4.91it/s]
+Epoch 2: Validation RMSE = 457.7743. Unprecise: nan
+
+
+Epoch 3/100:   6%|▋         | 18/281 [00:04<01:05,  4.03it/s]
+Traceback (most recent call last):
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 322, in <module>
+    train()
+    ~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py", line 132, in train
+    g_loss.backward()
+    ~~~~~~~~~~~~~~~^^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/_tensor.py", line 626, in backward
+    torch.autograd.backward(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        self, gradient, retain_graph, create_graph, inputs=inputs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/__init__.py", line 347, in backward
+    _engine_run_backward(
+    ~~~~~~~~~~~~~~~~~~~~^
+        tensors,
+        ^^^^^^^^
+    ...<5 lines>...
+        accumulate_grad=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/zhome/a1/4/145993/courses/special course/special_course/lib/python3.13/site-packages/torch/autograd/graph.py", line 823, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        t_outputs, *args, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )  # Calls into the C++ engine to run the backward pass
+    ^

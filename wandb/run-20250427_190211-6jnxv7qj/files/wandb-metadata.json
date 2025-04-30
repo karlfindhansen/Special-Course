@@ -1,0 +1,174 @@
+{
+    "os": "Linux-6.1.132-1.el9.elrepo.x86_64-x86_64-with-glibc2.34",
+    "python": "CPython 3.13.0",
+    "heartbeatAt": "2025-04-27T17:02:11.637404",
+    "startedAt": "2025-04-27T17:02:11.038429",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/tmp/tmpob52upqj/port-2832501.txt",
+        "--pid",
+        "2832501"
+    ],
+    "state": "running",
+    "program": "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py",
+    "codePathLocal": "src/optimize_wandb.py",
+    "codePath": "src/optimize_wandb.py",
+    "git": {
+        "remote": "https://github.com/karlfindhansen/Special-Course.git",
+        "commit": "c1b58f4baef9e1605e8943fcf44dd9bff0eb5ec5"
+    },
+    "email": "karl.find.hansen@gmail.com",
+    "root": "/zhome/a1/4/145993/courses/special course/Special-Course",
+    "host": "n-62-20-4",
+    "username": null,
+    "executable": "/zhome/a1/4/145993/courses/special course/special_course/bin/python",
+    "cpu_count": 24,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 2841.8941250000003,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3400.242,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3399.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3399.999,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3402.337,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3399.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3399.805,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3399.98,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3398.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 1000.057,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 3616.958,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 76817485824,
+            "used": 6240006144
+        }
+    },
+    "gpu": "Tesla V100-PCIE-16GB",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Tesla V100-PCIE-16GB",
+            "memory_total": 17179869184
+        }
+    ],
+    "memory": {
+        "total": 201902448640
+    }
+}

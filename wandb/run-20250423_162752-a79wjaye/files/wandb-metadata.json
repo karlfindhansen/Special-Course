@@ -1,0 +1,166 @@
+{
+    "os": "Linux-6.1.131-1.el9.elrepo.x86_64-x86_64-with-glibc2.34",
+    "python": "CPython 3.13.0",
+    "heartbeatAt": "2025-04-23T14:27:53.392122",
+    "startedAt": "2025-04-23T14:27:52.906762",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/tmp/tmp9qgfc9oy/port-939405.txt",
+        "--pid",
+        "939405"
+    ],
+    "state": "running",
+    "program": "/zhome/a1/4/145993/courses/special course/Special-Course/src/optimize_wandb.py",
+    "codePathLocal": "src/optimize_wandb.py",
+    "codePath": "src/optimize_wandb.py",
+    "git": {
+        "remote": "https://github.com/karlfindhansen/Special-Course.git",
+        "commit": "c1b58f4baef9e1605e8943fcf44dd9bff0eb5ec5"
+    },
+    "email": "karl.find.hansen@gmail.com",
+    "root": "/zhome/a1/4/145993/courses/special course/Special-Course",
+    "host": "n-62-31-16",
+    "username": null,
+    "executable": "/zhome/a1/4/145993/courses/special course/special_course/bin/python",
+    "cpu_count": 24,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 2499.976041666667,
+        "min": 0.0,
+        "max": 0.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.001,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.996,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.001,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.002,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.003,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.003,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.003,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.996,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.997,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.001,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2599.998,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2600.0,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2000.343,
+            "min": 0.0,
+            "max": 0.0
+        },
+        {
+            "current": 2500.0,
+            "min": 0.0,
+            "max": 0.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 76817485824,
+            "used": 5886115840
+        }
+    },
+    "memory": {
+        "total": 404874964992
+    }
+}
