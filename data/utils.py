@@ -1,7 +1,27 @@
 import matplotlib.pyplot as plt
 from pyproj import Transformer
 import numpy as np
+import pandas as pd
+from tqdm import tqdm
 import torch
+
+LARGEST_MASKS = ['Øvre Frederiksborg Gletsjer', 'Seward Gletsjer', 'Sermersuaq', 'Kangerlussuup Sermersua', 'Gronau Gletsjer',
+                 'Døren', 'Victor Madsen Gletsjer', 'Storstrømmen', 'Zachariae Isstrøm']
+
+def split_coordinates(df):
+
+    lat = df['LAT'].str.replace(',', '.').astype(float)
+    df['lat_deg'] = lat.abs().astype(int)
+    df['lat_min'] = (lat.abs() % 1 * 60).round(4)
+    df['lat_hem'] = np.where(lat >= 0, 'N', 'S')
+    
+    # For longitude
+    lon = df['LON'].str.replace(',', '.').astype(float)
+    df['lon_deg'] = lon.abs().astype(int)
+    df['lon_min'] = (lon.abs() % 1 * 60).round(4)
+    df['lon_hem'] = np.where(lon >= 0, 'E', 'W')
+    
+    return df
 
 def plot_tensor(tensor, title, filename, cmap='viridis', show=False):
     """ Generic function to plot PyTorch tensors and save the figure. """
@@ -48,12 +68,21 @@ def dms_to_epsg3413(lat_deg: int, lat_min: float, lat_hem: str,
     x, y = transformer.transform(lon, lat)
     return x, y
 
-def create_mask(ice_velocity, mass_balance_tensor, lat_deg: int, lat_min: float, lat_hem: str,
-                lon_deg: int, lon_min: float, lon_hem: str, area_around_point: int):
+def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_around_point: int):
     """
     Creates a mask for valid data points around a given coordinate.
     If no valid blocks are found at the coordinate, finds the closest valid blocks.
     """
+    glacier_names = pd.read_csv("data/inputs/glaciers.csv", encoding='latin1', sep=';')
+    glacier = glacier_names[glacier_names['Official name'] == glacier_name]
+    glacier = split_coordinates(glacier)
+    lat_deg = glacier['lat_deg'].values[0]
+    lat_min = glacier['lat_min'].values[0]
+    lat_hem = glacier['lat_hem'].values[0]
+    lon_deg = glacier['lon_deg'].values[0]
+    lon_min = glacier['lon_min'].values[0]
+    lon_hem = glacier['lon_hem'].values[0]
+
     x_vals = ice_velocity.x.values
     y_vals = ice_velocity.y.values
 
@@ -124,7 +153,7 @@ def create_mask(ice_velocity, mass_balance_tensor, lat_deg: int, lat_min: float,
                                 if distance < best_distance:
                                     best_distance = distance
                                     best_result = (size, start_y, start_x)
-                                    print(f"Found valid square at distance {distance:.2f}")
+                                    #print(f"Found valid square at distance {distance:.2f}")
                                     return best_result  # Return first valid square found
 
         return best_result
@@ -134,12 +163,12 @@ def create_mask(ice_velocity, mass_balance_tensor, lat_deg: int, lat_min: float,
     
     # If no valid square found, search for closest one
     if size < 11:  # Need at least size 11 for blocks
-        print("No valid square at specified coordinate, searching nearby...")
+       # print("No valid square at specified coordinate, searching nearby...")
         result = find_closest_valid_square()
         if result is not None:
             size, start_y, start_x = result
         else:
-            print("No valid squares found in search area")
+            #print("No valid squares found in search area")
             return None, []
 
     # Create the mask
@@ -149,17 +178,17 @@ def create_mask(ice_velocity, mass_balance_tensor, lat_deg: int, lat_min: float,
             for j in range(size):
                 mask[start_y + i, start_x + j] = True
         
-        print(f"Found valid square with side length: {size}")
-        print(f"Starting at coordinates: ({start_y}, {start_x})")
+        #print(f"Found valid square with side length: {size}")
+        #print(f"Starting at coordinates: ({start_y}, {start_x})")
     
     # Plot mask overlayed on mass balance
     plt.figure(figsize=(10, 8))
     plt.imshow(mass_balance_tensor.numpy(), cmap='viridis', origin='lower')
     plt.imshow(mask.numpy(), alpha=0.5, cmap='gray')
-    #plt.plot(x_idx, y_idx, 'r*', markersize=10, label='Requested coordinate')
+    plt.plot(x_idx, y_idx, 'r*', markersize=10, label='Requested coordinate')
     plt.title('Mask Overlayed on Mass Balance')
     plt.colorbar(label='Mass Balance')
-    plt.legend()
+    #plt.legend()
     plt.savefig("figures/mask_overlayed_on_mass_balance.png", dpi=300, bbox_inches='tight')
     plt.close()
 
@@ -167,48 +196,24 @@ def create_mask(ice_velocity, mass_balance_tensor, lat_deg: int, lat_min: float,
     blocks = []
     coords = []
 
-    # Find valid square blocks
-    for i in range(start_y, start_y + size - block_size + 1):
-        for j in range(start_x, start_x + size - block_size + 1):
+    for i in range(start_y, start_y + size - block_size + 1, block_size):
+        for j in range(start_x, start_x + size - block_size + 1, block_size):
             block = mask[i:i+block_size, j:j+block_size]
             if block.all():
                 blocks.append(block)
                 coords.append((i, j))
 
     print(f"Found {len(blocks)} blocks of size {block_size}x{block_size} within the valid square")
-
+    
     return mask, coords
 
 if __name__ == '__main__':
 
-    glaciers = {
-        'Kankalusat' : {'lat_deg': 68, 'lat_min': 38, 'lat_hem': 'N',
-                        'lon_deg': 33, 'lon_min': 0, 'lon_hem': 'W'},
-        'Siorallip Sermia': {'lat_deg': 60, 'lat_min': 51, 'lat_hem': 'N',
-                         'lon_deg': 44, 'lon_min': 52, 'lon_hem': 'W'},
-        'Sermeq Kangilleq': {'lat_deg': 60, 'lat_min': 58, 'lat_hem': 'N',
-                            'lon_deg': 44, 'lon_min': 55, 'lon_hem': 'W'},
-        'Sermilik': {'lat_deg': 60, 'lat_min': 59, 'lat_hem': 'N',
-                    'lon_deg': 46, 'lon_min': 59, 'lon_hem': 'W'},
-        'Naajat Sermiat': {'lat_deg': 61, 'lat_min': 2, 'lat_hem': 'N',
-                        'lon_deg': 46, 'lon_min': 35, 'lon_hem': 'W'},
-        'Eqalorutsit Killiit Sermiat': {'lat_deg': 61, 'lat_min': 17, 'lat_hem': 'N',
-                                        'lon_deg': 46, 'lon_min': 9, 'lon_hem': 'W'},
-        'Qooqqup Sermia': {'lat_deg': 61, 'lat_min': 20, 'lat_hem': 'N',
-                        'lon_deg': 44, 'lon_min': 59, 'lon_hem': 'W'},
-        'Eqalorutsit Kangilliit Sermiat': {'lat_deg': 61, 'lat_min': 22, 'lat_hem': 'N',
-                                        'lon_deg': 45, 'lon_min': 44, 'lon_hem': 'W'},
-        'Sermiligaarsuup Sermia': {'lat_deg': 61, 'lat_min': 38, 'lat_hem': 'N',
-                                'lon_deg': 48, 'lon_min': 8, 'lon_hem': 'W'},
-        'Uukkaasorsuaq': {'lat_deg': 61, 'lat_min': 58, 'lat_hem': 'N',
-                        'lon_deg': 48, 'lon_min': 38, 'lon_hem': 'W'},
-        'Sioqqap Sermia': {'lat_deg': 62, 'lat_min': 33, 'lat_hem': 'N',
-                        'lon_deg': 49, 'lon_min': 53, 'lon_hem': 'W'},               
-    }
+    glacier_names = pd.read_csv("data/inputs/glaciers.csv", encoding='latin1', sep=';')
+    glacier_names = glacier_names[glacier_names['Type'] == 'GrIS']
+    
+    glaciers = split_coordinates(glacier_names)
 
-    dms_to_epsg3413(glaciers['Kankalusat']['lat_deg'],
-                    glaciers['Kankalusat']['lat_min'], glaciers['Kankalusat']['lat_hem'],
-                    glaciers['Kankalusat']['lon_deg'], glaciers['Kankalusat']['lon_min'], glaciers['Kankalusat']['lon_hem'])
     import os
     import xarray as xr
     import rioxarray as rio
@@ -222,4 +227,64 @@ if __name__ == '__main__':
     mass_balance = mass_balance.rio.reproject_match(ice_velocity_data['land_ice_surface_easting_velocity'])
     mass_balance = torch.tensor(mass_balance.values.astype(np.float32)).squeeze(0)
 
-    create_mask(ice_velocity_data['land_ice_surface_easting_velocity'],mass_balance, 68, 33, 'N', 33, 0, 'W', 100)
+    mask, coords = create_mask(
+            ice_velocity_data['land_ice_surface_easting_velocity'],
+            mass_balance,
+            glacier_name=LARGEST_MASKS[0],
+            area_around_point=100
+        )
+    
+    
+    exit()
+
+    masks = {}
+    largest_masks = []  # Store all glaciers with their mask sizes
+
+    total_glaciers = len(glaciers)
+    tqdm_bar = tqdm(
+        list(glaciers.iterrows()),
+        total=total_glaciers,
+        desc="Processing glaciers",
+        unit="glacier",
+        bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]"
+    )
+
+    for idx, glacier in tqdm_bar:
+        glacier_name = glacier['New Greenlandic name']
+        tqdm_bar.set_description(f"Processing {glacier_name:30}")
+
+        mask, coords = create_mask(
+            ice_velocity_data['land_ice_surface_easting_velocity'],
+            mass_balance,
+            glacier['lat_deg'],
+            glacier['lat_min'],
+            glacier['lat_hem'],
+            glacier['lon_deg'],
+            glacier['lon_min'],
+            glacier['lon_hem'],
+            area_around_point=100
+        )
+
+        if mask is not None:
+            current_mask_size = mask.sum().item()
+            masks[glacier['ID']] = (mask, coords)
+
+            # Store info for sorting later
+            largest_masks.append({
+                'glacier_id': glacier['ID'],
+                'official_name': glacier['Official name'],
+                'greenlandic_name': glacier['New Greenlandic name'],
+                'mask_size': current_mask_size,
+                'num_blocks': len(coords),
+                'mask': mask,
+                'coords': coords
+            })
+
+    top_10 = sorted(largest_masks, key=lambda x: x['mask_size'], reverse=True)[:10]
+
+    print("\n=== Top 10 Glaciers by Mask Size ===")
+    for i, glacier_info in enumerate(top_10, start=1):
+        print(f"{i}. {glacier_info['official_name']} (ID: {glacier_info['glacier_id']})")
+        print(f"   Greenlandic name: {glacier_info['greenlandic_name']}")
+        print(f"   Mask size: {glacier_info['mask_size']} pixels")
+        print(f"   Valid blocks: {glacier_info['num_blocks']}")
