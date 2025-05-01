@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 
-LARGEST_MASKS = ['Øvre Frederiksborg Gletsjer', 'Seward Gletsjer', 'Sermersuaq', 'Kangerlussuup Sermersua', 'Gronau Gletsjer',
+LARGEST_GLACIER_AREAS = ['Øvre Frederiksborg Gletsjer', 'Seward Gletsjer', 'Sermersuaq', 'Kangerlussuup Sermersua', 'Gronau Gletsjer',
                  'Døren', 'Victor Madsen Gletsjer', 'Storstrømmen', 'Zachariae Isstrøm']
 
 def split_coordinates(df):
@@ -230,7 +230,7 @@ if __name__ == '__main__':
     mask, coords = create_mask(
             ice_velocity_data['land_ice_surface_easting_velocity'],
             mass_balance,
-            glacier_name=LARGEST_MASKS[0],
+            glacier_name=LARGEST_GLACIER_AREAS[0],
             area_around_point=100
         )
     

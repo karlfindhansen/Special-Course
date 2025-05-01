@@ -7,7 +7,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from tqdm import tqdm
-from utils import create_mask
+from utils import create_mask, LARGEST_GLACIER_AREAS
 class CroppedAreaGenerator:
     def __init__(self, 
                  bedmachine_path = os.path.join("data", "inputs", "Bedmachine", "BedMachineGreenland-v5.nc"), 
@@ -220,7 +220,7 @@ class CroppedAreaGenerator:
 
 if __name__ == '__main__':
 
-    crop_generator = CroppedAreaGenerator(crop_size=11, precise=True, glacier_name=None) 
+    crop_generator = CroppedAreaGenerator(crop_size=11, precise=True, glacier_name=LARGEST_GLACIER_AREAS[0]) 
     crop_generator.generate_and_save_crops()
     crop_generator.overlay_crops_on_mask()
     

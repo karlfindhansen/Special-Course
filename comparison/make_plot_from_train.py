@@ -5,11 +5,15 @@ import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 from skimage.io import imread
+from skimage.transform import resize
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from skimage.color import rgba2rgb, rgb2gray
+
 
 img_dir = 'figures/specified_area/'
-csv_path = 'data/crops/coordinate_crops.csv'
+csv_path = 'data/crops//coordinate_crops/original_crops.csv'
 netcdf_path = 'data/inputs/Bedmachine/BedMachineGreenland-v5.nc'
-save_path = 'comparison/hopeful_plot_with_same_cmap.png'
+save_path = 'comparison/comparison.png'
 
 image_files = sorted(
     [img for img in os.listdir(img_dir) if img.endswith('.png')],
@@ -23,28 +27,59 @@ x1, x2 = df['x_1'].min(), df['x_2'].max()
 hr_bed_machine = xr.open_dataset(netcdf_path)['bed']
 cropped_bed_machine = hr_bed_machine[y1:y2, x1:x2]
 
-images = [imread(os.path.join(img_dir, img)) for img in image_files[:121]]
+images = [imread(os.path.join(img_dir, img)) for img in image_files]
 
-rows, cols = 11, 11
+num_images = len(images)
+rows, cols = int(np.sqrt(num_images)), int(np.sqrt(num_images))
 
-stitched_image_1 = np.vstack([
+generated_img = np.vstack([
     np.hstack(images[row * cols:(row + 1) * cols]) for row in range(rows)
 ])
 
-vmin, vmax = hr_bed_machine.min(), hr_bed_machine.max()
 
-fig, axes = plt.subplots(1, 2, figsize=(20, 10))
+fig, axes = plt.subplots(1, 3, figsize=(30, 10))
+gs = plt.GridSpec(1, 4, width_ratios=[1, 1, 1,0.05])
 
-im1 = axes[0].imshow(stitched_image_1, cmap='terrain', vmin=vmin, vmax=vmax)
+# Convert to grayscale if it has 4 channels (RGBA)
+if generated_img.shape[-1] == 4:
+    generated_img_gray = rgb2gray(rgba2rgb(generated_img))
+else:
+    generated_img_gray = generated_img
+
+cropped_resized = resize(
+    cropped_bed_machine.values, 
+    generated_img_gray.shape,
+    order=1, 
+    preserve_range=True, 
+    anti_aliasing=True
+)
+
+min_val = np.min(cropped_resized)
+max_val = np.max(cropped_resized)
+gray_image = (cropped_resized - min_val) / (max_val - min_val) 
+
+difference_img = generated_img_gray - gray_image
+
+vmin, vmax = 0, 1
+
+im1 = axes[0].imshow(generated_img, cmap='terrain', vmin=vmin, vmax=vmax)
 axes[0].axis('off')
-axes[0].set_title("Generated image")
+axes[0].set_title("Resized Generated image")
 
-im2 = axes[1].imshow(cropped_bed_machine, cmap='terrain', vmin=vmin, vmax=vmax)
+im2 = axes[1].imshow(cropped_resized, cmap='terrain', vmin=vmin, vmax=vmax)
 axes[1].axis('off')
 axes[1].set_title("Bedmachine")
 
-cbar = fig.colorbar(im1, ax=axes, orientation='vertical', fraction=0.046, pad=0.04)
-cbar.set_label('Elevation')
+diff_vmin = difference_img.min()
+diff_vmax = difference_img.max()
 
-plt.savefig(save_path, dpi=300)
+im3 = axes[2].imshow(difference_img, cmap='RdBu_r', vmin=diff_vmin, vmax=diff_vmax)
+axes[2].axis('off')
+axes[2].set_title("Difference (Resized Generated - Bedmachine)")
+
+cax = fig.add_subplot(gs[3])
+plt.colorbar(im3, cax=cax, label='Elevation Difference [m]')
+
+plt.savefig(save_path, dpi=300, bbox_inches='tight')
 plt.show()
+plt.close()
