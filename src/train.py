@@ -20,7 +20,7 @@ sys.path.append('data')
 sys.path.append('src/Model')
 
 from data_preprocessing import ArcticDataloader
-from compare_gen_bedmap import regions_of_interest
+#from compare_gen_bedmap import regions_of_interest
 from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
@@ -56,7 +56,7 @@ def train(
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
         mass_balance_path=os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
         hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
-        region=regions_of_interest
+        region=True
     )
 
     train_size = int(0.9 * len(dataset))

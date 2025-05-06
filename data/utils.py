@@ -8,6 +8,9 @@ import torch
 LARGEST_GLACIER_AREAS = ['Øvre Frederiksborg Gletsjer', 'Seward Gletsjer', 'Sermersuaq', 'Kangerlussuup Sermersua', 'Gronau Gletsjer',
                  'Døren', 'Victor Madsen Gletsjer', 'Storstrømmen', 'Zachariae Isstrøm']
 
+KANKALUSAT = 'Kangerlussuaq Gletsjer'
+
+
 def split_coordinates(df):
 
     lat = df['LAT'].str.replace(',', '.').astype(float)
@@ -68,144 +71,92 @@ def dms_to_epsg3413(lat_deg: int, lat_min: float, lat_hem: str,
     x, y = transformer.transform(lon, lat)
     return x, y
 
-def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_around_point: int):
+def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_around_point: int = 500):
     """
-    Creates a mask for valid data points around a given coordinate.
-    If no valid blocks are found at the coordinate, finds the closest valid blocks.
+    Creates a mask for the largest valid 12x12 square near a given glacier coordinate.
+    If the target point is invalid, searches nearby to find the closest valid 12x12 region.
     """
     glacier_names = pd.read_csv("data/inputs/glaciers.csv", encoding='latin1', sep=';')
     glacier = glacier_names[glacier_names['Official name'] == glacier_name]
     glacier = split_coordinates(glacier)
-    lat_deg = glacier['lat_deg'].values[0]
-    lat_min = glacier['lat_min'].values[0]
-    lat_hem = glacier['lat_hem'].values[0]
-    lon_deg = glacier['lon_deg'].values[0]
-    lon_min = glacier['lon_min'].values[0]
-    lon_hem = glacier['lon_hem'].values[0]
+    lat_deg, lat_min, lat_hem = glacier['lat_deg'].values[0], glacier['lat_min'].values[0], glacier['lat_hem'].values[0]
+    lon_deg, lon_min, lon_hem = glacier['lon_deg'].values[0], glacier['lon_min'].values[0], glacier['lon_hem'].values[0]
 
     x_vals = ice_velocity.x.values
     y_vals = ice_velocity.y.values
 
-    x, y = dms_to_epsg3413(lat_deg, lat_min, lat_hem,
-                          lon_deg, lon_min, lon_hem)
+    x, y = dms_to_epsg3413(lat_deg, lat_min, lat_hem, lon_deg, lon_min, lon_hem)
 
     x_idx = np.searchsorted(x_vals, x)
-    y_idx = np.searchsorted(y_vals[::-1], y)
-    y_idx = len(y_vals) - 1 - y_idx  # Flip due to descending Y
+    y_idx = len(y_vals) - 1 - np.searchsorted(y_vals[::-1], y)  # Flip Y-axis for descending order
 
-    # === Create tensors ===
     ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)
-    
-    def is_valid_point(y, x):
-        """Check if a point is valid in both datasets"""
-        if (0 <= y < ice_velocity_tensor.shape[0] and 
-            0 <= x < ice_velocity_tensor.shape[1]):
-            return (not torch.isnan(ice_velocity_tensor[y, x]) and 
-                   not torch.isnan(mass_balance_tensor[y, x]))
-        return False
 
-    def find_largest_square(center_y, center_x, max_radius):
-        """Find the largest valid square centered around a point"""
-        best_size = 0
-        best_y = center_y
-        best_x = center_x
+    def is_valid_square(top_y, top_x, block_size):
+        """Check if a block_size x block_size square is fully valid"""
+        if (top_y + block_size > ice_velocity_tensor.shape[0] or 
+            top_x + block_size > ice_velocity_tensor.shape[1]):
+            return False
+        block_ice = ice_velocity_tensor[top_y:top_y + block_size, top_x:top_x + block_size]
+        block_mb = mass_balance_tensor[top_y:top_y + block_size, top_x:top_x + block_size]
+        return not (torch.isnan(block_ice).any() or torch.isnan(block_mb).any())
 
-        # Try different square sizes
-        for size in range(1, max_radius * 2, 2):  # Odd sizes to keep center
-            half = size // 2
-            valid = True
-            
-            # Check if all points in this square are valid
-            for y in range(center_y - half, center_y + half + 1):
-                for x in range(center_x - half, center_x + half + 1):
-                    if not is_valid_point(y, x):
-                        valid = False
-                        break
-                if not valid:
-                    break
-            
-            if valid:
-                best_size = size
-                best_y = center_y - half
-                best_x = center_x - half
-            else:
-                break
-
-        return best_size, best_y, best_x
-
-    def find_closest_valid_square():
-        """Find the closest point with a valid square"""
-        max_search_radius = 100
+    def find_closest_valid_block(center_y, center_x, block_size, max_search_radius):
         best_distance = float('inf')
-        best_result = None
+        best_coords = None
 
-        for radius in range(1, max_search_radius):
+        for radius in range(max_search_radius + 1):
             for dy in range(-radius, radius + 1):
                 for dx in range(-radius, radius + 1):
-                    if abs(dy) == radius or abs(dx) == radius:  # Only check the perimeter
-                        new_y = y_idx + dy
-                        new_x = x_idx + dx
-                        
-                        if is_valid_point(new_y, new_x):
-                            size, start_y, start_x = find_largest_square(new_y, new_x, area_around_point)
-                            if size >= 11:  # Minimum size needed for blocks
-                                distance = np.sqrt(dy**2 + dx**2)
-                                if distance < best_distance:
-                                    best_distance = distance
-                                    best_result = (size, start_y, start_x)
-                                    #print(f"Found valid square at distance {distance:.2f}")
-                                    return best_result  # Return first valid square found
+                    # Check perimeter only
+                    if abs(dy) != radius and abs(dx) != radius:
+                        continue
 
-        return best_result
+                    y0 = center_y + dy - block_size // 2
+                    x0 = center_x + dx - block_size // 2
 
-    # Try to find square at original coordinate
-    size, start_y, start_x = find_largest_square(y_idx, x_idx, area_around_point)
-    
-    # If no valid square found, search for closest one
-    if size < 11:  # Need at least size 11 for blocks
-       # print("No valid square at specified coordinate, searching nearby...")
-        result = find_closest_valid_square()
-        if result is not None:
-            size, start_y, start_x = result
-        else:
-            #print("No valid squares found in search area")
-            return None, []
+                    if is_valid_square(y0, x0, block_size):
+                        dist = np.sqrt(dy ** 2 + dx ** 2)
+                        if dist < best_distance:
+                            best_distance = dist
+                            best_coords = (y0, x0)
+            if best_coords:
+                print(best_coords)
+                #exit()
+                return best_coords
+        return None
 
-    # Create the mask
+    block_size = 88
+    coords = find_closest_valid_block(y_idx, x_idx, block_size, area_around_point)
+
+    if coords is None:
+        print("No valid 12x12 block found within search radius.")
+        return None, []
+
+    start_y, start_x = coords
     mask = torch.zeros_like(ice_velocity_tensor, dtype=torch.bool)
-    if size > 0:
-        for i in range(size):
-            for j in range(size):
-                mask[start_y + i, start_x + j] = True
-        
-        #print(f"Found valid square with side length: {size}")
-        #print(f"Starting at coordinates: ({start_y}, {start_x})")
-    
-    # Plot mask overlayed on mass balance
+    mask[start_y:start_y + block_size, start_x:start_x + block_size] = True
+
+    coords = []
+    for i in range(start_y, start_y+block_size, 11):
+        for j in range(start_x, start_x + block_size, 11):
+            block = mask[i:i+11, j:j+11]
+            if block.all():
+                coords.append((i,j))
+
+    # Plot mask
     plt.figure(figsize=(10, 8))
     plt.imshow(mass_balance_tensor.numpy(), cmap='viridis', origin='lower')
     plt.imshow(mask.numpy(), alpha=0.5, cmap='gray')
-    plt.plot(x_idx, y_idx, 'r*', markersize=10, label='Requested coordinate')
-    plt.title('Mask Overlayed on Mass Balance')
+    #plt.plot(x_idx, y_idx, 'r*', markersize=10, label='Requested coordinate')
+    plt.title(f'Valid {block_size}x{block_size} Mask Overlayed on Mass Balance')
     plt.colorbar(label='Mass Balance')
-    #plt.legend()
     plt.savefig("figures/mask_overlayed_on_mass_balance.png", dpi=300, bbox_inches='tight')
     plt.close()
 
-    block_size = 11
-    blocks = []
-    coords = []
-
-    for i in range(start_y, start_y + size - block_size + 1, block_size):
-        for j in range(start_x, start_x + size - block_size + 1, block_size):
-            block = mask[i:i+block_size, j:j+block_size]
-            if block.all():
-                blocks.append(block)
-                coords.append((i, j))
-
-    print(f"Found {len(blocks)} blocks of size {block_size}x{block_size} within the valid square")
-    
+    print(f"Found valid {block_size}x{block_size} block at ({start_y}, {start_x})")
     return mask, coords
+
 
 if __name__ == '__main__':
 
@@ -230,8 +181,8 @@ if __name__ == '__main__':
     mask, coords = create_mask(
             ice_velocity_data['land_ice_surface_easting_velocity'],
             mass_balance,
-            glacier_name=LARGEST_GLACIER_AREAS[0],
-            area_around_point=100
+            glacier_name=KANKALUSAT,
+            area_around_point=500
         )
     
     

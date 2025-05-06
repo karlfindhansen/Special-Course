@@ -7,8 +7,8 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.Model.ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
-from src.Model.InputBlock import InputBlock
+from ResidualBlocks import ResidualDenseBlock, ResInResDenseBlock
+from InputBlock import InputBlock
 
 sys.path.append('data')
 from data_preprocessing import ArcticDataloader

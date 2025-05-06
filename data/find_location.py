@@ -92,7 +92,7 @@ class CroppedAreaGenerator:
                 "projected": [i, j, i+11, j+11],
                 "original": [orig_y1, orig_x1, orig_y2, orig_x2]
             })
-
+ 
         return valid_crops_info, coordinate_tensor
 
     def _find_valid_crop_indices(self):
