@@ -1,0 +1,57 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@hpc.dtu.dk>
+Subject: Job 24915893: <train> in cluster <dcc> Exited
+
+Job <train> was submitted from host <n-62-12-19> by user <s193624> in cluster <dcc> at Tue May  6 11:15:49 2025
+Job was executed on host(s) <2*n-62-20-11>, in queue <gpuv100>, as user <s193624> in cluster <dcc> at Tue May  6 11:43:12 2025
+</zhome/a1/4/145993> was used as the home directory.
+</zhome/a1/4/145993/courses/special course/Special-Course> was used as the working directory.
+Started at Tue May  6 11:43:12 2025
+Terminated at Tue May  6 11:44:59 2025
+Results reported at Tue May  6 11:44:59 2025
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J train
+#BSUB -q gpuv100
+#BSUB -W 300
+#BSUB -R "rusage[mem=4096MB]"
+#BSUB -n 2         
+#BSUB -R "span[hosts=1]"   
+#BSUB -o src/batch_out/train_%J.out
+#BSUB -e src/batch_out/train_%J.err 
+
+source '../special_course/bin/activate'
+
+python src/train.py
+
+------------------------------------------------------------
+
+TERM_MEMLIMIT: job killed after reaching LSF memory usage limit.
+Exited with exit code 137.
+
+Resource usage summary:
+
+    CPU time :                                   44.00 sec.
+    Max Memory :                                 8192 MB
+    Average Memory :                             5546.33 MB
+    Total Requested Memory :                     8192.00 MB
+    Delta Memory :                               0.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                8
+    Run time :                                   108 sec.
+    Turnaround time :                            1750 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <src/batch_out/train_24915893.err> for stderr output of this job.
+
