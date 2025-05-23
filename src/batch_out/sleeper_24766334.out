@@ -1,7 +1,0 @@
-Dataloader created with 39848 crops
-Dataloader created with 31456 crops
-Dataloader created with 121 crops
-Number of items in train_dataset: 35863
-Running on cpu
-Epoch 1: Validation RMSE = 798.2428. Unprecise: nan
-Epoch 2: Validation RMSE = 573.6635. Unprecise: nan

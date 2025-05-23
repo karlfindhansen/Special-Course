@@ -12,14 +12,20 @@ KANKALUSAT = 'Kangerlussuaq Gletsjer'
 
 
 def split_coordinates(df):
-
-    lat = df['LAT'].str.replace(',', '.').astype(float)
+    
+    try:
+        lat = df['LAT'].str.replace(',', '.').astype(float)
+    except:
+        lat = df['LAT']
     df['lat_deg'] = lat.abs().astype(int)
     df['lat_min'] = (lat.abs() % 1 * 60).round(4)
     df['lat_hem'] = np.where(lat >= 0, 'N', 'S')
     
     # For longitude
-    lon = df['LON'].str.replace(',', '.').astype(float)
+    try:
+        lon = df['LON'].str.replace(',', '.').astype(float)
+    except:
+        lon = df['LON']
     df['lon_deg'] = lon.abs().astype(int)
     df['lon_min'] = (lon.abs() % 1 * 60).round(4)
     df['lon_hem'] = np.where(lon >= 0, 'E', 'W')
@@ -71,13 +77,16 @@ def dms_to_epsg3413(lat_deg: int, lat_min: float, lat_hem: str,
     x, y = transformer.transform(lon, lat)
     return x, y
 
-def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_around_point: int = 500):
+def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str=None, area_around_point: int = 500):
     """
     Creates a mask for the largest valid 12x12 square near a given glacier coordinate.
     If the target point is invalid, searches nearby to find the closest valid 12x12 region.
     """
-    glacier_names = pd.read_csv("data/inputs/glaciers.csv", encoding='latin1', sep=';')
-    glacier = glacier_names[glacier_names['Official name'] == glacier_name]
+    if glacier_name:
+        glacier_names = pd.read_csv("data/inputs/glaciers.csv", encoding='latin1', sep=';')
+        glacier = glacier_names[glacier_names['Official name'] == glacier_name]
+    else:
+        glacier = pd.DataFrame({'LAT': [67.008611],'LON': [-50.689167]})
     glacier = split_coordinates(glacier)
     lat_deg, lat_min, lat_hem = glacier['lat_deg'].values[0], glacier['lat_min'].values[0], glacier['lat_hem'].values[0]
     lon_deg, lon_min, lon_hem = glacier['lon_deg'].values[0], glacier['lon_min'].values[0], glacier['lon_hem'].values[0]
@@ -126,7 +135,7 @@ def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_aroun
                 return best_coords
         return None
 
-    block_size = 88
+    block_size = 176
     coords = find_closest_valid_block(y_idx, x_idx, block_size, area_around_point)
 
     if coords is None:
@@ -138,9 +147,9 @@ def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str, area_aroun
     mask[start_y:start_y + block_size, start_x:start_x + block_size] = True
 
     coords = []
-    for i in range(start_y, start_y+block_size, 11):
-        for j in range(start_x, start_x + block_size, 11):
-            block = mask[i:i+11, j:j+11]
+    for i in range(start_y, start_y+block_size, 22):
+        for j in range(start_x, start_x + block_size, 22):
+            block = mask[i:i+22, j:j+22]
             if block.all():
                 coords.append((i,j))
 
@@ -181,11 +190,11 @@ if __name__ == '__main__':
     mask, coords = create_mask(
             ice_velocity_data['land_ice_surface_easting_velocity'],
             mass_balance,
-            glacier_name=KANKALUSAT,
-            area_around_point=500
+            #glacier_name=KANKALUSAT,
+            area_around_point=2500
         )
     
-    
+    print(len(coords))
     exit()
 
     masks = {}

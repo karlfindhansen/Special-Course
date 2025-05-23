@@ -6,14 +6,14 @@ import sys
 
 sys.path.append('data')
 
-from data_preprocessing import ArcticDataloader
+from data_preprocessing import ArcticDataset
 
 class InputBlock(nn.Module):
     """
     Custom input block for DeepBedMap.
 
     Takes in BedMachine (X) : size 16x16 
-    REMA Ice Surface Elevation (W1) : size 16x16
+    ArcticDEM Ice Surface Elevation (W1) : size 16x16
     MEaSUREs Ice Surface Velocity x and y components (W2) : size 16x16
     Snow Accumulation (W3) : size 16x16
 
@@ -24,23 +24,23 @@ class InputBlock(nn.Module):
         super(InputBlock, self).__init__()
 
         self.conv_on_X = nn.Conv2d(
-            in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
+            in_channels=1, out_channels=out_channels, kernel_size=5, stride=1, padding=(0, 0)
         )
         
         self.conv_on_W1 = nn.Conv2d(
-            in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
+            in_channels=1, out_channels=out_channels, kernel_size=25, stride=5, padding=(0, 0)
         )
 
         self.conv_on_W2 = nn.Conv2d(
-            in_channels=2, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
+            in_channels=2, out_channels=out_channels, kernel_size=5, stride=1, padding=(0, 0)
         )
 
         self.conv_on_W3 = nn.Conv2d(
-            in_channels=1, out_channels=out_channels, kernel_size=(3, 3), stride=(1, 1), padding=(0, 0)
+            in_channels=1, out_channels=out_channels, kernel_size=5, stride=1, padding=(0, 0)
         )
 
         self.conv_on_W4 = nn.Conv2d(
-            in_channels=1, out_channels=out_channels, kernel_size=(3,3), stride=(1,1), padding=(0,0)
+            in_channels=1, out_channels=out_channels, kernel_size=5, stride=1, padding=(0, 0)
         )
 
         # Initialize weights with He (Kaiming) initialization
@@ -66,13 +66,7 @@ class InputBlock(nn.Module):
 
 if __name__ == "__main__":
     input_block = InputBlock()
-    dataset = ArcticDataloader(
-        bedmachine_path="data/inputs/Bedmachine/BedMachineGreenland-v5.nc",
-        arcticdem_path="data/inputs/Surface_elevation/arcticdem_mosaic_500m_v4.1.tar",
-        ice_velocity_path="data/inputs/Ice_velocity/Promice_AVG5year.nc",
-        mass_balance_path="data/inputs/mass_balance/GrIS-Annual-RA-VMB-1992-2020.nc",
-        hillshade_path="data/inputs/hillshade/macgregortest_flowalignedhillshade.tif"
-    )
+    dataset = ArcticDataset()
 
     train_size = int(0.8 * len(dataset)) 
     val_size = len(dataset) - train_size 
@@ -88,7 +82,7 @@ if __name__ == "__main__":
         w3 = batch['mass_balance']
         w4 = batch['hillshade']
         break
-
+    
     output = input_block(x, w1, w2, w3, w4)
     # this is the goal: Output shape: torch.Size([32, 128, 9, 9])
     print("Output shape:", output.shape)

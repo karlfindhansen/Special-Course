@@ -1,20 +1,13 @@
 import torch
 import torch.nn.functional as F
 import numpy as np
-
-# Assuming you have a PyTorch implementation of SSIM loss in ssim.py
-# You might need to install a library or implement it yourself.
-# For example, you can use kornia library: pip install kornia
-
 from kornia.losses import SSIMLoss
-ssim_loss = SSIMLoss(window_size=9, reduction='mean') #you can change window size here.
 
 
 def ssim_loss_func(
     y_pred: torch.Tensor,
     y_true: torch.Tensor,
-    window_size: int = 9,
-    stride: int = 1,
+    window_size: int = 11,
 ) -> torch.Tensor:
     """
     Structural Similarity (SSIM) loss/metric, calculated with default window size of 9.
@@ -23,6 +16,8 @@ def ssim_loss_func(
     """
     if not y_pred.shape == y_true.shape:
         raise ValueError("Input images must have the same dimensions.")
+    
+    ssim_loss = SSIMLoss(window_size=window_size,reduction='mean') #you can change window size here.
 
     return ssim_loss(y_pred, y_true)
 

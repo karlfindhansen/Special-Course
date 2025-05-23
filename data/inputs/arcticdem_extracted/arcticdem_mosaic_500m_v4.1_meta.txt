@@ -1,4 +1,0 @@
-ArcticDEM Mosaic Tile Metadata
-Tile: arcticdem_mosaic_500m
-Creation Date: 06-Jul-2023 16:56:01
-Version: 4.1

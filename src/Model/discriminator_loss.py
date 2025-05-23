@@ -29,10 +29,12 @@ def calculate_discriminator_loss(
 
     # Binary Cross-Entropy Loss with Sigmoid
     real_versus_fake_loss = F.binary_cross_entropy_with_logits(
-        input=(real_labels_pred - fake_labels_pred_avg), target=real_minus_fake_target.float()
+        input=(real_labels_pred - fake_labels_pred_avg), 
+        target=real_minus_fake_target.float()
     )  # let predicted labels from real images be more realistic than those from fake
     fake_versus_real_loss = F.binary_cross_entropy_with_logits(
-        input=(fake_labels_pred - real_labels_pred_avg), target=fake_minus_real_target.float()
+        input=(fake_labels_pred - real_labels_pred_avg), 
+        target=fake_minus_real_target.float()
     )  # let predicted labels from fake images be less realistic than those from real
 
     # Relativistic average Standard GAN's Discriminator Loss

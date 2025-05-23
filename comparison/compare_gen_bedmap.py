@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 import matplotlib.pyplot as plt
-from data_preprocessing import ArcticDataloader
+from data_preprocessing import ArcticDataset
 from torch.utils.data import DataLoader
 import torch.nn as nn
 from torchvision.utils import save_image
@@ -37,7 +37,7 @@ regions_of_interest = {
 }
 
 if __name__ == '__main__':
-    dataset = ArcticDataloader(
+    dataset = ArcticDataset(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),

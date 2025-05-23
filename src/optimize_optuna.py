@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 import os
 from torch.utils.data import DataLoader, random_split
-from data_preprocessing import ArcticDataloader
+from data_preprocessing import ArcticDataset
 from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
 
@@ -18,7 +18,7 @@ def objective(trial):
     epochs = 30  # Fixed number of epochs
     
     # Load dataset
-    dataset = ArcticDataloader(
+    dataset = ArcticDataset(
         bedmachine_path=os.path.join("data", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "Ice_velocity", "Promice_AVG5year.nc"),

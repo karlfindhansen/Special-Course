@@ -20,7 +20,7 @@ sys.path.append('comparison')
 sys.path.append('data')
 sys.path.append('src/Model')
 
-from data_preprocessing import ArcticDataloader
+from data_preprocessing import ArcticDataset
 from compare_gen_bedmap import regions_of_interest
 from GeneratorModel import GeneratorModel
 from DiscriminatorModel import DiscriminatorModel
@@ -44,7 +44,7 @@ def train(
     )
     config = wandb.config
     # Load dataset
-    dataset = ArcticDataloader(
+    dataset = ArcticDataset(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
@@ -52,7 +52,7 @@ def train(
         hillshade_path=os.path.join("data", "inputs", "hillshade", "macgregortest_flowalignedhillshade.tif"),
     )
 
-    dataset_for_validation = ArcticDataloader(
+    dataset_for_validation = ArcticDataset(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
@@ -62,7 +62,7 @@ def train(
         bedmachine_crops=os.path.join("data", "crops", "unprecise_crops", "original_crops.csv"),
     )
 
-    dataset_for_generation = ArcticDataloader(
+    dataset_for_generation = ArcticDataset(
         bedmachine_path=os.path.join("data","inputs", "Bedmachine", "BedMachineGreenland-v5.nc"),
         arcticdem_path=os.path.join("data", "inputs", "Surface_elevation", "arcticdem_mosaic_500m_v4.1.tar"),
         ice_velocity_path=os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),

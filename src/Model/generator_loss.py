@@ -2,27 +2,8 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 import numpy as np
-
-# Assuming calculate_discriminator_loss and ssim_loss_func are defined elsewhere
-# You will need to replace these with your PyTorch implementations.
-
-def calculate_discriminator_loss(real_labels_pred, fake_labels_pred, real_minus_fake_target, fake_minus_real_target):
-    """
-    Placeholder for your discriminator loss calculation.
-    Replace with your actual PyTorch implementation.
-    """
-    # Example: Simple binary cross-entropy loss
-    real_loss = F.binary_cross_entropy_with_logits(real_labels_pred, real_minus_fake_target.float())
-    fake_loss = F.binary_cross_entropy_with_logits(fake_labels_pred, fake_minus_real_target.float())
-    return real_loss + fake_loss
-
-def ssim_loss_func(y_pred, y_true):
-    """
-    Placeholder for your SSIM loss calculation.
-    Replace with your actual PyTorch SSIM implementation.
-    """
-    # Example: Simple placeholder (replace with actual SSIM)
-    return torch.mean(torch.abs(y_pred - y_true))
+from discriminator_loss import calculate_discriminator_loss
+from ssim_loss import ssim_loss_func
 
 def calculate_generator_loss(
     y_pred: torch.Tensor,

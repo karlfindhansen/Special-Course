@@ -1,4 +1,8 @@
 *.tar
 *.tif
 *.nc
+*.png
+*.err
+*.out
+*fake_real
 __pycache__

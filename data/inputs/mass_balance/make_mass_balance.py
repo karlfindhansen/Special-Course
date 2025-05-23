@@ -35,7 +35,7 @@ combined_mass_balance = xr.where(
         inner_mass_balance, 
         outer_mass_balance  
     )
-)
+) * 917
 
 output_path = "data/inputs/mass_balance/combined_mass_balance.tif"
 combined_mass_balance.rio.to_raster(output_path)
