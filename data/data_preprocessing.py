@@ -1,13 +1,11 @@
 import os
-import tarfile
 import torch
 import numpy as np
-import pandas as pd
 import xarray as xr
 import rioxarray
 import csv
 from PIL import Image
-from torch.utils.data import Dataset, DataLoader, random_split, Subset
+from torch.utils.data import Dataset, DataLoader
 import matplotlib.pyplot as plt
 
 Image.MAX_IMAGE_PIXELS = None
@@ -48,14 +46,17 @@ class ArcticDataset(Dataset):
         self.hillshade_tensor = self.read_hillshade_data()
         
         if region is None:
+            glacier_name = None
             self.true_crops = self.load_crops(path=true_crops)
             self.bedmachine_crops = self.load_crops(path=bedmachine_crops)
             self.arcticdem_crops = self.load_crops(path=arcticdem_crops)
         else:
-            self.true_crops = self.load_crops(file_name="projected_crops.csv", use_coordinates=True)
-            self.bedmachine_crops = self.load_crops(file_name="original_crops.csv", use_coordinates=True)
-            self.arcticdem_crops = self.load_crops(file_name="arcticdem100_crops.csv", use_coordinates=True)
+            glacier_name = "Kangerlussuaq"
+            self.true_crops = self.load_crops(file_name=f"projected_crops_{glacier_name}.csv", use_coordinates=True)
+            self.bedmachine_crops = self.load_crops(file_name=f"original_crops_{glacier_name}.csv", use_coordinates=True)
+            self.arcticdem_crops = self.load_crops(file_name=f"arcticdem100_crops_{glacier_name}.csv", use_coordinates=True)
 
+        self.glacier_name = glacier_name
         self.crop_size = self.true_crops[0][2] - self.true_crops[0][0]
         self.bedmachine_crops_size = self.bedmachine_crops[0][2] - self.bedmachine_crops[0][0]
 
@@ -136,8 +137,7 @@ class ArcticDataset(Dataset):
         }
 
 if __name__ == "__main__":
-
-    dataset = ArcticDataset(region=True)
+    dataset = ArcticDataset()
 
     batch_size = 128
     dataloader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False)
@@ -159,20 +159,20 @@ if __name__ == "__main__":
 
     bedmachine = dataset.bedmachine_projected.squeeze(0)
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(15, 10))
     plt.imshow(bedmachine, cmap="terrain", origin="upper")
     plt.colorbar(label="Bed Elevation (m)")
 
-    for j, batch in enumerate(dataloader):
-        for i in range(len(batch['hr_bed_elevation'])):
-            y1, x1, y2, x2 = dataset.true_crops[i]
-            plt.plot([x1, x2, x2, x1, x1], [y1, y1, y2, y2, y1], c='r')
+    # Plot training tiles from the dataset directly
+    for crop in dataset.true_crops:
+        y1, x1, y2, x2 = crop
+        plt.plot([x1, x2, x2, x1, x1], [y1, y1, y2, y2, y1], c='r', alpha=0.1)
 
-    plt.title("Visualization of Crop Locations over BedMachine Elevation")
-    plt.xlabel("X Coordinate")
-    plt.ylabel("Y Coordinate")
-    plt.savefig("figures/crop_locations.png", dpi=500)
+    plt.title("Training Tiles on BedMachine")
+    plt.axis("off")
+    plt.savefig("figures/crop_locations.png", dpi=500, bbox_inches='tight')
     plt.close()
+    exit()
 
     if len(dataloader) == 1:
         batch = next(iter(dataloader))
@@ -250,7 +250,7 @@ if __name__ == "__main__":
 
         plt.suptitle('Overview of All Input Data Types', fontsize=16, y=1.02)
         plt.tight_layout()
-        plt.savefig('figures/batch_examples/glacier/all_inputs_overview.png', 
+        plt.savefig(f'figures/batch_examples/glacier/all_inputs_overview{dataset.glacier_name}.png', 
                     dpi=300, bbox_inches='tight')
         plt.close()
     else:

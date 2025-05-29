@@ -15,7 +15,7 @@ class CroppedAreaGenerator:
                  ice_velocity_path = os.path.join("data", "inputs", "Ice_velocity", "Promice_AVG5year.nc"),
                  mass_balance_path = os.path.join("data", "inputs", "mass_balance", "combined_mass_balance.tif"),
                  arcticdem_path    = os.path.join("data", "inputs", "arcticdem", "arcticdem_mosaic_100m_v4.1_dem.tif"),
-                 precise=True, crop_size=22, glacier_name=None):
+                 precise=True, crop_size=22, glacier=None):
         """Initializes the CroppedAreaGenerator with paths, processing settings, and data loading."""
         self.bedmachine_path = bedmachine_path
         self.ice_velocity_path = ice_velocity_path
@@ -36,10 +36,11 @@ class CroppedAreaGenerator:
 
         self.bed_tensor, self.mask_tensor, self.ice_velocity_tensor, self.mass_balance_tensor, self.transform_info = self._load_and_preprocess_data()
 
-        self.glacier_name = glacier_name
-        if glacier_name:
+        self.glacier = glacier
+        if glacier:
             self.coordinate_indices, self.coordinate_tensor = self._find_valid_coordinate_indicies()
-        
+
+        self.glacier_name = "Kangerlussuaq" if isinstance(self.glacier, bool) else self.glacier
         self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
@@ -96,17 +97,17 @@ class CroppedAreaGenerator:
     def _find_valid_coordinate_indicies(self):
         """Find and return 11x11 crops specifically within the coordinate tensor region."""
         valid_crops_info = []
-        if isinstance(self.glacier_name, bool):
+        if isinstance(self.glacier, bool):
             coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.mass_balance_tensor, area_around_point=500)
         else:
-            coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.mass_balance_tensor, self.glacier_name, 500)
+            coordinate_tensor, valid_crops_coordinates = create_mask(self.ice_velocity_data["land_ice_surface_easting_velocity"], self.mass_balance_tensor, self.glacier, 500)
 
         for i,j in valid_crops_coordinates:
             orig_bed_y1, orig_bed_x1 = self._projected_bed_to_original_coords(i, j)
             orig_bed_y2, orig_bed_x2 = self._projected_bed_to_original_coords(i+22, j+22)
 
-            orig_arcticdem_y1, orig_arcticdem_x1 = self._projected_arcticdem_to_orginal_coords(i,j)
-            orig_arcticdem_y2, orig_arcticdem_x2 = self._projected_arcticdem_to_orginal_coords(i+22,j+22)
+            orig_arcticdem_y1, orig_arcticdem_x1 = self._projected_arcticdem_to_orginal_coords(i, j)
+            orig_arcticdem_y2, orig_arcticdem_x2 = self._projected_arcticdem_to_orginal_coords(i+22, j+22)
 
             valid_crops_info.append({
                 "projected": [i, j, i+22, j+22],
@@ -127,7 +128,7 @@ class CroppedAreaGenerator:
         tqdm_bar = tqdm(range(edge_margin, h - self.crop_size - edge_margin + 1), desc="Finding valid crops")
         for i in tqdm_bar:
             for j in range(edge_margin, w - self.crop_size - edge_margin + 1):
-                if not self.precise and occupied[i:i + self.crop_size, j:j + self.crop_size].any() or (self.glacier_name and self.coordinate_tensor[i:i + self.crop_size, j:j + self.crop_size].any()):
+                if not self.precise and occupied[i:i + self.crop_size, j:j + self.crop_size].any() or (self.glacier and self.coordinate_tensor[i:i + self.crop_size, j:j + self.crop_size].any()):
                     continue
 
                 crop_mask = self.mask_tensor[i:i + self.crop_size, j:j + self.crop_size]
@@ -196,15 +197,14 @@ class CroppedAreaGenerator:
         original_csv = os.path.join(output_dir, "original_crops.csv")
         arcticdem_csv = os.path.join(output_dir, "arcticdem100_crops.csv")
 
-        projected_coordinates_csv = os.path.join(output_dir_coordinates, "projected_crops.csv")
-        original_coordinates_csv = os.path.join(output_dir_coordinates, "original_crops.csv")
-        original_bed_coordinates_csv = os.path.join(output_dir_coordinates, "arcticdem100_crops.csv")
-
         self._save_crops_to_csv([crop["projected"] for crop in self.valid_indices], projected_csv)
         self._save_crops_to_csv([crop["original_bed"] for crop in self.valid_indices], original_csv)
         self._save_crops_to_csv([crop["original_arcticdem"] for crop in self.valid_indices], arcticdem_csv)
 
-        if self.glacier_name:
+        if self.glacier:
+            projected_coordinates_csv = os.path.join(output_dir_coordinates, f"projected_crops_{self.glacier_name}.csv")
+            original_coordinates_csv = os.path.join(output_dir_coordinates, f"original_crops_{self.glacier_name}.csv")
+            original_bed_coordinates_csv = os.path.join(output_dir_coordinates, f"arcticdem100_crops_{self.glacier_name}.csv")
             self._save_crops_to_csv([crop["projected"] for crop in self.coordinate_indices], projected_coordinates_csv)
             self._save_crops_to_csv([crop["original_bed"] for crop in self.coordinate_indices], original_coordinates_csv)
             self._save_crops_to_csv([crop["original_arcticdem"] for crop in self.coordinate_indices], original_bed_coordinates_csv)
@@ -220,14 +220,13 @@ class CroppedAreaGenerator:
                                 linewidth=1, edgecolor="r", facecolor="none")
             axes[0].add_patch(rect)
         
-        if self.glacier_name:
+        if self.glacier:
             for crop in self.coordinate_indices:
                 y1, x1, y2, x2 = crop["projected"]
                 rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size,
                                     linewidth=1, edgecolor="b", facecolor="none", label="Coordinate crops")
                 axes[0].add_patch(rect)
         axes[0].set_title("Cropped Areas on Mask")
-        axes[0].legend()
 
         axes[1].imshow(self.mass_balance_tensor.numpy(), cmap="terrain")
         for crop in self.valid_indices:
@@ -236,7 +235,7 @@ class CroppedAreaGenerator:
                                 linewidth=1, edgecolor="r", facecolor="none")
             axes[1].add_patch(rect)
         
-        if self.glacier_name:
+        if self.glacier:
             for crop in self.coordinate_indices:
                 y1, x1, y2, x2 = crop["projected"]
                 rect = patches.Rectangle((x1, y1), self.crop_size, self.crop_size,
@@ -252,16 +251,16 @@ class CroppedAreaGenerator:
 
 if __name__ == '__main__':
 
-    #crop_generator = CroppedAreaGenerator(precise=False) 
+   # crop_generator = CroppedAreaGenerator(precise=False)
+   # crop_generator.generate_and_save_crops() 
+   # crop_generator.overlay_crops_on_mask() 
+
+    #crop_generator = CroppedAreaGenerator(glacier="Døren") 
     #crop_generator.generate_and_save_crops()
     #crop_generator.overlay_crops_on_mask()
 
-    crop_generator = CroppedAreaGenerator(glacier_name=True) 
+    crop_generator = CroppedAreaGenerator() 
     crop_generator.generate_and_save_crops()
     crop_generator.overlay_crops_on_mask()
-
-    #crop_generator = CroppedAreaGenerator() 
-    #crop_generator.generate_and_save_crops()
-    #crop_generator.overlay_crops_on_mask()
 
     
