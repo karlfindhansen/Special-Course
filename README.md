@@ -9,7 +9,7 @@ Using Deep Learning to predict bed topography in Greenland.
 ```bash
 python data/find_location.py
 ```
-Here you must specify if you want to find it for a specic glaicer, just write its name and it will generate crops to it.
+Here you must specify if you want to find it for a specific glaicer, just write its name and it will generate crops to it.
 
 3. Ensure that you can run the dataloader
 ```bash
