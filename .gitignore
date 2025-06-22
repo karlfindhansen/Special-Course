@@ -1,7 +1,7 @@
 *.tar
 *.tif
 *.nc
-*.png
+#*.png
 *.err
 *.out
 *fake_real
