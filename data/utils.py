@@ -10,7 +10,6 @@ LARGEST_GLACIER_AREAS = ['Øvre Frederiksborg Gletsjer', 'Seward Gletsjer', 'Ser
 
 KANKALUSAT = 'Kangerlussuaq Gletsjer'
 
-
 def split_coordinates(df):
     
     try:
@@ -147,25 +146,74 @@ def create_mask(ice_velocity, mass_balance_tensor, glacier_name: str=None, area_
     mask[start_y:start_y + block_size, start_x:start_x + block_size] = True
 
     coords = []
-    for i in range(start_y, start_y+block_size, 22):
-        for j in range(start_x, start_x + block_size, 22):
+    step_size = 18
+    for i in range(start_y, start_y+block_size, step_size):
+        for j in range(start_x, start_x + block_size, step_size):
             block = mask[i:i+22, j:j+22]
             if block.all():
                 coords.append((i,j))
 
-    # Plot mask
     plt.figure(figsize=(10, 8))
     plt.imshow(mass_balance_tensor.numpy(), cmap='viridis', origin='lower')
     plt.imshow(mask.numpy(), alpha=0.5, cmap='gray')
     #plt.plot(x_idx, y_idx, 'r*', markersize=10, label='Requested coordinate')
     plt.title(f'Valid {block_size}x{block_size} Mask Overlayed on Mass Balance')
     plt.colorbar(label='Mass Balance')
-    plt.savefig("figures/mask_overlayed_on_mass_balance.png", dpi=300, bbox_inches='tight')
+    plt.savefig("figures/mask_overlayed_on_mass_balance_karl.png", dpi=300, bbox_inches='tight')
     plt.close()
 
     print(f"Found valid {block_size}x{block_size} block at ({start_y}, {start_x})")
     return mask, coords
 
+def all_coordinates_valid(mask, ice_velocity_tensor, mass_balance_tensor):
+    """
+    Check if all coordinates in the block are valid (no NaN values)
+    Args:
+        mask: Boolean mask of shape (block_size, block_size)
+        ice_velocity_tensor: Ice velocity tensor
+        mass_balance_tensor: Mass balance tensor
+    Returns:
+        bool: True if all coordinates are valid
+    """
+    # Convert xarray DataArrays to numpy arrays if needed
+    if hasattr(ice_velocity_tensor, 'values'):
+        ice_velocity_values = ice_velocity_tensor.values
+    else:
+        ice_velocity_values = ice_velocity_tensor
+
+    if hasattr(mass_balance_tensor, 'values'):
+        mass_balance_values = mass_balance_tensor.values
+    else:
+        mass_balance_values = mass_balance_tensor
+    
+    # Check if any values in the block are NaN
+    if np.isnan(ice_velocity_values).any() or np.isnan(mass_balance_values).any():
+        return False
+    
+    # Check if the mask contains any invalid values
+    if not mask.all():
+        return False
+    
+    return True
+
+# make a function that takes the mask and ice velocity tensor and splits it into coordinates of size 22x22 if the coordinates are valid
+def split_mask_into_coordinates(ice_velocity_tensor, mass_balance_tensor, block_size=22):
+    """
+    Split the mask into coordinates of size block_size x block_size if they are valid.
+    """
+    ice_velocity_tensor = torch.tensor(ice_velocity_tensor.values.astype(np.float32)).squeeze(0)
+    output_size = 22
+    overlap = 4
+    step_size = output_size - (2*overlap)
+    coords = []
+    for i in range(0, ice_velocity_tensor.shape[0] - block_size + 1, step_size):
+        for j in range(0, ice_velocity_tensor.shape[1] - block_size + 1, step_size):
+            block_mask_1 = ice_velocity_tensor[i:i + block_size, j:j + block_size]
+            block_mask_2 = mass_balance_tensor[i:i + block_size, j:j + block_size]
+            if not (torch.isnan(block_mask_1).any() or torch.isnan(block_mask_2).any()):
+                coords.append((i, j))
+
+    return coords
 
 if __name__ == '__main__':
 
@@ -190,11 +238,20 @@ if __name__ == '__main__':
     mask, coords = create_mask(
             ice_velocity_data['land_ice_surface_easting_velocity'],
             mass_balance,
-            #glacier_name=KANKALUSAT,
+            glacier_name='Karl',
             area_around_point=2500
         )
     
-    print(len(coords))
+    coords = split_mask_into_coordinates(ice_velocity_data['land_ice_surface_easting_velocity'], mass_balance, block_size=22)
+    # plot the coords over the mask
+    plt.figure(figsize=(10, 8))
+    plt.imshow(mask.numpy(), cmap='gray', origin='lower')
+    print(f"Number of valid coordinates: {len(coords)}")
+    for coord in coords:
+        plt.plot(coord[1] + 22, coord[0] + 22, 'ro', markersize=5)
+    plt.title('Valid Coordinates Overlayed on Mask')
+    plt.colorbar(label='Mask')
+    plt.show()
     exit()
 
     masks = {}

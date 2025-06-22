@@ -7,7 +7,7 @@ import xarray as xr
 import matplotlib.pyplot as plt 
 import matplotlib.patches as patches
 from tqdm import tqdm
-from utils import create_mask, LARGEST_GLACIER_AREAS
+from utils import create_mask, LARGEST_GLACIER_AREAS, split_mask_into_coordinates
 
 class CroppedAreaGenerator:
     def __init__(self, 
@@ -41,6 +41,7 @@ class CroppedAreaGenerator:
             self.coordinate_indices, self.coordinate_tensor = self._find_valid_coordinate_indicies()
 
         self.glacier_name = "Kangerlussuaq" if isinstance(self.glacier, bool) else self.glacier
+        self.all_indices = self._project_all_to_coords()
         self.valid_indices = self._find_valid_crop_indices()
 
     def _load_and_preprocess_data(self):
@@ -63,7 +64,7 @@ class CroppedAreaGenerator:
         ice_velocity = self.ice_velocity_data["land_ice_surface_easting_velocity"]
         ice_velocity_tensor = torch.tensor(ice_velocity.values.astype(np.float32)).squeeze(0)
 
-        self.uncertaincy_criteria = 30
+        self.uncertaincy_criteria = 0
         mask_tensor = (errbed_tensor <= self.uncertaincy_criteria).float() if self.precise else (errbed_tensor > self.uncertaincy_criteria).float()
 
         transform_info = {
@@ -93,6 +94,25 @@ class CroppedAreaGenerator:
         orig_y_idx = np.abs(self.transform_info["original_arcticdem_dims"]["y"] - reproj_y).argmin()
         orig_x_idx = np.abs(self.transform_info["original_arcticdem_dims"]["x"] - reproj_x).argmin()
         return orig_y_idx, orig_x_idx
+
+    def _project_all_to_coords(self):
+        valid_crops_info = []
+        all_coordinates = split_mask_into_coordinates(self.ice_velocity_data['land_ice_surface_easting_velocity'], self.mass_balance_tensor)
+        for i,j in all_coordinates:
+            orig_bed_y1, orig_bed_x1 = self._projected_bed_to_original_coords(i, j)
+            orig_bed_y2, orig_bed_x2 = self._projected_bed_to_original_coords(i+22, j+22)
+
+            orig_arcticdem_y1, orig_arcticdem_x1 = self._projected_arcticdem_to_orginal_coords(i, j)
+            orig_arcticdem_y2, orig_arcticdem_x2 = self._projected_arcticdem_to_orginal_coords(i+22, j+22)
+
+            valid_crops_info.append({
+                "projected": [i, j, i+22, j+22],
+                "original_bed": [orig_bed_y1, orig_bed_x1, orig_bed_y2, orig_bed_x2],
+                "original_arcticdem" : [orig_arcticdem_y1, orig_arcticdem_x1, orig_arcticdem_y2, orig_arcticdem_x2]
+            })
+ 
+        return valid_crops_info
+
 
     def _find_valid_coordinate_indicies(self):
         """Find and return 11x11 crops specifically within the coordinate tensor region."""
@@ -132,11 +152,10 @@ class CroppedAreaGenerator:
                     continue
 
                 crop_mask = self.mask_tensor[i:i + self.crop_size, j:j + self.crop_size]
-                crop_bed = self.bed_tensor[i:i + self.crop_size, j:j + self.crop_size]
                 crop_velocity = self.ice_velocity_tensor[i:i + self.crop_size, j:j + self.crop_size]
                 crop_mass_balance = self.mass_balance_tensor[i:i+self.crop_size, j:j+self.crop_size]
 
-                if torch.all(crop_mask == 1) and torch.all(crop_bed > 0) and torch.all(~torch.isnan(crop_velocity)) and torch.all(~torch.isnan(crop_mass_balance)):
+                if torch.all(crop_mask == 1) and torch.all(~torch.isnan(crop_velocity)) and torch.all(~torch.isnan(crop_mass_balance)):
                     end_row, end_col = i + self.crop_size, j + self.crop_size
 
                     if self.crop_size > base_size:
@@ -200,6 +219,13 @@ class CroppedAreaGenerator:
         self._save_crops_to_csv([crop["projected"] for crop in self.valid_indices], projected_csv)
         self._save_crops_to_csv([crop["original_bed"] for crop in self.valid_indices], original_csv)
         self._save_crops_to_csv([crop["original_arcticdem"] for crop in self.valid_indices], arcticdem_csv)
+
+        projected_coordinates_csv = os.path.join(output_dir_coordinates, "projected_crops_All.csv")
+        original_coordinates_csv = os.path.join(output_dir_coordinates, "original_crops_All.csv")
+        original_bed_coordinates_csv = os.path.join(output_dir_coordinates, "arcticdem100_crops_All.csv")
+        self._save_crops_to_csv([crop["projected"] for crop in self.all_indices], projected_coordinates_csv)
+        self._save_crops_to_csv([crop["original_bed"] for crop in self.all_indices], original_coordinates_csv)
+        self._save_crops_to_csv([crop["original_arcticdem"] for crop in self.all_indices], original_bed_coordinates_csv)
 
         if self.glacier:
             projected_coordinates_csv = os.path.join(output_dir_coordinates, f"projected_crops_{self.glacier_name}.csv")
