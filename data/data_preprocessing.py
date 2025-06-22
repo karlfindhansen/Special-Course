@@ -40,7 +40,7 @@ class ArcticDataset(Dataset):
 
         self.mass_balance = rioxarray.open_rasterio(mass_balance_path)
         self.mass_balance.rio.write_crs("EPSG:3413", inplace=True)
-        self.mass_balance = torch.tensor(self.mass_balance.values.astype(np.float32))
+        self.mass_balance = self.align_to_velocity(self.mass_balance)
 
         self.hillshade_path = hillshade_path
         self.hillshade_tensor = self.read_hillshade_data()
@@ -51,7 +51,7 @@ class ArcticDataset(Dataset):
             self.bedmachine_crops = self.load_crops(path=bedmachine_crops)
             self.arcticdem_crops = self.load_crops(path=arcticdem_crops)
         else:
-            glacier_name = "Kangerlussuaq"
+            glacier_name = "Kangerlussuaq" if isinstance(region, bool) else region
             self.true_crops = self.load_crops(file_name=f"projected_crops_{glacier_name}.csv", use_coordinates=True)
             self.bedmachine_crops = self.load_crops(file_name=f"original_crops_{glacier_name}.csv", use_coordinates=True)
             self.arcticdem_crops = self.load_crops(file_name=f"arcticdem100_crops_{glacier_name}.csv", use_coordinates=True)
@@ -84,7 +84,7 @@ class ArcticDataset(Dataset):
         return torch.tensor(hillshade_data.values.astype(np.float32))
 
     def align_to_velocity(self, data):
-        aligned = data.rio.reproject_match(self.ice_velocity_data['land_ice_surface_easting_velocity'])
+        aligned = data.rio.reproject_match(self.ice_velocity_data)
         return torch.tensor(aligned.values.astype(np.float32))
 
     def __len__(self):
@@ -120,6 +120,14 @@ class ArcticDataset(Dataset):
         assert hillshade.shape == (1, self.crop_size, self.crop_size), f"Patch hillshade shape mismatch: {hillshade}"
         assert bed_elevation_hr.shape == (1, 72, 72), f"Patch bed elevation shape mismatch: {bed_elevation_hr.shape}"
 
+        assert not torch.isnan(arcticdem).any(), "NaN values found in arcticdem tensor"
+        assert not torch.isnan(arcticdem_lr).any(), "NaN values found in arcticdem_lr tensor"
+        assert not torch.isnan(mass_balance).any(), "NaN values found in mass_balance tensor"
+        assert not torch.isnan(bed_elevation_lr).any(), "NaN values found in bed_elevation_lr tensor"
+        assert not torch.isnan(velocity).any(), "NaN values found in velocity tensor"
+        assert not torch.isnan(hillshade).any(), "NaN values found in hillshade tensor"
+        assert not torch.isnan(bed_elevation_hr).any(), "NaN values found in bed_elevation_hr tensor"
+
         crops = {'Projected'          : {'y_1':y_1 ,           'x_1':x_1,           'y_2':y_2,           'x_2':x_2},
                  'Original bed'       : {'y_1':y_1_bed ,       'x_1':x_1_bed,       'y_2':y_2_bed,       'x_2':x_2_bed},
                  'Original Arcticdem' : {'y_1':y_1_arcticdem , 'x_1':x_1_arcticdem, 'y_2':y_2_arcticdem, 'x_2':x_2_arcticdem}
@@ -138,149 +146,5 @@ class ArcticDataset(Dataset):
 
 if __name__ == "__main__":
     dataset = ArcticDataset()
-
-    batch_size = 128
-    dataloader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=False)
-
-    def has_nan(tensor):
-        return torch.isnan(tensor).any().item()
-
-    for i, batch in enumerate(dataloader):
-        for key, value in batch.items():
-            if isinstance(value, torch.Tensor):
-                if has_nan(value):
-                    print(f"NaN detected in batch {i} in key: {key}")
-            elif isinstance(value, dict):
-                continue  # crops dict, skip
-            else:
-                print(f"Unexpected data type for key '{key}' in batch {i}: {type(value)}")
-        
-        print(f"Dataloader created with {len(dataloader)} batches")
-
-    bedmachine = dataset.bedmachine_projected.squeeze(0)
-
-    plt.figure(figsize=(15, 10))
-    plt.imshow(bedmachine, cmap="terrain", origin="upper")
-    plt.colorbar(label="Bed Elevation (m)")
-
-    # Plot training tiles from the dataset directly
-    for crop in dataset.true_crops:
-        y1, x1, y2, x2 = crop
-        plt.plot([x1, x2, x2, x1, x1], [y1, y1, y2, y2, y1], c='r', alpha=0.1)
-
-    plt.title("Training Tiles on BedMachine")
-    plt.axis("off")
-    plt.savefig("figures/crop_locations.png", dpi=500, bbox_inches='tight')
-    plt.close()
-    exit()
-
-    if len(dataloader) == 1:
-        batch = next(iter(dataloader))
-        
-        # Define layout for all plots
-        fig = plt.figure(figsize=(20, 15))
-        gs = plt.GridSpec(2, 4, figure=fig)
-        
-        # Dictionary mapping data types to their plot positions and titles
-        plot_config = {
-            'height_icecap': {'pos': gs[0, 0], 'title': 'ArcticDEM'},
-            'lr_bed_elevation': {'pos': gs[0, 1], 'title': 'Low-res BedMachine'},
-            'hr_bed_elevation': {'pos': gs[0, 2], 'title': 'High-res BedMachine'},
-            'velocity_x': {'pos': gs[1, 0], 'title': 'Velocity (East-West)'},
-            'velocity_y': {'pos': gs[1, 1], 'title': 'Velocity (North-South)'},
-            'mass_balance': {'pos': gs[0, 3], 'title': 'Mass Balance'},
-            'hillshade': {'pos': gs[1, 2], 'title': 'Flow-aware Hillshade'},
-            'lr_arcticdem' : {'pos': gs[1, 3], 'title': 'Low-res ArcticDEM'},
-        }
-
-        # Create canvases and plot
-        for img_type, config in plot_config.items():
-            n_images = len(batch['velocity'])
-            grid_size = int(np.ceil(np.sqrt(n_images)))
-
-            if img_type in ['velocity_x', 'velocity_y']:
-
-                ax = fig.add_subplot(config['pos'])
-                
-                # Create canvases for both components
-                canvas_x = np.zeros((grid_size * batch['velocity'].shape[2], 
-                                    grid_size * batch['velocity'].shape[3]))
-                canvas_y = np.zeros_like(canvas_x)
-                
-                for idx in range(n_images):
-                    i, j = idx // grid_size, idx % grid_size
-                    y_start = i * batch['velocity'].shape[2]
-                    y_end = (i + 1) * batch['velocity'].shape[2]
-                    x_start = j * batch['velocity'].shape[3]
-                    x_end = (j + 1) * batch['velocity'].shape[3]
-                    
-                    # Convert tensors to numpy arrays safely
-                    x_data = batch['velocity'][idx][0].squeeze().cpu().detach().numpy()
-                    y_data = batch['velocity'][idx][1].squeeze().cpu().detach().numpy()
-                    canvas_x[y_start:y_end, x_start:x_end] = x_data.copy()
-                    canvas_y[y_start:y_end, x_start:x_end] = y_data.copy()
-
-                im = ax.imshow(canvas_x, cmap='viridis') if img_type == 'velocity_x' else ax.imshow(canvas_y, cmap='terrain')
-                ax.set_title(config['title'])
-                plt.colorbar(im, ax=ax)
-
-            else:
-                ax = fig.add_subplot(config['pos'])
-                
-                # Create and fill canvas
-                canvas = np.zeros((grid_size * batch[img_type].shape[2], 
-                                grid_size * batch[img_type].shape[3]))
-                
-                for idx in range(n_images):
-                    i, j = idx // grid_size, idx % grid_size
-                    y_start = i * batch[img_type].shape[2]
-                    y_end = (i + 1) * batch[img_type].shape[2]
-                    x_start = j * batch[img_type].shape[3]
-                    x_end = (j + 1) * batch[img_type].shape[3]
-                    
-                    # Convert tensor to numpy array safely
-                    img_data = batch[img_type][idx].squeeze().cpu().detach().numpy()
-                    canvas[y_start:y_end, x_start:x_end] = img_data.copy()
-                    
-                im = ax.imshow(canvas, cmap='terrain')
-                ax.set_title(config['title'])
-                plt.colorbar(im, ax=ax)
-            
-            ax.axis('off')
-
-        plt.suptitle('Overview of All Input Data Types', fontsize=16, y=1.02)
-        plt.tight_layout()
-        plt.savefig(f'figures/batch_examples/glacier/all_inputs_overview{dataset.glacier_name}.png', 
-                    dpi=300, bbox_inches='tight')
-        plt.close()
-    else:
-        for i, batch in enumerate(dataloader):
-            
-            image_types = ['height_icecap', 'lr_bed_elevation', 'hr_bed_elevation', 'velocity', 'velocity', 'mass_balance', 'hillshade']
-            titles = ["ArcticDem", "Low-res BedMachine",  "High-res BedMachine", "Velocity east/west", "Velocity north/south", "Mass balance", "Flow aware hillshade"]
-            for j in range(batch_size):
-                fig, axes = plt.subplots(1, len(image_types), figsize=(20, 5))
-                
-                for ax, img_type, title in zip(axes, image_types, titles):
-                    if img_type == 'velocity':
-                        img_x = batch[img_type][j][0].squeeze(0).numpy()
-                        img_y = batch[img_type][j][1].squeeze(0).numpy()
-                        ax.imshow(img_x, cmap="terrain")
-                        ax.set_title(title + " X")
-                        ax.axis("off")
-                        ax.imshow(img_y)
-                        ax.set_title(title + " Y")
-                        ax.axis("off")
-                    else:
-                        img = batch[img_type][j].squeeze(0).numpy()
-                        ax.imshow(img, cmap="terrain")
-                        ax.set_title(title)
-                        ax.axis("off")
-
-                fig.savefig(f"figures/batch_examples/glacier/batch_of_crops_{j}.png", dpi=150)
-                plt.close()
-                if j == 30:
-                    break
-            break
-
-
+    batch_size = 256
+    dataloader = DataLoader(dataset=dataset, batch_size=128, shuffle=False)
